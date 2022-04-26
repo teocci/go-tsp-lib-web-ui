@@ -1,0 +1,9 @@
+{
+  "web": {
+    "port": 8080
+  },
+  "tsp": {
+    "host": "localhost",
+    "port": 6029
+  }
+}

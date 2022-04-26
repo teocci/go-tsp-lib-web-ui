@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="css/style.css"/>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+
+    <title>Document</title>
+</head>
+
+<body>
+<div class="wrapper">
+    <div class="main">
+        <div class="aside">
+            <div class="header item">
+                <h1 class="title">TSP Lib 가시화 도구</h1>
+            </div>
+            <div class="content item">
+                <section class="points">
+                    <h2 class="title">배달전 선택</h2>
+                    <div class="controls">
+                        <div class="control item">
+                            <button>지도에서 직접</button>
+                        </div>
+                        <div class="control item">
+                            <button>랜덤</button>
+                            <div>
+                                <input type="radio" id="random-10" name="random-points" value="10" checked>
+                                <label for="random-10">10</label>
+                            </div>
+                            <div>
+                                <input type="radio" id="random-20" name="random-points" value="20">
+                                <label for="random-20">20</label>
+                            </div>
+                            <div>
+                                <input type="radio" id="random-30" name="random-points" value="30">
+                                <label for="random-30">30</label>
+                            </div>
+                            <div>
+                                <input type="radio" id="random-100" name="random-points" value="100">
+                                <label for="random-100">100</label>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="generators">
+                    <h2 class="title">경로 탐색</h2>
+                    <div class="control item">
+                        <div>
+                            <input type="checkbox" id="tsp" name="tsp" checked>
+                            <label for="tsp">TSP Lib</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="tmap" name="tmap" checked>
+                            <label for="tmap">T-Map</label>
+                        </div>
+                    </div>
+                </section>
+                <section class="results">
+                    <h2 class="title">배달전 선택</h2>
+                </section>
+            </div>
+            <div class="footer item">
+                <div class="copy">&copy; Realtimetech</div>
+            </div>
+        </div>
+        <div class="map"></div>
+    </div>
+    <div class="shadow">
+        <div class="bar"></div>
+    </div>
+</div>
+</body>
+
+</html>
