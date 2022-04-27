@@ -9,10 +9,10 @@
     <link rel="stylesheet" href="css/style.css"/>
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-
+    <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.1.1/css/all.css"
+          crossorigin="anonymous">
     <title>Document</title>
 </head>
-
 <body>
 <div class="wrapper">
     <div class="main">
@@ -52,17 +52,17 @@
                 </section>
                 <section class="generators">
                     <h2 class="title">경로 탐색</h2>
-                    <div class="types">
-                        <div class="type">
-                            <input type="checkbox" id="tsp" name="tsp" checked>
-                            <label for="tsp">TSP Lib</label>
-                        </div>
-                        <div class="type">
-                            <input type="checkbox" id="tmap" name="tmap" checked>
-                            <label for="tmap">T-Map</label>
-                        </div>
-                    </div>
                     <div class="generate">
+                        <div class="types">
+                            <div class="type">
+                                <input type="checkbox" id="tsp" name="tsp" checked>
+                                <label for="tsp">TSP Lib</label>
+                            </div>
+                            <div class="type">
+                                <input type="checkbox" id="tmap" name="tmap" checked>
+                                <label for="tmap">T-Map</label>
+                            </div>
+                        </div>
                         <button>지도에서 직접</button>
                     </div>
                 </section>
@@ -80,9 +80,36 @@
     <div class="shadow">
         <div class="bar"></div>
     </div>
+    <div class="summary floating">
+        <table>
+            <tr>
+                <th>탐색결과</th>
+                <th>T-Map</th>
+                <th>TSP Lib</th>
+            </tr>
+            <tr>
+                <td>Cost (km)</td>
+                <td class="cell">12.562</td>
+                <td class="cell">7.903</td>
+            </tr>
+            <tr>
+                <td>ETA (분)</td>
+                <td class="cell">45.8</td>
+                <td class="cell">36.5</td>
+            </tr>
+            <tr>
+                <td>Exec time (초)</td>
+                <td class="cell">0.76</td>
+                <td class="cell">0.04</td>
+            </tr>
+        </table>
+    </div>
+    <div class="menu floating">
+        <div class="button"><i class="fa-solid fa-bars"></i></div>
+    </div>
 </div>
 
-{{/*<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=06f04f21658e8f35d27d48b00f144297"></script>*/}}
+<!--<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=06f04f21658e8f35d27d48b00f144297"></script>-->
 
 <script type="text/javascript" src="js/sdk.js"></script>
 <script type="module" src="js/app.js"></script>

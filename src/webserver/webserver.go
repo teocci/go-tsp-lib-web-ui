@@ -9,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/teocci/go-tsp-lib-web-ui/src/config"
 	"log"
+	"mime"
 	"net/http"
 )
 
@@ -23,6 +24,7 @@ var (
 
 func Start() {
 	gin.SetMode(gin.ReleaseMode)
+	_ = mime.AddExtensionType(".js", "application/javascript")
 
 	router := gin.Default()
 	router.LoadHTMLGlob("web/templates/*")
@@ -30,10 +32,9 @@ func Start() {
 	router.StaticFS("/css", http.Dir("web/static/css"))
 	router.StaticFS("/js", http.Dir("web/static/js"))
 	router.StaticFS("/img", http.Dir("web/static/img"))
+	router.StaticFile("/main.html", "web/static/main.html")
 
 	router.Use(CORSMiddleware())
-
-	router.GET("/", HandleIndex)
 
 	err := router.Run(address)
 	if err != nil {
