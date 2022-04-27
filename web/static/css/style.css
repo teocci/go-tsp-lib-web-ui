@@ -211,6 +211,7 @@ body * {
 .generators .types {
     display: flex;
     flex-flow: row nowrap;
+    align-items: center;
     column-gap: 20px;
 }
 
