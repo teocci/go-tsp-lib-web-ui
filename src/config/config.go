@@ -62,7 +62,7 @@ const (
 	defaultStaticDir    = "static"
 	defaultTemplatesDir = "templates"
 
-	defaultWebPort = 8080
+	defaultWebPort = 8081
 	defaultTSPHost = "localhost"
 	defaultTSPPort = 6029
 )

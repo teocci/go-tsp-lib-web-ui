@@ -37,7 +37,7 @@ func Start() {
 	router.StaticFile("/main.html", "web/static/main.html")
 
 	router.Use(CORSMiddleware())
-
+	fmt.Printf("address : %v", address)
 	err := router.Run(address)
 	if err != nil {
 		log.Fatalln("Start HTTP Server error", err)
