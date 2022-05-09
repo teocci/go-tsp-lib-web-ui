@@ -2,32 +2,32 @@ export default class Route {
     constructor(){        
         this.route = {};
 
-        this.route.lines = []; //original response from tsp or tmap
-        this.route.linePath = []; // for route
-        this.route.pointPath = []; //for point route
-        this.route.pointInfos = [];
+        this.route.lines = [] //original response from tsp or tmap
+        this.route.linePath = [] // for route
+        this.route.pointPath = [] //for point route
+        this.route.pointInfos = []
 
-        this.routePolyLine = {};
-        this.pointPolyLine = {};
+        this.routePolyLine = {}
+        this.pointPolyLine = {}
         
-        this.routeOverlay = [];
-        this.pointOverlay = [];
+        this.routeOverlay = []
+        this.pointOverlay = []
     }
 
-    showRoute(isShow, _map){
+    showRoute(isShow, map){
         if(!isShow){
             this.routeOverlay.forEach(element =>{
-                element.setMap(null);
-            });
-            this.routePolyLine.setMap(null);
+                element.setMap(null)
+            })
+            this.routePolyLine.setMap(null)
         }
         else{
             this.routeOverlay.forEach(element =>{
-                element.setMap(_map);
-            });
+                element.setMap(map)
+            })
     
-            this.routePolyLine.setPath(this.route.linePath);
-            this.routePolyLine.setMap(_map);
+            this.routePolyLine.setPath(this.route.linePath)
+            this.routePolyLine.setMap(map)
         }
     }
 
