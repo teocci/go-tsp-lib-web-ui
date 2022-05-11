@@ -17,7 +17,7 @@ const MARKERS = {
 };
 
 const TSP_SVR_HOST = "localhost";
-const TSP_SVR_PORT = 8080;
+const TSP_SVR_PORT = 9080;
 const TSP_SVR_ADDR = `${TSP_SVR_HOST}:${TSP_SVR_PORT}`;
 const TSP_SVR_URL = `${getProtocol()}//${TSP_SVR_ADDR}`;
 

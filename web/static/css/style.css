@@ -390,10 +390,12 @@ input:checked + .slider:before {
 
 .control-box {
     width: 10vw;
+    height:33vh;
     z-index: 100;
     top: 50vh;
     right: 0;
     background-color: white;
+    padding:10px;
 }
 
 .hide {
@@ -455,12 +457,15 @@ input:checked + .slider:before {
 
 .centered{
     position: absolute;
-    top: 50%;
+    top: 40%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-40%, -50%);
+}
+
+.cost {
+    padding:2px;
 }
 
 .results-content{
     height:100%;
 }
-

@@ -23,9 +23,8 @@ export default class ElementManager {
 
         eachDiv.appendChild(container)
         eachDiv.appendChild(costSection)
-        console.log('i putttttttt')
-        eachDiv.onclick = ElementManager.process
-        eachDiv.dataset.id = id
+        // eachDiv.onclick = ElementManager.process
+        // eachDiv.dataset.id = id
 
         return eachDiv;
     }
@@ -35,12 +34,6 @@ export default class ElementManager {
         console.log({e}, {target:e.target})
     }
     
-
-
-    static makeRouteTableForTMap(id, cost){
-
-    }
-
     static makeOverlay(point, tlibCheck, tmapCheck){
         const span = document.createElement('span')
         span.className = 'overlay'
