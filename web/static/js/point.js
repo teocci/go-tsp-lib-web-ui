@@ -15,10 +15,10 @@ export default class Point {
     }
 
     hasTLibId() {
-        return this.tlibId === ''
+        return this.tlibId != ''
     }
 
     hasTMapId() {
-        return this.tmapId === ''
+        return this.tmapId != ''
     }
 }
