@@ -16,17 +16,10 @@ const MARKERS = {
     TMAP : new kakao.maps.MarkerImage(MARKER_SRC.TMAP, IMG_SIZE)
 }
 
-<<<<<<< HEAD
 const TSP_SVR_HOST = '192.168.100.58'
 const TSP_SVR_PORT = 9080
 const TSP_SVR_ADDR = `${TSP_SVR_HOST}:${TSP_SVR_PORT}`
 const TSP_SVR_URL = `${getProtocol()}//${TSP_SVR_ADDR}`
-=======
-const TSP_SVR_HOST = "localhost";
-const TSP_SVR_PORT = 9080;
-const TSP_SVR_ADDR = `${TSP_SVR_HOST}:${TSP_SVR_PORT}`;
-const TSP_SVR_URL = `${getProtocol()}//${TSP_SVR_ADDR}`;
->>>>>>> a50f80573e94c1050f57116f3717bd3ac6fff14f
 
 /* color */
 const TSP_ROUTE_COLOR = '#e04010'

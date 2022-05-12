@@ -2,12 +2,8 @@ import RouteManager from './routeManager.js'
 import TmapMgr from './tmap.js'
 import PointTable from './point-table.js'
 import Point from './point.js'
-<<<<<<< HEAD
 import ResultsPanel from './results-panel.js'
-=======
-import ElementManager from './element-manager.js'
 import DrawManager from './draw-manager.js'
->>>>>>> a50f80573e94c1050f57116f3717bd3ac6fff14f
 
 let mapElement = document.getElementById('map')
 let map
@@ -15,16 +11,11 @@ let markers = []
 
 let resultsPanel
 
-<<<<<<< HEAD
-let tsp = new RouteManager('tlib')
+let tsp = new RouteManager()
 let tmap = new RouteManager()
 
 let pointTable = new PointTable()
-=======
-let pointTable = new PointTable();
-let drawManager = new DrawManager();
-
->>>>>>> a50f80573e94c1050f57116f3717bd3ac6fff14f
+let drawManager = new DrawManager()
 
 //add points btn
 let btnAddPointsElement = document.getElementById('add-points')
@@ -58,9 +49,6 @@ const resultContent = document.getElementById('results-content')
 let btnInitMap = document.getElementById('initMap')
 let btnPointList = document.getElementById('pointList')
 
-function onRoutePointClicked() {
-
-}
 
 window.onload = () => {
     const options = {
@@ -83,15 +71,15 @@ window.onload = () => {
 
     btnFindRoute.onclick = findRoute;
 
-    tsp.routePolyLine = new kakao.maps.Polyline(TSP_ROUTE_POLYLINE);
+    tsp.routePolyLine = new kakao.maps.Polyline(TSP_ROUTE_POLYLINE)
     tsp.pointPolyLine = new kakao.maps.Polyline(TSP_POINT_POLYLINE)
     tsp.partlyPolyLine = new kakao.maps.Polyline(PARTLY_POLYLINE)
 
-    tmap.routePolyLine = new kakao.maps.Polyline(TMAP_ROUTE_POLYLINE);
-    tmap.pointPolyLine = new kakao.maps.Polyline(TMAP_POINT_POLYLINE);
+    tmap.routePolyLine = new kakao.maps.Polyline(TMAP_ROUTE_POLYLINE)
+    tmap.pointPolyLine = new kakao.maps.Polyline(TMAP_POINT_POLYLINE)
     tmap.partlyPolyLine = new kakao.maps.Polyline(PARTLY_POLYLINE)
 
-    menu.onclick = drawManager.showDialog;
+    menu.onclick = drawManager.showDialog
 
     tlibShowRoute.onchange = () => {
         drawManager.showRoute(tsp, tlibShowRoute.checked, map)
@@ -110,24 +98,6 @@ window.onload = () => {
     tmapShowPointRoute.onchange = () => {
         drawManager.showPointRoute(tmap, tmapShowPointRoute.checked, map)
     }
-
-<<<<<<< HEAD
-    // tabTLib.onclick = () => {
-    //     openTabContent('tlib-result-content')
-    // }
-    //
-    // tabTMap.onclick = () => {
-    //     openTabContent('tmap-result-content')
-    // }
-=======
-    tabTLib.onclick = () => {
-        drawManager.openTabContent('tlib-result-content')
-    }
-
-    tabTMap.onclick = () => {
-        drawManager.openTabContent('tmap-result-content')
-    }
->>>>>>> a50f80573e94c1050f57116f3717bd3ac6fff14f
 
     btnInitMap.onclick = () =>{
         pointTable.init()
@@ -260,21 +230,6 @@ function callTMapLib(routeRequest) {
     })
 }
 
-<<<<<<< HEAD
-
-function fillCostTable(data, isTSPLib) {
-    let rows = tblCost.getElementsByTagName('tr');
-
-    let cost = isTSPLib ? rows[1].getElementsByTagName('td')[2] : rows[1].getElementsByTagName('td')[1];
-    let eta = isTSPLib ? rows[2].getElementsByTagName('td')[2] : rows[2].getElementsByTagName('td')[1];
-    let ttime = isTSPLib ? rows[3].getElementsByTagName('td')[2] : rows[3].getElementsByTagName('td')[1];
-
-    cost.innerText = data.cost;
-    eta.innerText = data.eta;
-    ttime.innerText = data.time;
-}
-
-
 function drawTLibLinePartly(id){
     console.log({drawTLibLinePartly: id})
     let path = []
@@ -291,35 +246,7 @@ function drawTLibLinePartly(id){
     })
     tsp.partlyPolyLine.setPath(path)
     tsp.partlyPolyLine.setMap(map);
-=======
-function makeDetailRouteTable(){
-    tabTLibContent.appendChild(ElementManager.makeRouteTable('S', ''))
 
-    tsp.route.lines.forEach(line =>{
-        let elem = ElementManager.makeRouteTable(line.id, line.cost);
-        elem.onclick = () => {
-            drawManager.drawTspLinePartly(line.id, tsp, map)
-        }
-
-        tabTLibContent.appendChild(elem)
-    })
-    
-    tabTMapContent.appendChild(ElementManager.makeRouteTable('S', ''))
-    
-    let id = 1;
-    tmap.route.lines.features.forEach(feature =>{
-        if(parseInt(feature.properties.index) === id){
-            let elem = ElementManager.makeRouteTable(id, feature.properties.distance);
-     
-            elem.onclick = () => {
-                drawTmapLinePartly(id)
-            }
-            tabTMapContent.appendChild(elem);
-            id = id+1
-        }    
-    })
-    tabTMapContent.classList.add('hide')
->>>>>>> a50f80573e94c1050f57116f3717bd3ac6fff14f
 }
 
 function drawTMapLinePartly(id){
@@ -381,15 +308,10 @@ function drawTSPLine(lines) {
     overlayPromise.then(() => {
         if (pointTable.tlib && pointTable.tmap) {
                 console.log('tlib promise..')
-<<<<<<< HEAD
-                // initOverlay()
-                // makeDetailRouteTable()
+
                 resultsPanel.initOverlay(pointTable, map)
                 resultsPanel.initDetailRouteTable(tsp, tmap)
-=======
-                drawManager.drawOverlay(pointTable, map)
-                makeDetailRouteTable()
->>>>>>> a50f80573e94c1050f57116f3717bd3ac6fff14f
+
                 pointTable.tlib = false;
                 pointTable.tmap = false;
         }
@@ -449,15 +371,10 @@ function drawTMapLine(lines) {
     overlayPromise.then(() => {
         if (pointTable.tmap && pointTable.tlib) {
             console.log('tmap promise..')
-<<<<<<< HEAD
-            // initOverlay()
-            // makeDetailRouteTable()
+
             resultsPanel.initOverlay(pointTable, map)
             resultsPanel.initDetailRouteTable(tsp, tmap)
-=======
-            drawManager.drawOverlay(pointTable, map)
-            makeDetailRouteTable()
->>>>>>> a50f80573e94c1050f57116f3717bd3ac6fff14f
+
             pointTable.tlib = false;
             pointTable.tmap = false;
         }
@@ -471,7 +388,6 @@ function drawTMapLine(lines) {
     tmap.route.pointPath = pointPath
     tmap.route.pointInfos = pointInfos
 }
-
 
 function getRandomPoints() {
     const radioList = document.getElementsByName('random-points')
