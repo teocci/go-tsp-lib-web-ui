@@ -1,8 +1,9 @@
-export default class Route {
-    constructor(){        
+export default class RouteManager {
+    constructor(){
         this.route = {};
 
         this.route.lines = [] //original response from tsp or tmap
+
         this.route.linePath = [] // for route
         this.route.pointPath = [] //for point route, 경유지
         this.route.pointInfos = []
