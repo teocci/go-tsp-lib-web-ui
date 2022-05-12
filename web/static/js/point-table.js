@@ -9,7 +9,6 @@ export default class PointTable {
         this.tmap = false;
     }
     init(){
-        
         this.points = [];
         this.tlib = false;
         this.tmap = false;

@@ -35,21 +35,4 @@ export default class RouteManager {
         this.pointPolyLine.setMap(null);
         this.partlyPolyLine.setMap(null);
     }
-
-    showRoute(isShow, map){
-        if(!isShow){
-            this.routeOverlay.forEach(element =>{
-                element.setMap(null)
-            })
-            this.routePolyLine.setMap(null)
-        }
-        else{
-            this.routeOverlay.forEach(element =>{
-                element.setMap(map)
-            })
-    
-            this.routePolyLine.setPath(this.route.linePath)
-            this.routePolyLine.setMap(map)
-        }
-    }
 }

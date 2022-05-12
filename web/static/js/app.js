@@ -2,17 +2,29 @@ import RouteManager from './routeManager.js'
 import TmapMgr from './tmap.js'
 import PointTable from './point-table.js'
 import Point from './point.js'
+<<<<<<< HEAD
 import ResultsPanel from './results-panel.js'
+=======
+import ElementManager from './element-manager.js'
+import DrawManager from './draw-manager.js'
+>>>>>>> a50f80573e94c1050f57116f3717bd3ac6fff14f
 
 let mapElement = document.getElementById('map')
 let map
+let markers = []
 
 let resultsPanel
 
+<<<<<<< HEAD
 let tsp = new RouteManager('tlib')
 let tmap = new RouteManager()
 
 let pointTable = new PointTable()
+=======
+let pointTable = new PointTable();
+let drawManager = new DrawManager();
+
+>>>>>>> a50f80573e94c1050f57116f3717bd3ac6fff14f
 
 //add points btn
 let btnAddPointsElement = document.getElementById('add-points')
@@ -44,6 +56,7 @@ const resultContent = document.getElementById('results-content')
 
 //배달점 새로고침
 let btnInitMap = document.getElementById('initMap')
+let btnPointList = document.getElementById('pointList')
 
 function onRoutePointClicked() {
 
@@ -71,37 +84,34 @@ window.onload = () => {
     btnFindRoute.onclick = findRoute;
 
     tsp.routePolyLine = new kakao.maps.Polyline(TSP_ROUTE_POLYLINE);
-
     tsp.pointPolyLine = new kakao.maps.Polyline(TSP_POINT_POLYLINE)
-
     tsp.partlyPolyLine = new kakao.maps.Polyline(PARTLY_POLYLINE)
 
     tmap.routePolyLine = new kakao.maps.Polyline(TMAP_ROUTE_POLYLINE);
-
     tmap.pointPolyLine = new kakao.maps.Polyline(TMAP_POINT_POLYLINE);
-
     tmap.partlyPolyLine = new kakao.maps.Polyline(PARTLY_POLYLINE)
 
-    menu.onclick = showDialog;
+    menu.onclick = drawManager.showDialog;
 
     tlibShowRoute.onchange = () => {
-        tsp.showRoute(tlibShowRoute.checked, map)
-        showLabel('tsp', tlibShowRoute.checked)
+        drawManager.showRoute(tsp, tlibShowRoute.checked, map)
+        drawManager.showLabel('tsp', tlibShowRoute.checked)
     }
 
     tlibShowPointRoute.onchange = () => {
-        showPointRoute(tsp, tlibShowPointRoute.checked)
+        drawManager.showPointRoute(tsp, tlibShowPointRoute.checked, map)
     }
 
     tmapShowRoute.onchange = () => {
-        showRoute(tmap, tmapShowRoute.checked)
-        showLabel('tmap', tmapShowRoute.checked)
+        drawManager.showRoute(tmap, tmapShowRoute.checked, map)
+        drawManager.showLabel('tmap', tmapShowRoute.checked)
     }
 
     tmapShowPointRoute.onchange = () => {
-        showPointRoute(tmap, tmapShowPointRoute.checked)
+        drawManager.showPointRoute(tmap, tmapShowPointRoute.checked, map)
     }
 
+<<<<<<< HEAD
     // tabTLib.onclick = () => {
     //     openTabContent('tlib-result-content')
     // }
@@ -109,65 +119,33 @@ window.onload = () => {
     // tabTMap.onclick = () => {
     //     openTabContent('tmap-result-content')
     // }
+=======
+    tabTLib.onclick = () => {
+        drawManager.openTabContent('tlib-result-content')
+    }
 
-    showLabel('tmap', tmapShowRoute.checked)
+    tabTMap.onclick = () => {
+        drawManager.openTabContent('tmap-result-content')
+    }
+>>>>>>> a50f80573e94c1050f57116f3717bd3ac6fff14f
 
     btnInitMap.onclick = () =>{
         pointTable.init()
-        
+        tsp.init()
+        tmap.init()
+        drawManager.removeLabel()
+        drawManager.removeMarkers(markers)
+        drawManager.clearCostTable()
+        drawManager.clearRouteTable()
+    }
+
+    btnPointList.onclick = () =>{
+        drawManager.showPointListDialog(pointTable.points)
     }
 }
 
 function addDeliveryPoint() {
     kakao.maps.event.addListener(map, 'click', mapClickListener);
-}
-
-function openTabContent(tabName) {
-    //모든 탭의 컨텐츠 안보이게 우선 만들고
-    let tabcontent = Array.from(document.getElementsByClassName('tab-content'));
-    tabcontent.forEach(content => {
-        content.style.display = 'none';
-    });
-
-    //해당되는 탭만 보이게 
-    document.getElementById(tabName).style.display = 'block';
-}
-
-function showPointRoute(route, shown) {
-    if (!shown) {
-        route.pointPolyLine.setMap(null)
-    } else {
-        route.pointPolyLine.setPath(route.route.pointPath)
-        route.pointPolyLine.setMap(map)
-    }
-}
-
-function showLabel(name, shown) {
-    const classname = `overlay-${name}`
-    const overlayList = Array.from(document.getElementsByClassName(classname))
-
-    if (!shown) {
-        overlayList.forEach(overlay => overlay.classList.add('hide'))
-    } else {
-        overlayList.forEach(overlay => overlay.classList.remove('hide'))
-    }
-}
-
-function showRoute(route, shown) {
-    if (!shown) {
-        route.routeOverlay.forEach(element => element.setMap(null))
-
-        route.routePolyLine.setMap(null)
-    } else {
-        route.routeOverlay.forEach(element => element.setMap(map))
-
-        route.routePolyLine.setPath(route.route.linePath)
-        route.routePolyLine.setMap(map)
-    }
-}
-
-function showDialog() {
-    controlBox.classList.toggle('hide')
 }
 
 function mapClickListener(mouseEvent) {
@@ -188,6 +166,8 @@ function makeMarkers(latLng) {
         marker.setTitle(`${pointTable.points.length}`)
         marker.setImage(MARKERS.DELIVERY)
     }
+
+    markers.push(marker)
 
     const iwContent = `${pointTable.points.length}`
 
@@ -241,7 +221,7 @@ function callTSPLib(routeRequest) {
                 'eta': (body.SPathList.use_time / 60).toFixed(2),
                 'time':(eTime - sTime)/1000,//body.TSP_time.toFixed(5),
             };
-            fillCostTable(cost, true);
+            drawManager.fillCostTable(cost, true);
             drawTSPLine(body);
         });
 }
@@ -275,11 +255,12 @@ function callTMapLib(routeRequest) {
             'time': (eTime - sTime)/1000,
         }
 
-        fillCostTable(cost, false)
+        drawManager.fillCostTable(cost, false)
         drawTMapLine(body)
     })
 }
 
+<<<<<<< HEAD
 
 function fillCostTable(data, isTSPLib) {
     let rows = tblCost.getElementsByTagName('tr');
@@ -310,6 +291,35 @@ function drawTLibLinePartly(id){
     })
     tsp.partlyPolyLine.setPath(path)
     tsp.partlyPolyLine.setMap(map);
+=======
+function makeDetailRouteTable(){
+    tabTLibContent.appendChild(ElementManager.makeRouteTable('S', ''))
+
+    tsp.route.lines.forEach(line =>{
+        let elem = ElementManager.makeRouteTable(line.id, line.cost);
+        elem.onclick = () => {
+            drawManager.drawTspLinePartly(line.id, tsp, map)
+        }
+
+        tabTLibContent.appendChild(elem)
+    })
+    
+    tabTMapContent.appendChild(ElementManager.makeRouteTable('S', ''))
+    
+    let id = 1;
+    tmap.route.lines.features.forEach(feature =>{
+        if(parseInt(feature.properties.index) === id){
+            let elem = ElementManager.makeRouteTable(id, feature.properties.distance);
+     
+            elem.onclick = () => {
+                drawTmapLinePartly(id)
+            }
+            tabTMapContent.appendChild(elem);
+            id = id+1
+        }    
+    })
+    tabTMapContent.classList.add('hide')
+>>>>>>> a50f80573e94c1050f57116f3717bd3ac6fff14f
 }
 
 function drawTMapLinePartly(id){
@@ -341,7 +351,6 @@ function drawTSPLine(lines) {
     let linePath = []
     let pointPath = []
     let pointInfos = []
-    console.log({lines})
 
     lines.SPathList.paths.forEach(paths => {
 
@@ -372,10 +381,15 @@ function drawTSPLine(lines) {
     overlayPromise.then(() => {
         if (pointTable.tlib && pointTable.tmap) {
                 console.log('tlib promise..')
+<<<<<<< HEAD
                 // initOverlay()
                 // makeDetailRouteTable()
                 resultsPanel.initOverlay(pointTable, map)
                 resultsPanel.initDetailRouteTable(tsp, tmap)
+=======
+                drawManager.drawOverlay(pointTable, map)
+                makeDetailRouteTable()
+>>>>>>> a50f80573e94c1050f57116f3717bd3ac6fff14f
                 pointTable.tlib = false;
                 pointTable.tmap = false;
         }
@@ -387,7 +401,6 @@ function drawTSPLine(lines) {
     tsp.route.lines = lines.SPathList.paths
     tsp.route.linePath = linePath
     
-
     pointPath.push(pointPath[0]) //경유점 표현시 마지막 포인트로 되돌아가게
 
     tsp.route.pointPath = pointPath
@@ -395,7 +408,7 @@ function drawTSPLine(lines) {
 }
 
 function drawTMapLine(lines) {
-    console.log(lines)
+   
     let linePath = []
     let pointPath = []
     let pointInfos = []
@@ -436,10 +449,15 @@ function drawTMapLine(lines) {
     overlayPromise.then(() => {
         if (pointTable.tmap && pointTable.tlib) {
             console.log('tmap promise..')
+<<<<<<< HEAD
             // initOverlay()
             // makeDetailRouteTable()
             resultsPanel.initOverlay(pointTable, map)
             resultsPanel.initDetailRouteTable(tsp, tmap)
+=======
+            drawManager.drawOverlay(pointTable, map)
+            makeDetailRouteTable()
+>>>>>>> a50f80573e94c1050f57116f3717bd3ac6fff14f
             pointTable.tlib = false;
             pointTable.tmap = false;
         }
@@ -530,7 +548,7 @@ function getRandomPoints() {
 
 function makeRandom(data) { //Random 좌표 n개 생성
     let list = []
-    console.log({data})
+
     list.push(data.FixPoint.SPoint)
     data.FixPoint.pts.forEach(element => {
             list.push(element)
