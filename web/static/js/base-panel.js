@@ -2,7 +2,9 @@
  * Created by RTT.
  * Author: teocci@yandex.com on 2022-May-11
  */
-export default class BasePanel {
+import BaseListener from './base-listener.js'
+
+export default class BasePanel extends BaseListener {
     static CHAR_UNDERSCORE = '_'
     static CHAR_HYPHEN = '-'
 
@@ -17,9 +19,9 @@ export default class BasePanel {
     }
 
     constructor(element) {
-        this.placeholder = element
+        super()
 
-        this.listeners = {}
+        this.placeholder = element
     }
 
     get placeholder() {
@@ -48,17 +50,5 @@ export default class BasePanel {
             const lastChild = element.lastChild ?? false
             if (lastChild) element.removeChild(lastChild)
         }
-    }
-
-    addListener(name, callback) {
-        this.listeners[name] = callback
-    }
-
-    removeListener(name) {
-        if (this.listeners[name]) delete this.listeners[name]
-    }
-
-    getListener(name) {
-        return this.listeners[name] ?? null;
     }
 }

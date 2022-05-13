@@ -119,7 +119,7 @@ export default class ResultsPanel extends BasePanel {
         tlibData.route.lines.forEach(line => {
             const elem = this.makeRouteTable(line.id, line.cost);
             // elem.onclick = () => {
-            //     const callback = this.getListener(ResultsPanel.TMAP)
+            //     const callback = this.listener(ResultsPanel.TMAP)
             //     callback(line.id)
             // }
 

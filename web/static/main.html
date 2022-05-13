@@ -28,22 +28,22 @@
                             <button id="add-points">지도에서 직접</button>
                         </div>
                         <div class="random control">
-                            <button id="add-random-points">랜덤</button>
+                            <button id="gen-points">랜덤</button>
                             <div class="options">
                                 <div class="option">
-                                    <input type="radio" id="random-10" name="random-points" value="10" checked>
+                                    <input type="radio" id="random-10" name="path-length" value="10" checked>
                                     <label for="random-10">10</label>
                                 </div>
                                 <div class="option">
-                                    <input type="radio" id="random-20" name="random-points" value="20">
+                                    <input type="radio" id="random-20" name="path-length" value="20">
                                     <label for="random-20">20</label>
                                 </div>
                                 <div class="option">
-                                    <input type="radio" id="random-30" name="random-points" value="30">
+                                    <input type="radio" id="random-30" name="path-length" value="30">
                                     <label for="random-30">30</label>
                                 </div>
                                 <div class="option">
-                                    <input type="radio" id="random-100" name="random-points" value="100">
+                                    <input type="radio" id="random-100" name="path-length" value="100">
                                     <label for="random-100">100</label>
                                 </div>
                             </div>
@@ -55,15 +55,15 @@
                     <div class="generate">
                         <div class="types">
                             <div class="type">
-                                <input type="checkbox" id="tsp" name="tsp" checked>
-                                <label for="tsp">TSP Lib</label>
+                                <input type="checkbox" id="cb-tlib" name="check-tlib" checked>
+                                <label for="cb-tlib">TSP Lib</label>
                             </div>
                             <div class="type">
-                                <input type="checkbox" id="tmap" name="tmap" checked>
-                                <label for="tmap">T-Map</label>
+                                <input type="checkbox" id="cb-tmap" name="check-tmap" checked>
+                                <label for="cb-tmap">T-Map</label>
                             </div>
                         </div>
-                        <button id="findRoute">경로탐색</button>
+                        <button id="fetch-routes">경로탐색</button>
                     </div>
                 </section>
                 <section class="results">
@@ -80,7 +80,7 @@
     <div class="shadow">
         <div class="bar"></div>
     </div>
-    <div class="summary floating">
+    <div id="summary" class="summary floating">
         <table id="cost">
             <tr>
                 <th>탐색결과</th>
@@ -104,7 +104,7 @@
             </tr>
         </table>
     </div>
-    <div class="menu floating">
+    <div id="menu" class="menu floating">
         <div class="button" id="menu-btn"><i class="fa-solid fa-bars"></i></div>
     </div>
 
@@ -144,6 +144,7 @@
 
 <script type="text/javascript" src="js/sdk.js"></script>
 <script type="text/javascript" src="js/constant.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
 <script type="module" src="js/app.js"></script>
 </body>
 

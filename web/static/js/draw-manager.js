@@ -143,5 +143,4 @@ export default class DrawManager{
      
         alert(str)
     }
-
 }
