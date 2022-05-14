@@ -20,7 +20,6 @@ export default class FetcherManager extends BaseListener{
         const req = path.toRequest()
 
         this.start(req, apis).then(data => {
-            console.log({data})
             this.callListener(FetcherManager.LISTENER_ALL_DATA_FETCHED, data)
         })
     }

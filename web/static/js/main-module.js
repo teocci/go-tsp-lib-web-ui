@@ -4,10 +4,11 @@
  */
 import PathManager from './path-manager.js'
 import FetcherManager from './fetcherManager.js'
+import MapPanel from './map-panel.js'
 import PointsPanel from './points-panel.js'
 import GeneratorsPanel from './generators-panel.js'
 import ResultsPanel from './results-panel.js'
-import MapPanel from './map-panel.js'
+import MapManager from './map-manager.js'
 import SummaryPanel from './summary-panel.js'
 import MenuPanel from './Menu-panel.js'
 
@@ -16,7 +17,9 @@ export default class MainModule {
         this.pathManager = new PathManager()
         this.fetcherManager = new FetcherManager()
 
-        this.initElements()
+        this.initPanels()
+
+        this.mapManager = new MapManager(this.mapPanel)
 
         this.pointsPanel.addListener(PointsPanel.LISTENER_ADD_CLICKED, e => this.onAddPointClicked(e))
         this.pointsPanel.addListener(PointsPanel.LISTENER_GEN_CLICKED, (e, params) => this.onGenPointsClicked(e, params[0]))
@@ -30,7 +33,7 @@ export default class MainModule {
         // this.resultsPanel.addListener(TmapFetcher.TAG, drawTMapLinePartly)
     }
 
-    initElements() {
+    initPanels() {
         const mapElement = document.getElementById('map')
 
         const pointsElement = document.querySelector('section.points .controls')
@@ -55,12 +58,12 @@ export default class MainModule {
     }
 
     onGenPointsClicked(e, n) {
-        const bounds = this.mapPanel.mapBounds()
+        const bounds = this.mapManager.mapBounds()
         this.pathManager.genPoints(n, bounds)
     }
 
     onPointsLoaded(points) {
-        this.mapPanel.loadMarkers(points)
+        this.mapManager.loadMarkers(points)
         this.pointsPanel.enablePanelElements()
         this.generatorPanel.enablePanelElements()
     }
@@ -74,8 +77,7 @@ export default class MainModule {
         this.fetcherManager.executeRequest(this.pathManager.path, libs)
     }
 
-    onAllDataFetched(d) {
-        console.log(d)
-
+    onAllDataFetched(data) {
+        this.mapManager.loadRoutes(data)
     }
 }

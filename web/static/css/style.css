@@ -30,8 +30,8 @@
 
     --light-text-color: #fff;
 
-    --aside-width: 20vw;
-    --map-width: 80vw;
+    --aside-width: 300px;
+    --map-width: calc(100vw - var(--aside-width));
     --right-aside-width: 5vw;
 }
 
