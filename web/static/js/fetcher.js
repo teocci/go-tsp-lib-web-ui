@@ -9,8 +9,8 @@ export default class Fetcher extends BaseListener {
 
     constructor(info) {
         super()
-        this.serverInfo = info
 
+        this.apiInfo = info
         this.route = {}
 
         this.initStruct()
@@ -53,15 +53,40 @@ export default class Fetcher extends BaseListener {
     initPolyLines() {
     }
 
-    isTestMode() {
-        return this.serverInfo.mode === FETCH_MODE_TEST
+    apiURL() {
+        return this.apiInfo.url
+    }
+
+    apiKey() {
+        return this.apiInfo.key
+    }
+
+    testResponse(k) {
+        return this.apiInfo.testResponse(k)
+    }
+
+    isRequestTestMode(k) {
+        return this.apiInfo.isRequestTestMode(k)
+    }
+
+    isAPITestMode() {
+        return this.apiInfo.isTestMode()
+    }
+
+    async fetch(config) {
+        if (!config) throw new Error('InvalidConfig: null config')
+
+        const sTime = performance.now()
+        const body = await (await fetch(config.url, config.config)).json()
+        const duration = performance.now() - sTime
+
+        return {
+            'duration': duration,
+            'body': body,
+        }
     }
 
     fetchRoutePath(req) {
-        throw new Error('Abstract Method has no implementation')
-    }
-
-    parseRequest() {
         throw new Error('Abstract Method has no implementation')
     }
 

@@ -3,6 +3,7 @@
  * Author: teocci@yandex.com on 2022-May-11
  */
 import Fetcher from './fetcher.js'
+import TLibAPI from './tlib-api.js'
 import Point from './point.js'
 import Step from './step.js'
 import ExecutionInfo from './execution-info.js'
@@ -13,11 +14,7 @@ export default class TLibFetcher extends Fetcher {
     static TAG = 'tlib'
 
     constructor() {
-        super({
-            'url': TLIB_SVR_URL,
-            'test': TLIB_TEST_API,
-            'mode': FETCH_MODE_PROD,
-        })
+        super(TLibAPI.instance())
 
         this.initPolyLines()
     }
@@ -29,10 +26,12 @@ export default class TLibFetcher extends Fetcher {
     }
 
     async fetchRoutePath(req) {
-        const header = this.parseRequest(req)
+        const config = this.parseRequest(req)
+
+        console.log(config)
 
         const sTime = performance.now()
-        const body = await (await fetch(header.url, header.config)).json()
+        const body = await (await fetch(config.url, config.options)).json()
         const duration = performance.now() - sTime
 
         const info = this.parseInfo(body, duration)
@@ -42,16 +41,17 @@ export default class TLibFetcher extends Fetcher {
     }
 
     parseRequest(req) {
-        let url
-        let config
-        if (this.isTestMode()) {
-            url = this.serverInfo.test
-            config = {
+        const type = 'find-route'
+
+        let url, options
+        if (this.isRequestTestMode(type)) {
+            url = this.testResponse(type)
+            options = {
                 method: 'GET'
             }
         } else {
-            url = `${this.serverInfo.url}/TSP_find_shortest4`
-            config = {
+            url = `${this.apiURL()}/TSP_find_shortest4`
+            options = {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json'
@@ -62,7 +62,7 @@ export default class TLibFetcher extends Fetcher {
 
         return {
             'url': url,
-            'config': config,
+            'options': options,
         }
     }
 

@@ -3,6 +3,7 @@
  * Author: teocci@yandex.com on 2022-May-11
  */
 import Fetcher from './fetcher.js'
+import TMapAPI from './tmap-api.js'
 import ExecutionInfo from './execution-info.js'
 
 export default class TMapFetcher extends Fetcher {
@@ -10,11 +11,7 @@ export default class TMapFetcher extends Fetcher {
 
     // Use this class to control the tmap data
     constructor() {
-        super({
-            'url': TMAP_SVR_URL,
-            'test': TMAP_TEST_API,
-            'mode': FETCH_MODE,
-        })
+        super(TMapAPI.instance())
 
         this.initPolyLines()
     }
@@ -26,10 +23,12 @@ export default class TMapFetcher extends Fetcher {
     }
 
     async fetchRoutePath(req) {
-        const header = this.parseRequest(req)
+        const config = this.parseRequest(req)
+
+        // console.log({config})
 
         const sTime = performance.now()
-        fetch(header.url, header.config).then(response => response.json()).then(body => {
+        fetch(config.url, config.options).then(response => response.json()).then(body => {
             const duration = performance.now() - sTime
             const execInfo = new ExecutionInfo(body.properties.totalDistance, body.properties.totalTime, duration)
 
@@ -42,30 +41,32 @@ export default class TMapFetcher extends Fetcher {
         const num = req.SPointList.nodes.length + 1
         if (num < 10) throw new Error('InvalidLength: tmap request is possible when the number of delivery destinations is 10, 20, 30, 100.')
 
-        const re = /#/gi
+        const type = 'find-route'
 
-        let url
-        let config
-        if (this.isTestMode()) {
-            url = this.serverInfo.test
-            config = {
+        let url, options
+        if (this.isRequestTestMode(type)) {
+            url = this.testResponse(type)
+            options = {
                 method: 'GET'
             }
         } else {
-            url = this.serverInfo.url.replace(re, `${num}`)
-            config = {
+            const re = /#/gi
+            url = this.apiURL().replace(re, `${num}`)
+            options = {
                 method: 'POST',
                 headers: {
-                    'appKey': T_MAP_APP_KEY,
+                    'appKey': this.apiKey(),
                     'Content-type': 'application/json'
                 },
                 body: serialize(this.makeTMapReqObject(req))
             }
         }
 
+        console.log({url, options})
+
         return {
             'url': url,
-            'config': config,
+            'options': options,
         }
     }
 
