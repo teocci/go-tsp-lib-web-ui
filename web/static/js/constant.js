@@ -79,7 +79,13 @@ const TMAP_POLYLINE_STYLES = [
 const TLIB_API_NAME = 'tlib'
 const TMAP_API_NAME = 'tmap'
 
-const APIS = [TLIB_API_NAME, TMAP_API_NAME,]
+const APIS = [
+    TLIB_API_NAME,
+    TMAP_API_NAME,
+]
+
+const REQUEST_FIX_POINTS = 'fix-points'
+const REQUEST_FIND_ROUTE = 'find-route'
 
 const POLYLINE_STYLES = {}
 POLYLINE_STYLES[TLIB_API_NAME] = TLIB_POLYLINE_STYLES

@@ -39,7 +39,7 @@ export default class Step {
     }
 
     nodes() {
-        return this.path.nodes
+        return this.path?.nodes ?? null
     }
 
     allNodes() {

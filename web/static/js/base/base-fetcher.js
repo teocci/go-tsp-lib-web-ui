@@ -2,30 +2,20 @@
  * Created by RTT.
  * Author: teocci@yandex.com on 2022-May-12
  */
-import BaseListener from './base/base-listener.js'
+import BaseListener from './base-listener.js'
 
-export default class Fetcher extends BaseListener {
+export default class BaseFetcher extends BaseListener {
     static LISTENER_DATA_FETCHED = 'on-data-fetched'
 
     constructor(info) {
         super()
 
         this.apiInfo = info
-        this.route = {}
 
         this.initStruct()
     }
 
     initStruct() {
-        this.route.lines = [] //original response from tsp or tmap`
-        this.route.linePath = [] // for route
-        this.route.pointPath = [] //for point route, 경유지
-        this.route.pointInfos = []
-
-        this.routePolyLine = {}
-        this.pointPolyLine = {}
-        this.partlyPolyLine = {}
-
         this.routeOverlay = []
         this.pointOverlay = []
     }
@@ -77,20 +67,12 @@ export default class Fetcher extends BaseListener {
         if (!config) throw new Error('InvalidConfig: null config')
 
         const sTime = performance.now()
-        const body = await (await fetch(config.url, config.config)).json()
+        const body = await (await fetch(config.url, config.options)).json()
         const duration = performance.now() - sTime
 
         return {
-            'duration': duration,
             'body': body,
+            'duration': duration,
         }
-    }
-
-    fetchRoutePath(req) {
-        throw new Error('Abstract Method has no implementation')
-    }
-
-    parseRoute() {
-        throw new Error('Abstract Method has no implementation')
     }
 }

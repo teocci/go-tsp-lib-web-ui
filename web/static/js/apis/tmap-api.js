@@ -14,7 +14,7 @@ export default class TMapAPI extends API {
         this.key = TMAP_APP_KEY
         this.mode = FETCH_MODE_TEST
 
-        this.addRequest('find-route', 'POST', TMAP_TEST_API)
+        this.addRequest(REQUEST_FIND_ROUTE, 'POST', TMAP_TEST_API)
     }
 
     static instance() {

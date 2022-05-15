@@ -2,7 +2,7 @@
  * Created by RTT.
  * Author: teocci@yandex.com on 2022-May-11
  */
-import Fetcher from '../fetcher.js'
+import BaseFetcher from '../base/base-fetcher.js'
 import TLibAPI from '../apis/tlib-api.js'
 import Route from '../geo/route.js'
 import Step from '../geo/step.js'
@@ -10,37 +10,38 @@ import Path from '../geo/path.js'
 import ExecutionInfo from './execution-info.js'
 import RouteResponse from './route-response.js'
 
-export default class TLibFetcher extends Fetcher {
+export default class TLibFetcher extends BaseFetcher {
     // Use this class to control the tlib data
     constructor() {
         super(TLibAPI.instance())
-
-        this.initPolyLines()
     }
 
-    initPolyLines() {
-        this.routePolyLine = new kakao.maps.Polyline(TLIB_ROUTE_POLYLINE)
-        this.pointPolyLine = new kakao.maps.Polyline(TLIB_POINT_POLYLINE)
-        this.partlyPolyLine = new kakao.maps.Polyline(PARTLY_POLYLINE)
-    }
+    // async fetchRoutePath(req) {
+    //     const config = this.parseRequest(req)
+    //
+    //     const sTime = performance.now()
+    //     const body = await (await fetch(config.url, config.options)).json()
+    //     const duration = performance.now() - sTime
+    //
+    //     const info = this.parseInfo(body, duration)
+    //     const route = this.parseRoute(body)
+    //
+    //     return new RouteResponse(TLibAPI.TAG, info, route).toObject()
+    // }
 
     async fetchRoutePath(req) {
-        const config = this.parseRequest(req)
+        const config = this.prepareRouteRequest(req)
 
-        console.log(config)
+        const data = await this.fetch(config)
 
-        const sTime = performance.now()
-        const body = await (await fetch(config.url, config.options)).json()
-        const duration = performance.now() - sTime
-
-        const info = this.parseInfo(body, duration)
-        const route = this.parseRoute(body)
+        const info = this.parseInfo(data.body, data.duration)
+        const route = this.parseRoute(data.body)
 
         return new RouteResponse(TLibAPI.TAG, info, route).toObject()
     }
 
-    parseRequest(req) {
-        const type = 'find-route'
+    prepareRouteRequest(req) {
+        const type = REQUEST_FIND_ROUTE
 
         let url, options
         if (this.isRequestTestMode(type)) {

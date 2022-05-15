@@ -22,6 +22,10 @@ export default class Route {
         this.polylines.set(k, v)
     }
 
+    step(k) {
+        return this.steps.get(k)
+    }
+
     asArray() {
         return this.steps.values()
     }
@@ -59,6 +63,7 @@ export default class Route {
 
         const path = []
         this.steps.forEach(step => {
+            console.log({step})
             path.push(step.position)
         })
 
@@ -70,7 +75,8 @@ export default class Route {
 
         const path = []
         this.steps.forEach(step => {
-            path.push(step.nodes())
+            console.log({step})
+            if (step.nodes()) path.push(step.nodes())
         })
 
         return path
@@ -78,5 +84,9 @@ export default class Route {
 
     segmentPath(k) {
         this.steps.get(k).allNodes()
+    }
+
+    has(k) {
+        return this.steps.has(k)
     }
 }
