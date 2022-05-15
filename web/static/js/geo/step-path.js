@@ -2,9 +2,9 @@
  * Created by RTT.
  * Author: teocci@yandex.com on 2022-May-13
  */
-export default class Path {
+export default class StepPath {
     constructor(steps) {
-        if (!steps) throw new Error('InvalidPoints: null points')
+        if (!steps) throw new Error('InvalidSteps: null steps')
 
         const [start, ...rest] = steps
         const end = rest.pop()
@@ -14,9 +14,14 @@ export default class Path {
         this.end = end
     }
 
-    steps() {
+    // Omits end step if is a looped path
+    asPoints() {
         const rest = this.isLooped() ? this.waypoints : [...this.waypoints, this.end]
         return [this.start, ...rest]
+    }
+
+    allSteps() {
+        return [this.start, ...this.waypoints, this.end]
     }
 
     length() {

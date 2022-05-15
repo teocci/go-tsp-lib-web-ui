@@ -68,7 +68,7 @@
                 </section>
                 <section class="results">
                     <h2 class="title">탐색 결과</h2>
-                    <div id="results-content" class="content hide"></div>
+                    <div id="results-content" class="content hidden"></div>
                 </section>
             </div>
             <div class="footer part">
@@ -81,7 +81,7 @@
         <div class="bar"></div>
     </div>
     <div id="summary" class="summary floating">
-        <table id="cost">
+        <table>
             <tr>
                 <th>탐색결과</th>
                 <th>T-Map</th>
@@ -89,18 +89,18 @@
             </tr>
             <tr>
                 <td>Cost (km)</td>
-                <td class="cell"></td>
-                <td class="cell"></td>
+                <td id="tlib-cost" class="cell"></td>
+                <td id="tmap-cost" class="cell"></td>
             </tr>
             <tr>
                 <td>ETA (분)</td>
-                <td class="cell"></td>
-                <td class="cell"></td>
+                <td id="tlib-eta" class="cell"></td>
+                <td id="tmap-eta" class="cell"></td>
             </tr>
             <tr>
                 <td>Exec time (초)</td>
-                <td class="cell"></td>
-                <td class="cell"></td>
+                <td id="tlib-exec" class="cell"></td>
+                <td id="tmap-exec" class="cell"></td>
             </tr>
         </table>
     </div>
@@ -108,43 +108,55 @@
         <div class="button" id="menu-btn"><i class="fa-solid fa-bars"></i></div>
     </div>
 
-    <div class="control-box hide floating" id="control-box">
-        <h2 class="title">지도 설정</h2>
-        <label class="switch">
-            <input type="checkbox" id="show-tsp-route" checked>
-            <span class="slider round"></span>
-        </label> TSP LIB 경로
-        <br>
-
-        <label class="switch">
-            <input type="checkbox" id="show-tsp-points-route">
-            <span class="slider round"></span>
-        </label> TSP 경유지
-        <br>
-
-
-        <label class="switch">
-            <input type="checkbox" id="show-tmap-route" checked>
-            <span class="slider round"></span>
-        </label> T Map 경로
-        <br>
-
-        <label class="switch">
-            <input type="checkbox" id="show-tmap-points-route">
-            <span class="slider round"></span>
-        </label> T Map 경유지
-
-        <h2 class="title">배달점 관리</h2>
-        <span class="button" id="initMap"><i class="fa-solid fa-refresh fa-2xl"></i></span> &nbsp;&nbsp;
-        <span class="button" id="pointList"><i class="fa-solid fa-file-text fa-2xl"></i></span>
+    <div id="menu-options" class="control-box floating hidden">
+        <section class="show-route-controls">
+            <h2 class="title">지도 설정</h2>
+            <div class="path-switches">
+                <div class="switch">
+                    <div class="toggler part">
+                        <input type="checkbox" id="show-tlib-route" value="route" checked>
+                        <label for="show-tlib-route"></label>
+                    </div>
+                    <div class="label part">TSP LIB 경로</div>
+                </div>
+                <div class="switch">
+                    <div class="toggler part">
+                        <input type="checkbox" id="show-tlib-points" value="points">
+                        <label for="show-tlib-points"></label>
+                    </div>
+                    <div class="label part">TSP 경유지</div>
+                </div>
+                <div class="switch">
+                    <div class="toggler part">
+                        <input type="checkbox" id="show-tmap-route" value="route" checked>
+                        <label for="show-tmap-points"></label>
+                    </div>
+                    <div class="label part">T Map 경로</div>
+                </div>
+                <div class="switch">
+                    <div class="toggler part">
+                        <input type="checkbox" id="show-tmap-points" value="points">
+                        <label for="show-tmap-points"></label>
+                    </div>
+                    <div class="label part">T Map 경유지</div>
+                </div>
+            </div>
+        </section>
+        <section class="other-controls">
+            <h2 class="title">배달점 관리</h2>
+            <div class="button-controls">
+                <div class="clear button" id="clear-map"><i class="fa-solid fa-refresh fa-2xl"></i></div> &nbsp;&nbsp;
+                <div class="list button" id="list-points"><i class="fa-solid fa-file-text fa-2xl"></i></div>
+            </div>
+        </section>
     </div>
 </div>
 
 <!--<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=06f04f21658e8f35d27d48b00f144297"></script>-->
-
-<script type="text/javascript" src="js/sdk.js"></script>
+<script type="text/javascript" src="js/vendors/sdk.js"></script>
 <script type="text/javascript" src="js/constant.js"></script>
 <script type="text/javascript" src="js/common.js"></script>
+
 <script type="module" src="js/app.js"></script>
 </body>
 

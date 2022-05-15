@@ -5,6 +5,8 @@
 import API from './api.js'
 
 export default class TMapAPI extends API {
+    static TAG = TMAP_API_NAME
+
     constructor() {
         super()
 
@@ -12,7 +14,7 @@ export default class TMapAPI extends API {
         this.key = TMAP_APP_KEY
         this.mode = FETCH_MODE_TEST
 
-        this.addRequest('fix-points', 'POST', TMAP_TEST_API)
+        this.addRequest('find-route', 'POST', TMAP_TEST_API)
     }
 
     static instance() {

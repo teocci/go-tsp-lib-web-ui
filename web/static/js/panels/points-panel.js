@@ -2,7 +2,7 @@
  * Created by RTT.
  * Author: teocci@yandex.com on 2022-May-12
  */
-import BasePanel from './base-panel.js'
+import BasePanel from '../base/base-panel.js'
 
 export default class PointsPanel extends BasePanel {
     static TAG = 'points-panel'

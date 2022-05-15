@@ -2,7 +2,7 @@
  * Created by RTT.
  * Author: teocci@yandex.com on 2022-May-12
  */
-import BaseListener from './base-listener.js'
+import BaseListener from './base/base-listener.js'
 
 export default class Fetcher extends BaseListener {
     static LISTENER_DATA_FETCHED = 'on-data-fetched'

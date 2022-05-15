@@ -3,7 +3,7 @@
  * Author: teocci@yandex.com on 2022-May-12
  */
 
-import BasePanel from './base-panel.js'
+import BasePanel from '../base/base-panel.js'
 
 export default class GeneratorsPanel extends BasePanel {
     static TAG = 'generators'

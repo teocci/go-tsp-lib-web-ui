@@ -2,17 +2,16 @@
  * Created by RTT.
  * Author: teocci@yandex.com on 2022-May-11
  */
-import Fetcher from './fetcher.js'
-import TLibAPI from './tlib-api.js'
-import Point from './point.js'
-import Step from './step.js'
+import Fetcher from '../fetcher.js'
+import TLibAPI from '../apis/tlib-api.js'
+import Route from '../geo/route.js'
+import Step from '../geo/step.js'
+import Path from '../geo/path.js'
 import ExecutionInfo from './execution-info.js'
 import RouteResponse from './route-response.js'
 
 export default class TLibFetcher extends Fetcher {
     // Use this class to control the tlib data
-    static TAG = 'tlib'
-
     constructor() {
         super(TLibAPI.instance())
 
@@ -37,7 +36,7 @@ export default class TLibFetcher extends Fetcher {
         const info = this.parseInfo(body, duration)
         const route = this.parseRoute(body)
 
-        return new RouteResponse(TLibFetcher.TAG, info, route).toObject()
+        return new RouteResponse(TLibAPI.TAG, info, route).toObject()
     }
 
     parseRequest(req) {
@@ -54,9 +53,9 @@ export default class TLibFetcher extends Fetcher {
             options = {
                 method: 'POST',
                 headers: {
-                    'Content-type': 'application/json'
+                    'Content-Type': 'text/plain'
                 },
-                body: serialize(req)
+                body: serialize(req),
             }
         }
 
@@ -71,20 +70,23 @@ export default class TLibFetcher extends Fetcher {
     }
 
     parseRoute(data) {
-        const steps = new Map()
+        const route = new Route(TLibAPI.TAG)
         data.SPathList.paths.forEach(path => {
             const step = new Step(path.id, path.id)
-            step.point = new Point(path.SPoint.x, path.SPoint.y)
-            step.position = new kakao.maps.LatLng(path.SPoint.y, path.SPoint.x)
             step.distance = path.cost
 
-            step.nodes = []
+            step.path = new Path()
+            step.path.start = new kakao.maps.LatLng(path.SPoint.y, path.SPoint.x)
+            step.path.end  = new kakao.maps.LatLng(path.EPoint.y, path.EPoint.x)
+            step.path.nodes = []
             path.SLineString.nodes.forEach(node => {
-                step.nodes.push(new kakao.maps.LatLng(node.y, node.x))
+                step.path.nodes.push(new kakao.maps.LatLng(node.y, node.x))
             })
-            steps.set(path.id, step)
+            step.position = step.path.start
+
+            route.addStep(path.id, step)
         })
 
-        return steps
+        return route
     }
 }

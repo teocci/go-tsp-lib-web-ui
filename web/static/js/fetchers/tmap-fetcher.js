@@ -2,13 +2,14 @@
  * Created by RTT.
  * Author: teocci@yandex.com on 2022-May-11
  */
-import Fetcher from './fetcher.js'
-import TMapAPI from './tmap-api.js'
+import Fetcher from '../fetcher.js'
+import TMapAPI from '../apis/tmap-api.js'
+import Point from '../geo/point.js'
+import Route from '../geo/route.js'
+import Step from '../geo/step.js'
 import ExecutionInfo from './execution-info.js'
 
 export default class TMapFetcher extends Fetcher {
-    static TAG = 'tmap'
-
     // Use this class to control the tmap data
     constructor() {
         super(TMapAPI.instance())

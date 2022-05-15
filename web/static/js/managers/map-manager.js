@@ -2,10 +2,16 @@
  * Created by RTT.
  * Author: teocci@yandex.com on 2022-May-12
  */
-import MapPanel from './map-panel.js'
+import Polyline from '../geo/polyline.js'
 
 export default class MapManager {
     static TAG = 'map'
+
+    static POLYLINE_TYPES = [
+        POLYLINE_TYPE_ROUTE,
+        POLYLINE_TYPE_POINTS,
+        POLYLINE_TYPE_SEGMENT,
+    ]
 
     constructor(panel) {
         if (!panel) throw 'InvalidPanel: null panel'
@@ -14,6 +20,8 @@ export default class MapManager {
 
         this.map = null
         this.markers = []
+
+        this.routes = new Map()
 
         this.initPanel()
         this.initMapListeners()
@@ -60,26 +68,64 @@ export default class MapManager {
         this.markers.push(marker)
     }
 
-    // MBR 가져오기
-    mapBounds() {
-        const bounds = this.map.getBounds().toString().split(',')
-        const minX = bounds[0].replace('((', '')
-        const minY = bounds[1].replace(')', '')
-        const maxX = bounds[2].replace('(', '')
-        const maxY = bounds[3].replace('))', '')
-        console.log({bounds})
-
-        return {
-            minX: minX,
-            maxX: maxX,
-            minY: minY,
-            maxY: maxY,
-        }
+    loadRoutes(data) {
+        data.forEach(r => this.addRoute(r.api, r.route))
+        console.log({routes: this.routes})
     }
 
-    loadRoutes(data) {
-        console.log({data})
+    addRoute(api, route) {
+        if (!api) throw new Error('InvalidAPI: null apis')
+        if (!route) throw new Error('InvalidRoute: null route')
 
+        const styles = POLYLINE_STYLES[api]
+        styles.forEach(item => {
+            if (item.type !== Polyline.TYPE_SEGMENT) {
+                const pl = route.polyline(item.type)
+                const path = route.pathByType(item.type)
+                console.log({type: item.type, path})
+                pl.options(item.style)
+                pl.load(path)
+            }
+        })
+
+        this.routes.set(api, route)
+    }
+
+    route(api) {
+        return this.routes.get(api) ?? null
+    }
+
+    renderRoutes(type) {
+        console.log({type})
+        this.routes.forEach(route => this.renderRoute(route, type))
+    }
+
+    renderRouteByAPI(api, type) {
+        this.renderRoute(this.route(api), type)
+    }
+
+    renderRoute(route, type) {
+        const pl = route.polyline(type)
+        console.log({route, type, pl})
+        pl.render(this.map)
+    }
+
+    removeRouteByAPI(api, type) {
+        this.removeRoute(this.route(api), type)
+    }
+
+    removeRoute(route, type) {
+        const pl = route.polyline(type)
+        console.log({route, type, pl})
+        pl.remove()
+    }
+
+    renderSegment(api, step) {
+        const type = Polyline.TYPE_SEGMENT
+        const pl = this.route(api).polyline(type)
+        const path = this.route(api).pathByType(type, step)
+        pl.load(path)
+        pl.render(this.map)
     }
 
     drawTSPLine(lines) {
@@ -87,21 +133,21 @@ export default class MapManager {
         let pointPath = []
         let pointInfos = []
 
-        lines.SPathList.paths.forEach(paths => {
+        lines.SPathList.paths.forEach(path => {
             let obj = {
-                pos: new kakao.maps.LatLng(paths.SPoint.y, paths.SPoint.x),
-                id: paths.id - 1,  //path.id가 1부터 옴.
-                cost: paths.cost
+                pos: new kakao.maps.LatLng(path.SPoint.y, path.SPoint.x),
+                id: path.id - 1,  //path.id가 1부터 옴.
+                cost: path.cost
             };
             pointInfos.push(obj);
 
-            pointPath.push(new kakao.maps.LatLng(paths.SPoint.y, paths.SPoint.x));
+            pointPath.push(new kakao.maps.LatLng(path.SPoint.y, path.SPoint.x));
 
-            paths.SLineString.nodes.forEach(element => {
+            path.SLineString.nodes.forEach(element => {
                 linePath.push(new kakao.maps.LatLng(element.y, element.x))
             })
 
-            pointTable.putTLibPoint(obj.id, paths.SPoint.x, paths.SPoint.y);
+            pointTable.putTLibPoint(obj.id, path.SPoint.x, path.SPoint.y);
 
         })
 
@@ -138,8 +184,8 @@ export default class MapManager {
 
     drawTLibLinePartly(id) {
         console.log({drawTLibLinePartly: id})
-        let path = []
 
+        let path = []
         tsp.partlyPolyLine.setMap(null);
         tsp.route.lines.forEach(line => {
             if (line.id === id) {
@@ -236,5 +282,22 @@ export default class MapManager {
         tmap.route.linePath = linePath
         tmap.route.pointPath = pointPath
         tmap.route.pointInfos = pointInfos
+    }
+
+    // MBR 가져오기
+    mapBounds() {
+        const bounds = this.map.getBounds().toString().split(',')
+        const minX = bounds[0].replace('((', '')
+        const minY = bounds[1].replace(')', '')
+        const maxX = bounds[2].replace('(', '')
+        const maxY = bounds[3].replace('))', '')
+        console.log({bounds})
+
+        return {
+            minX: minX,
+            maxX: maxX,
+            minY: minY,
+            maxY: maxY,
+        }
     }
 }

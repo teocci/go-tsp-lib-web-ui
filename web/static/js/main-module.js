@@ -2,19 +2,19 @@
  * Created by RTT.
  * Author: teocci@yandex.com on 2022-May-12
  */
-import PathManager from './path-manager.js'
-import FetcherManager from './fetcherManager.js'
-import MapPanel from './map-panel.js'
-import PointsPanel from './points-panel.js'
-import GeneratorsPanel from './generators-panel.js'
-import ResultsPanel from './results-panel.js'
-import MapManager from './map-manager.js'
-import SummaryPanel from './summary-panel.js'
-import MenuPanel from './Menu-panel.js'
+import StepManager from './managers/step-manager.js'
+import FetcherManager from './managers/fetcher-manager.js'
+import MapPanel from './panels/map-panel.js'
+import PointsPanel from './panels/points-panel.js'
+import GeneratorsPanel from './panels/generators-panel.js'
+import ResultsPanel from './panels/results-panel.js'
+import MapManager from './managers/map-manager.js'
+import SummaryPanel from './panels/summary-panel.js'
+import MenuPanel from './panels/menu-panel.js'
 
 export default class MainModule {
     constructor() {
-        this.pathManager = new PathManager()
+        this.stepManager = new StepManager()
         this.fetcherManager = new FetcherManager()
 
         this.initPanels()
@@ -24,12 +24,16 @@ export default class MainModule {
         this.pointsPanel.addListener(PointsPanel.LISTENER_ADD_CLICKED, e => this.onAddPointClicked(e))
         this.pointsPanel.addListener(PointsPanel.LISTENER_GEN_CLICKED, (e, params) => this.onGenPointsClicked(e, params[0]))
 
-        this.pathManager.addListener(PathManager.LISTENER_POINTS_LOADED, p => this.onPointsLoaded(p))
+        this.stepManager.addListener(StepManager.LISTENER_POINTS_LOADED, p => this.onPointsLoaded(p))
         this.fetcherManager.addListener(FetcherManager.LISTENER_ALL_DATA_FETCHED, d => this.onAllDataFetched(d))
 
         this.generatorPanel.addListener(GeneratorsPanel.LISTENER_FETCH_CLICKED, (e, params) => this.onFetchRoutesClicked(e, params[0]))
 
-        // this.resultsPanel.addListener(TlibFetcher.TAG, drawTLibLinePartly)
+        this.menuPanel.addListener(MenuPanel.LISTENER_SHOW_CHANGED, e => this.onShowPathChanged(e))
+        this.menuPanel.addListener(MenuPanel.LISTENER_CLEAR_CLICKED, e => this.onClearMapClicked(e))
+        this.menuPanel.addListener(MenuPanel.LISTENER_LIST_CLICKED, e => this.onListPointsClicked(e))
+
+        this.resultsPanel.addListener(ResultsPanel.LISTENER_SHOW_SEGMENT, e => this.onShowSegmentClicked(e))
         // this.resultsPanel.addListener(TmapFetcher.TAG, drawTMapLinePartly)
     }
 
@@ -54,12 +58,14 @@ export default class MainModule {
     }
 
     onAddPointClicked(e) {
-        this.pathManager.addStep(e)
+        this.stepManager.addStep(e)
     }
 
     onGenPointsClicked(e, n) {
+        this.stepManager.init()
+
         const bounds = this.mapManager.mapBounds()
-        this.pathManager.genPoints(n, bounds)
+        this.stepManager.genPoints(n, bounds)
     }
 
     onPointsLoaded(points) {
@@ -69,15 +75,45 @@ export default class MainModule {
     }
 
     onFetchRoutesClicked(e, libs) {
-        if (this.pathManager.pathLength() < 1) {
+        if (this.stepManager.pathLength() < 1) {
             alert('배달점이 없습니다. 배달점을 등록해주세요.')
             return
         }
 
-        this.fetcherManager.executeRequest(this.pathManager.path, libs)
+        this.fetcherManager.executeRequest(this.stepManager.stepPath, libs)
     }
 
     onAllDataFetched(data) {
+        this.menuPanel.enableCBByData(data)
+        this.stepManager.matchRoutes(data)
+        this.summaryPanel.updateInfo(data)
+
+        this.resultsPanel.renderTimelines(data, this.stepManager.startStep())
+
         this.mapManager.loadRoutes(data)
+        this.mapManager.renderRoutes(POLYLINE_TYPE_ROUTE)
+    }
+
+    onShowPathChanged(e) {
+        const type = e.target.value
+        const api = e.target.dataset.api
+        if (e.target.checked) {
+            this.mapManager.renderRouteByAPI(api, type)
+        } else {
+            this.mapManager.removeRouteByAPI(api, type)
+        }
+    }
+
+    onClearMapClicked(e) {
+        console.log({e})
+    }
+
+    onListPointsClicked(e) {
+        console.log({e})
+    }
+
+    onShowSegmentClicked(e) {
+        const target = e.currentTarget
+        console.log({target, id: target.dataset.stepId, api: target.dataset.api})
     }
 }

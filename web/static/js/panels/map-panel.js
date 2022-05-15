@@ -2,7 +2,7 @@
  * Created by RTT.
  * Author: teocci@yandex.com on 2022-May-14
  */
-import BasePanel from './base-panel.js'
+import BasePanel from '../base/base-panel.js'
 
 export default class MapPanel extends BasePanel {
     constructor(element) {

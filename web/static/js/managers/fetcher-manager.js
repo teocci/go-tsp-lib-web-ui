@@ -2,9 +2,9 @@
  * Created by RTT.
  * Author: teocci@yandex.com on 2022-May-12
  */
-import TLibFetcher from './tlib-fetcher.js'
-import TMapFetcher from './tmap-fetcher.js'
-import BaseListener from './base-listener.js'
+import TLibFetcher from '../fetchers/tlib-fetcher.js'
+import TMapFetcher from '../fetchers/tmap-fetcher.js'
+import BaseListener from '../base/base-listener.js'
 
 export default class FetcherManager extends BaseListener{
     static LISTENER_ALL_DATA_FETCHED = 'on-all-data-fetched'

@@ -5,6 +5,8 @@
 import API from './api.js'
 
 export default class TLibAPI extends API {
+    static TAG = TLIB_API_NAME
+
     constructor() {
         super()
 

@@ -2,7 +2,7 @@
  * Created by RTT.
  * Author: teocci@yandex.com on 2022-May-14
  */
-import Request from './request.js'
+import Request from '../fetchers/request.js'
 
 export default class API {
     constructor() {
