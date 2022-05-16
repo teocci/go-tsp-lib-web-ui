@@ -11,6 +11,7 @@ import ResultsPanel from './panels/results-panel.js'
 import MapManager from './managers/map-manager.js'
 import SummaryPanel from './panels/summary-panel.js'
 import MenuPanel from './panels/menu-panel.js'
+import Point from './geo/point.js'
 
 export default class MainModule {
     constructor() {
@@ -21,8 +22,12 @@ export default class MainModule {
 
         this.mapManager = new MapManager(this.mapPanel)
 
+        this.mapManager.addListener(MapManager.LISTENER_ADD_CLICKED, e => this.onMapClicked(e))
+
+
         this.pointsPanel.addListener(PointsPanel.LISTENER_ADD_CLICKED, e => this.onAddPointClicked(e))
         this.pointsPanel.addListener(PointsPanel.LISTENER_GEN_CLICKED, (e, params) => this.onGenPointsClicked(e, params[0]))
+
 
         this.stepManager.addListener(StepManager.LISTENER_POINTS_LOADED, p => this.onPointsLoaded(p))
         this.fetcherManager.addListener(FetcherManager.LISTENER_ALL_DATA_FETCHED, d => this.onAllDataFetched(d))
@@ -58,9 +63,19 @@ export default class MainModule {
     }
 
     onAddPointClicked(e) {
-        this.stepManager.addStep(e)
+        //this.stepManager.addStep(e)
+        this.mapManager.activateClickListener()
     }
 
+    onMapClicked(e) {
+        const latLng = e.latLng
+        console.log({latLng})
+        const point = new Point(latLng.getLng(), latLng.getLat())
+        console.log({point})
+        this.stepManager.addPoint(point)
+    }
+
+    
     onGenPointsClicked(e, n) {
         this.stepManager.init()
 

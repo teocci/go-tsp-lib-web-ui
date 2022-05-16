@@ -2,9 +2,10 @@
  * Created by RTT.
  * Author: teocci@yandex.com on 2022-May-12
  */
+import BaseListener from '../base/base-listener.js'
 import Polyline from '../geo/polyline.js'
 
-export default class MapManager {
+export default class MapManager extends BaseListener{
     static TAG = 'map'
 
     static POLYLINE_TYPES = [
@@ -13,13 +14,19 @@ export default class MapManager {
         POLYLINE_TYPE_SEGMENT,
     ]
 
-    constructor(panel) {
+    static LISTENER_ADD_CLICKED = 'on-add-point'
+
+    constructor(panel) {      
         if (!panel) throw 'InvalidPanel: null panel'
 
+        super()
+        
         this.panel = panel
 
         this.map = null
         this.markers = []
+
+        this.handlerOnClick = null
 
         this.routes = new Map()
 
@@ -39,31 +46,40 @@ export default class MapManager {
 
     initMapListeners() {
         const map = this.map
+
+        this.handlerOnClick = e => {
+            this.mapClickListener(e)
+        }
+
         kakao.maps.event.addListener(map, 'rightclick', me => {
-            kakao.maps.event.removeListener(map, 'click', this.mapClickListener)
+            this.map.setCursor(null)
+            kakao.maps.event.removeListener(map, 'click', this.handlerOnClick)
         })
+        
     }
 
-    addDeliveryPoint() {
-        const map = this.map
-        kakao.maps.event.addListener(map, 'click', this.mapClickListener)
+    activateClickListener(){
+        this.map.setCursor('pointer')
+        kakao.maps.event.addListener(this.map, 'click', this.handlerOnClick)
     }
 
-    mapClickListener(mouseEvent) {
-        const latLng = mouseEvent.latLng
-        this.makeMarkers(latLng)
+    mapClickListener(me) {
+        
+        //call the listener. send data to main-moudle.
+        this.callListener(MapManager.LISTENER_ADD_CLICKED, me)
+        this.loadMarkers({})
     }
 
-    loadMarkers(points) {
-        points.forEach((p, i) => this.addMarker(p, i, this.map))
+    loadMarkers(steps) {
+        steps.forEach((step, i) => this.addMarker(step, i, this.map))
     }
 
-    addMarker(p, i, map) {
+    addMarker(step, i, map) {
         const marker = new kakao.maps.Marker({
             map: map,
-            position: p.position,
+            position: step.position,
         })
-        marker.setTitle(p.label)
+        marker.setTitle(step.label)
         marker.setImage(i === 0 ? MARKERS.start : MARKERS.waypoint)
         this.markers.push(marker)
     }
