@@ -17,6 +17,7 @@ export default class Step {
 
         this.distance = null
 
+        this.point = null
         this.position = null
         this.path = null
 
@@ -43,15 +44,15 @@ export default class Step {
     }
 
     allNodes() {
-        return this.path.asNodes()
+        return this.path?.asNodes() ?? null
     }
 
     lat() {
-        return this.position.getLat()
+        return this.position?.getLat() ?? null
     }
 
     lng() {
-        return this.position.getLng()
+        return this.position?.getLng() ?? null
     }
 
     hasTLib() {
@@ -62,8 +63,12 @@ export default class Step {
         return this.tmapStep !== null
     }
 
+    equalPoint(p) {
+        return this.point?.equals(p.point)
+    }
+
     equalPosition(s) {
-        return this.position.equals(s.position)
+        return this.position?.equals(s.position)
     }
 
     isStart() {

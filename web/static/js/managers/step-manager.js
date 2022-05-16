@@ -113,7 +113,7 @@ export default class StepManager extends BaseListener {
         for (const s of this.steps.values()) {
             if (s.isStart()) continue
 
-            if (step.equalPosition(s)) {
+            if (step.equalPoint(s)) {
                 s.update(api, step)
                 return
             }

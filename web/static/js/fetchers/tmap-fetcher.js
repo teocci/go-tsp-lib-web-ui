@@ -4,8 +4,8 @@
  */
 import BaseFetcher from '../base/base-fetcher.js'
 import TMapAPI from '../apis/tmap-api.js'
-import Point from '../geo/point.js'
 import Route from '../geo/route.js'
+import Point from '../geo/point.js'
 import Step from '../geo/step.js'
 import Path from '../geo/path.js'
 import ExecutionInfo from './execution-info.js'
@@ -78,7 +78,7 @@ export default class TMapFetcher extends BaseFetcher {
 
         data.features.forEach(feature => {
             const id = parseInt(feature.properties.index)
-            if (id > 0){
+            if (id > 0) {
                 if (!route.has(id)) route.addStep(id, new Step(id, id))
                 const step = route.step(id)
 
@@ -86,6 +86,7 @@ export default class TMapFetcher extends BaseFetcher {
                     step.distance = feature.properties.distance
                     const x = feature.geometry.coordinates[0]
                     const y = feature.geometry.coordinates[1]
+                    step.point = new Point(x, y)
                     step.position = new kakao.maps.LatLng(y, x)
                 }
 

@@ -63,7 +63,6 @@ export default class Route {
 
         const path = []
         this.steps.forEach(step => {
-            console.log({step})
             path.push(step.position)
         })
 
@@ -75,7 +74,6 @@ export default class Route {
 
         const path = []
         this.steps.forEach(step => {
-            console.log({step})
             if (step.nodes()) path.push(step.nodes())
         })
 

@@ -5,6 +5,7 @@
 import BaseFetcher from '../base/base-fetcher.js'
 import TLibAPI from '../apis/tlib-api.js'
 import Route from '../geo/route.js'
+import Point from '../geo/point.js'
 import Step from '../geo/step.js'
 import Path from '../geo/path.js'
 import ExecutionInfo from './execution-info.js'
@@ -77,6 +78,7 @@ export default class TLibFetcher extends BaseFetcher {
             step.distance = path.cost
 
             step.path = new Path()
+            step.point = new Point(path.SPoint.x, path.SPoint.y)
             step.path.start = new kakao.maps.LatLng(path.SPoint.y, path.SPoint.x)
             step.path.end  = new kakao.maps.LatLng(path.EPoint.y, path.EPoint.x)
             step.path.nodes = []
