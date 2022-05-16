@@ -10,7 +10,7 @@ import BaseListener from '../base/base-listener.js'
 export default class StepManager extends BaseListener {
     static TAG = 'step-manager'
 
-    static LISTENER_POINTS_LOADED = 'on-points-loaded'
+    static LISTENER_STEPS_LOADED = 'on-steps-loaded'
 
     constructor() {
         super()
@@ -23,8 +23,9 @@ export default class StepManager extends BaseListener {
         this.steps = new Map()
     }
 
-    genPoints(points) {
-        //const points = this.isTestMode() ? RANDOM_TEST_POINTS : this.genRandomInBounds(n, bounds)
+    fixPoints(points) {
+        if (!points) throw new Error('InvalidPoints: null points')
+
         console.log({points})
         const [start, ...rest] = points
 
@@ -65,7 +66,7 @@ export default class StepManager extends BaseListener {
         this.steps.get(last).label = '도착지'
         this.steps.get(last).type = Step.TYPE_END
 
-        this.callListener(StepManager.LISTENER_POINTS_LOADED, this.asPoints(false, true))
+        this.callListener(StepManager.LISTENER_STEPS_LOADED, this.asStepArray(false, true))
     }
 
     addPoint(p) {
@@ -75,6 +76,17 @@ export default class StepManager extends BaseListener {
 
     addPointWithId(id, p) {
         this.points.set(id, p)
+    }
+
+    pointsAsArray(n, bounds) {
+        if (n && bounds) {
+            const points = this.isTestMode() ? RANDOM_TEST_POINTS : this.genRandomInBounds(n, bounds)
+            points.forEach(p => this.addPoint(p))
+            return points
+        }
+        if (this.points.size < 1) throw new Error('InvalidPoints: null points')
+
+        return [...this.points].map(([k, v]) => (v))
     }
 
     addStep(s) {
@@ -169,8 +181,7 @@ export default class StepManager extends BaseListener {
         console.error(`[${api}] step not found ${step.position.toString()}`)
     }
 
-    // Omits end step if is a looped path
-    asPoints(noStart, noEnd) {
+    asStepArray(noStart, noEnd) {
         const nodes = []
         for (const step of this.steps.values()) {
             if (step == null) continue

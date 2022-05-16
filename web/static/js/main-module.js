@@ -25,12 +25,10 @@ export default class MainModule {
         this.mapManager.addListener(MapManager.LISTENER_ADD_CLICKED, e => this.onMapClicked(e))
         this.mapManager.addListener(MapManager.LISTENER_FINISH_CLICKED, e => this.onMapClickFinished(e))
 
-
         this.pointsPanel.addListener(PointsPanel.LISTENER_ADD_CLICKED, e => this.onAddPointClicked(e))
         this.pointsPanel.addListener(PointsPanel.LISTENER_GEN_CLICKED, (e, params) => this.onGenPointsClicked(e, params[0]))
 
-
-        this.stepManager.addListener(StepManager.LISTENER_POINTS_LOADED, p => this.onPointsLoaded(p))
+        this.stepManager.addListener(StepManager.LISTENER_STEPS_LOADED, steps => this.onStepsLoaded(steps))
         this.fetcherManager.addListener(FetcherManager.LISTENER_ALL_DATA_FETCHED, d => this.onAllDataFetched(d))
 
         this.generatorPanel.addListener(GeneratorsPanel.LISTENER_FETCH_CLICKED, (e, params) => this.onFetchRoutesClicked(e, params[0]))
@@ -70,30 +68,29 @@ export default class MainModule {
     onMapClicked(e) {
         const latLng = e.latLng
         const point = new Point(latLng.getLng(), latLng.getLat())
-        
+
         this.mapManager.addMarker(latLng, this.stepManager.points.size)
         this.stepManager.addPoint(point)
     }
 
-    onMapClickFinished(e){
+    onMapClickFinished(e) {
         this.pointsPanel.enablePanelElements()
         this.generatorPanel.enablePanelElements()
         this.mapManager.removeMarkers()
-        const points = [... this.stepManager.points].map(([k,v])=>(v))
-        this.stepManager.genPoints(points)
+
+        const points = this.stepManager.pointsAsArray()
+        this.stepManager.fixPoints(points)
     }
 
     onGenPointsClicked(e, n) {
         this.stepManager.init()
         const bounds = this.mapManager.mapBounds()
-        let  points = this.stepManager.isTestMode() ?
-            RANDOM_TEST_POINTS : this.stepManager.genRandomInBounds(n, bounds)
-
-        this.stepManager.genPoints(points)
+        const points = this.stepManager.pointsAsArray(n, bounds)
+        this.stepManager.fixPoints(points)
     }
 
-    onPointsLoaded(points) {
-        this.mapManager.loadMarkers(points)
+    onStepsLoaded(steps) {
+        this.mapManager.loadMarkers(steps)
         this.pointsPanel.enablePanelElements()
         this.generatorPanel.enablePanelElements()
     }
