@@ -114,6 +114,11 @@ export default class MainModule {
 
     onShowSegmentClicked(e) {
         const target = e.currentTarget
-        console.log({target, id: target.dataset.stepId, api: target.dataset.api})
+        const api = target.dataset.api
+        const stepId = target.dataset.stepId
+        console.log({target, api, stepId})
+
+        const step = this.stepManager.stepByAPI(api, stepId)
+        this.mapManager.renderSegment(api, step)
     }
 }

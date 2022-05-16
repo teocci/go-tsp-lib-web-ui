@@ -8,17 +8,9 @@ export default class ResultsPanel extends BasePanel {
     static LISTENER_SHOW_SEGMENT = 'on-show-segment'
 
     static TABS_LIST = [
-        {id: TLibAPI.TAG, label: 'TLib'},
-        {id: TMapAPI.TAG, label: 'TMap'},
+        {api: TLibAPI.TAG, label: 'TLib'},
+        {api: TMapAPI.TAG, label: 'TMap'},
     ]
-
-    //탐색 결과 표출하는 부분
-    // let tabTLib = document.getElementById('tab-tlib')
-    // let tabTMap = document.getElementById('tab-tmap')
-    //
-    // let tabTLibContent = document.getElementById('tab-result-tlib')
-    // let tabTMapContent = document.getElementById('tab-result-tmap')
-
 
     constructor(element) {
         if (!element) throw 'InvalidElement: null element'
@@ -26,13 +18,12 @@ export default class ResultsPanel extends BasePanel {
 
         this.tabs = new Map()
 
-        this.mainTab = null
+        this.mainTabId = null
 
         this.createPanel()
     }
 
     createPanel() {
-        const ctx = this
         const tabs = document.createElement('div')
         tabs.classList.add('tabs', 'effect')
 
@@ -40,23 +31,24 @@ export default class ResultsPanel extends BasePanel {
         content.classList.add('tabs-content')
 
         ResultsPanel.TABS_LIST.forEach(t => {
+            const api = t.api
             const tab = document.createElement('div')
             tab.classList.add('tab')
 
-            const tabId = `tab-${t.id}`
+            const tabId = `tab-${api}`
             const radio = document.createElement('input')
             radio.type = 'radio'
             radio.name = 'result-tabs'
             radio.id = tabId
-            radio.dataset.baseId = t.id
-            radio.onchange = e => this.handleOnChange(e, ctx)
+            radio.dataset.api = api
+            radio.onchange = e => this.handleOnChange(e)
 
             const label = document.createElement('label')
             label.setAttribute('for', tabId)
             label.className = 'checkbox-label'
             label.textContent = t.label
 
-            const sectionId = `tab-result-${t.id}`
+            const sectionId = `tab-result-${api}`
             const section = document.createElement('section')
             section.id = sectionId
 
@@ -67,8 +59,8 @@ export default class ResultsPanel extends BasePanel {
 
             content.append(section)
 
-            this.tabs.set(t.id, {
-                'id': t.id,
+            this.tabs.set(api, {
+                'api': api,
                 'label': t.label,
                 'tab': radio,
                 'section': section,
@@ -80,21 +72,30 @@ export default class ResultsPanel extends BasePanel {
         this.placeholder.append(content)
     }
 
-    handleOnChange(e, ctx) {
+    handleOnChange(e) {
         const element = e.target
-        console.log({element})
-        if (element.dataset.baseId) ctx.toggleTabContentById(element.dataset.baseId)
+        const api = element.dataset.api
+        console.log({this: this})
+        if (api) this.openTabContentByAPI(api)
     }
 
-    sectionById(id) {
-        console.log({id})
-        return this.tabs.get(id).section
+    tabByAPI(api) {
+        return this.tabs.get(api).tab ?? null
     }
 
-    toggleTabContentById(id) {
-        console.log({id})
+    sectionByAPI(api) {
+        return this.tabs.get(api).section ?? null
+    }
+
+    checkTabByAPI(api) {
+        this.tabByAPI(api).checked = true
+    }
+
+    openTabContentByAPI(api) {
+        console.log({api})
         this.hideAllTabContentElements()
-        this.sectionById(id).classList.add('active')
+        this.checkTabByAPI(api)
+        this.sectionByAPI(api).classList.add('active')
     }
 
     hideAllTabContentElements() {
@@ -104,15 +105,15 @@ export default class ResultsPanel extends BasePanel {
     }
 
     renderTimelines(data, start) {
-        this.mainTab = null
+        this.mainTabId = null
         this.disableTabs()
         data.forEach(r => this.renderTimeline(r.api, r.route, start))
-        this.toggleTabContentById(this.mainTab)
+        this.openTabContentByAPI(this.mainTabId)
         this.show()
     }
 
     renderTimeline(api, route, start) {
-        const section = this.sectionById(api)
+        const section = this.sectionByAPI(api)
         const nodes = route.asArray()
 
         this.setMainTab(api)
@@ -157,18 +158,22 @@ export default class ResultsPanel extends BasePanel {
         return stepElement
     }
 
+    disableTabByAPI(api) {
+        const tab = this.tabByAPI(api)
+        this.disableTab(tab)
+    }
+
     disableTabs() {
         this.tabs.forEach(item => this.disableTab(item.tab))
     }
 
     disableTab(tab) {
-        tab.disabled = true
+        if (tab) tab.disabled = true
     }
 
-    disableTabByAPI(api) {
-        const tabId = `tab-${api}`
-        const tabElement = document.getElementById(tabId)
-        tabElement.disabled = true
+    enableTabByAPI(api) {
+        const tab = this.tabByAPI(api)
+        this.enableTab(tab)
     }
 
     enableTabs() {
@@ -176,13 +181,7 @@ export default class ResultsPanel extends BasePanel {
     }
 
     enableTab(tab) {
-        tab.disabled = false
-    }
-
-    enableTabByAPI(api) {
-        const tabId = `tab-${api}`
-        const tabElement = document.getElementById(tabId)
-        tabElement.disabled = false
+        if (tab) tab.disabled = false
     }
 
     handleOnShowSegmentClicked(e) {
@@ -296,6 +295,6 @@ export default class ResultsPanel extends BasePanel {
     }
 
     setMainTab(api) {
-        this.mainTab = this.mainTab ?? api
+        this.mainTabId = this.mainTabId ?? api
     }
 }

@@ -95,13 +95,13 @@ export default class MapManager {
         return this.routes.get(api) ?? null
     }
 
+    renderRouteByAPI(api, type) {
+        this.renderRoute(this.route(api), type)
+    }
+
     renderRoutes(type) {
         console.log({type})
         this.routes.forEach(route => this.renderRoute(route, type))
-    }
-
-    renderRouteByAPI(api, type) {
-        this.renderRoute(this.route(api), type)
     }
 
     renderRoute(route, type) {
