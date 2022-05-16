@@ -23,6 +23,7 @@ export default class MainModule {
         this.mapManager = new MapManager(this.mapPanel)
 
         this.mapManager.addListener(MapManager.LISTENER_ADD_CLICKED, e => this.onMapClicked(e))
+        this.mapManager.addListener(MapManager.LISTENER_FINISH_CLICKED, e => this.onMapClickFinished(e))
 
 
         this.pointsPanel.addListener(PointsPanel.LISTENER_ADD_CLICKED, e => this.onAddPointClicked(e))
@@ -63,30 +64,39 @@ export default class MainModule {
     }
 
     onAddPointClicked(e) {
-        //this.stepManager.addStep(e)
         this.mapManager.activateClickListener()
     }
 
     onMapClicked(e) {
         const latLng = e.latLng
-        console.log({latLng})
         const point = new Point(latLng.getLng(), latLng.getLat())
-        console.log({point})
+        
+        this.mapManager.addMarker(latLng, this.stepManager.points.size)
         this.stepManager.addPoint(point)
     }
 
-    
+    onMapClickFinished(e){
+        this.pointsPanel.enablePanelElements()
+        this.generatorPanel.enablePanelElements()
+        this.mapManager.removeMarkers()
+        const points = [... this.stepManager.points].map(([k,v])=>(v))
+        this.stepManager.genPoints(points)
+    }
+
     onGenPointsClicked(e, n) {
         this.stepManager.init()
-
         const bounds = this.mapManager.mapBounds()
-        this.stepManager.genPoints(n, bounds)
+        let  points = this.stepManager.isTestMode() ?
+            RANDOM_TEST_POINTS : this.stepManager.genRandomInBounds(n, bounds)
+
+        this.stepManager.genPoints(points)
     }
 
     onPointsLoaded(points) {
         this.mapManager.loadMarkers(points)
         this.pointsPanel.enablePanelElements()
         this.generatorPanel.enablePanelElements()
+        
     }
 
     onFetchRoutesClicked(e, libs) {
@@ -94,7 +104,7 @@ export default class MainModule {
             alert('배달점이 없습니다. 배달점을 등록해주세요.')
             return
         }
-
+        
         this.fetcherManager.executeRequest(this.stepManager.stepPath, libs)
     }
 

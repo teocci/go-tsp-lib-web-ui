@@ -4,6 +4,7 @@
  */
 import BaseListener from '../base/base-listener.js'
 import Polyline from '../geo/polyline.js'
+import StepManager from './step-manager.js'
 
 export default class MapManager extends BaseListener{
     static TAG = 'map'
@@ -15,6 +16,7 @@ export default class MapManager extends BaseListener{
     ]
 
     static LISTENER_ADD_CLICKED = 'on-add-point'
+    static LISTENER_FINISH_CLICKED = 'finished-click-mode'
 
     constructor(panel) {      
         if (!panel) throw 'InvalidPanel: null panel'
@@ -53,6 +55,7 @@ export default class MapManager extends BaseListener{
 
         kakao.maps.event.addListener(map, 'rightclick', me => {
             this.map.setCursor(null)
+            this.callListener(MapManager.LISTENER_FINISH_CLICKED, me)
             kakao.maps.event.removeListener(map, 'click', this.handlerOnClick)
         })
         
@@ -64,22 +67,35 @@ export default class MapManager extends BaseListener{
     }
 
     mapClickListener(me) {
-        
         //call the listener. send data to main-moudle.
-        this.callListener(MapManager.LISTENER_ADD_CLICKED, me)
-        this.loadMarkers({})
+        this.callListener(MapManager.LISTENER_ADD_CLICKED, me)       
     }
 
     loadMarkers(steps) {
-        steps.forEach((step, i) => this.addMarker(step, i, this.map))
+        steps.forEach((step, i) => this.addMarkerWithStep(step, i))
     }
 
-    addMarker(step, i, map) {
-        const marker = new kakao.maps.Marker({
-            map: map,
-            position: step.position,
+    addMarkerWithStep(step, i) {
+        this.makeMarker(step.label, step.position, i);
+    }
+    
+    addMarker(pos, i){
+        this.makeMarker(i  === 0 ? "start" : i.toString(), pos, i)
+    }
+
+    removeMarkers(){
+        this.markers.forEach(m =>{
+            m.setMap(null)
         })
-        marker.setTitle(step.label)
+        this.markers = []
+    }
+
+    makeMarker(title, pos, i){
+        const marker = new kakao.maps.Marker({
+            map: this.map,
+            position: pos,
+        })
+        marker.setTitle(title)
         marker.setImage(i === 0 ? MARKERS.start : MARKERS.waypoint)
         this.markers.push(marker)
     }

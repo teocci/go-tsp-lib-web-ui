@@ -29,8 +29,9 @@ export default class StepManager extends BaseListener {
         this.tmap = false
     }
 
-    genPoints(n, bounds) {
-        const points = this.isTestMode() ? RANDOM_TEST_POINTS : this.genRandomInBounds(n, bounds)
+    genPoints(points) {
+        //const points = this.isTestMode() ? RANDOM_TEST_POINTS : this.genRandomInBounds(n, bounds)
+        console.log({points})
         const [start, ...rest] = points
 
         const url = `${TLIB_SVR_URL}/fix_points`
@@ -84,8 +85,6 @@ export default class StepManager extends BaseListener {
 
     addPoint(p){
         this.points.set(this.points.size, p)
-
-        console.log({points:this.points})
     }
 
     addStep(id, s) {
@@ -159,7 +158,8 @@ export default class StepManager extends BaseListener {
     // }
 
     pathLength() {
-        return this.stepPath.length()
+        
+        return this.points.size
     }
 
     isTestMode() {
