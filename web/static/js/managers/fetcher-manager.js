@@ -30,7 +30,7 @@ export default class FetcherManager extends BaseListener {
                 if (apis.tlib) return this.tlibManager.fetchRoutePath(req);
             })(),
             (async () => {
-                if (apis.tlib) return this.tmapManager.fetchRoutePath(req)
+                if (apis.tmap) return this.tmapManager.fetchRoutePath(req)
             })(),
         ])
 
