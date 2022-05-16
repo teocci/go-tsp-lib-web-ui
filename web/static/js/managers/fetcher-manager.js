@@ -6,8 +6,9 @@ import TLibFetcher from '../fetchers/tlib-fetcher.js'
 import TMapFetcher from '../fetchers/tmap-fetcher.js'
 import BaseListener from '../base/base-listener.js'
 
-export default class FetcherManager extends BaseListener{
+export default class FetcherManager extends BaseListener {
     static LISTENER_ALL_DATA_FETCHED = 'on-all-data-fetched'
+
     constructor() {
         super()
 
@@ -15,9 +16,8 @@ export default class FetcherManager extends BaseListener{
         this.tmapManager = new TMapFetcher()
     }
 
-    executeRequest(path, apis) {
-        console.log({path, apis: apis})
-        const req = path.toRequest()
+    executeRequest(req, apis) {
+        console.log({req, apis})
 
         this.start(req, apis).then(data => {
             this.callListener(FetcherManager.LISTENER_ALL_DATA_FETCHED, data)

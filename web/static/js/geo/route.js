@@ -7,8 +7,10 @@ import Polyline from './polyline.js'
 export default class Route {
     constructor(api) {
         this.api = api
-        this.steps = new Map()
 
+        this.baseStep = null
+
+        this.steps = new Map()
         this.polylines = new Map()
 
         POLYLINE_TYPES.forEach(t => this.addPolyline(t, new Polyline(t)))
@@ -26,8 +28,12 @@ export default class Route {
         return this.steps.get(k)
     }
 
+    asArrayObjects(){
+        return [...this.steps].map(([id, step]) => ({id, step}))
+    }
+
     asArray() {
-        return this.steps.values()
+        return [...this.steps].map(([id, step]) => (step))
     }
 
     polyline(k) {
@@ -62,9 +68,13 @@ export default class Route {
         if (this.steps.size === 0) throw new Error('InvalidCall: no steps')
 
         const path = []
+        if (this.baseStep) path.push(this.baseStep.position)
         this.steps.forEach(step => {
             path.push(step.position)
         })
+        if (this.baseStep) path.push(this.baseStep.position)
+
+        console.log({path})
 
         return path
     }
@@ -81,7 +91,7 @@ export default class Route {
     }
 
     segmentPath(k) {
-        this.steps.get(k).allNodes()
+        return this.steps.get(k).nodes(true)
     }
 
     has(k) {

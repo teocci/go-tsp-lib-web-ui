@@ -119,7 +119,6 @@ export default class ResultsPanel extends BasePanel {
         this.setMainTab(api)
         this.enableTabByAPI(api)
 
-
         const steps = [start, ...nodes]
         steps.forEach(step => {
             const elem = this.createWaypoint(api, step)

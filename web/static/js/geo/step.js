@@ -32,15 +32,26 @@ export default class Step {
                 break
             case TMapAPI.TAG:
                 this.tmapStep = step
-                break;
+                break
             default:
-                throw new Error('InvalidAPI: apis not supported')
+                throw new Error(`InvalidAPI: ${api} not supported`)
         }
         this.path = step.nodes
     }
 
+    apiStep(api) {
+        switch (api) {
+            case TLibAPI.TAG:
+                return this.tlibStep
+            case TMapAPI.TAG:
+                return this.tmapStep
+            default:
+                throw new Error(`InvalidAPI: ${api} not supported`)
+        }
+    }
+
     nodes() {
-        return this.path?.nodes ?? null
+        return this.path?.asNodes(true) ?? null
     }
 
     allNodes() {

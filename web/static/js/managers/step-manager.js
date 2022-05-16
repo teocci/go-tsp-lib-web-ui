@@ -4,7 +4,6 @@
  */
 import Point from '../geo/point.js'
 import Step from '../geo/step.js'
-import StepPath from '../geo/step-path.js'
 import BaseListener from '../base/base-listener.js'
 
 // Data Structure to map points
@@ -16,17 +15,12 @@ export default class StepManager extends BaseListener {
     constructor() {
         super()
 
-        this.stepPath = null
-
         this.init()
     }
 
     init() {
         this.points = new Map()
         this.steps = new Map()
-
-        this.tlib = false
-        this.tmap = false
     }
 
     genPoints(n, bounds) {
@@ -53,47 +47,92 @@ export default class StepManager extends BaseListener {
 
     // Random 좌표 n개 생성
     loadSteps(data) {
+        let last = 0
+
         const list = [data.FixPoint.SPoint, ...data.FixPoint.pts, data.FixPoint.EPoint]
-        list.forEach((p, i) => {
-            const label = i === 0 ? '시작점' : `${i}`
+        list.forEach((p, id) => {
+            const label = id === 0 ? '시작점' : `${id}`
             const point = new Point(p.x, p.y)
-            const step = new Step(i, label)
-            step.type = i === 0 ? Step.TYPE_START : Step.TYPE_WAYPOINT
+            const step = new Step(id, label)
+            step.type = id === 0 ? Step.TYPE_START : Step.TYPE_WAYPOINT
             step.point = point
             step.position = new kakao.maps.LatLng(p.y, p.x)
-            this.addPointWithId(i, point)
-            this.addStep(i, step)
+            this.addPointWithId(id, point)
+            this.addStepWithId(id, step)
+            last = id
         })
-        const last = list.length - 1
         this.steps.get(last).label = '도착지'
         this.steps.get(last).type = Step.TYPE_END
 
-        this.loadPath()
-
-        this.callListener(StepManager.LISTENER_POINTS_LOADED, this.stepPath.asPoints())
+        this.callListener(StepManager.LISTENER_POINTS_LOADED, this.asPoints(false, true))
     }
 
-    loadPath() {
-        console.log({steps: this.steps})
-        this.stepPath = new StepPath(this.steps.values())
+    addPoint(p) {
+        this.addPointWithId(this.points.size, p)
+        console.log({points: this.points})
     }
 
     addPointWithId(id, p) {
         this.points.set(id, p)
     }
 
-    addPoint(p){
-        this.points.set(this.points.size, p)
-
-        console.log({points:this.points})
+    addStep(s) {
+        this.addStepWithId(this.points.size, s)
     }
 
-    addStep(id, s) {
+    addStepWithId(id, s) {
         this.steps.set(id, s)
     }
 
+    stepsLength() {
+        return this.steps.size ?? 0
+    }
+
+    stepByAPI(api, stepId) {
+        for (const s of this.steps.values()) {
+            const step = s.apiStep(api)
+            if (step?.id === stepId) return step
+        }
+
+        console.log({steps: this.steps})
+
+        console.error(`[${api}] step id not found ${stepId}`)
+    }
+
     startStep() {
-        return this.stepPath.start;
+        for (const step of this.steps.values()) {
+            if (step == null) continue
+            if (step.isStart()) return step
+        }
+        return null
+    }
+
+    endStep() {
+        for (const step of this.steps.values()) {
+            if (step == null) continue
+            if (step.isEnd()) return step
+        }
+        return null
+    }
+
+    waypointSteps() {
+        const nodes = []
+        for (const step of this.steps.values()) {
+            if (step == null) continue
+            if (step.isWaypoint()) nodes.push(step)
+        }
+
+        return nodes
+    }
+
+    waypointsAsPoints() {
+        const points = []
+        for (const step of this.steps.values()) {
+            if (step == null) continue
+            if (step.isWaypoint()) points.push(step.point)
+        }
+
+        return points
     }
 
     genRandomInBounds(n, bounds) {
@@ -110,9 +149,10 @@ export default class StepManager extends BaseListener {
     }
 
     matchRoute(api, route) {
+        if (!route) throw 'InvalidRoute: null route'
+        if (!route.baseStep) route.baseStep = this.startStep()
         route.steps.forEach(s => this.matchStep(api, s))
         console.log({steps: this.steps})
-        console.log({path: this.stepPath})
     }
 
     matchStep(api, step) {
@@ -128,7 +168,33 @@ export default class StepManager extends BaseListener {
         console.error(`[${api}] step not found ${step.position.toString()}`)
     }
 
+    // Omits end step if is a looped path
+    asPoints(noStart, noEnd) {
+        const nodes = []
+        for (const step of this.steps.values()) {
+            if (step == null) continue
+            if (step.isStart() && noStart) continue
+            if (step.isEnd() && noEnd) continue
 
+            nodes.push(step)
+        }
+
+        return nodes
+    }
+
+    toRequest() {
+        return {
+            SPoint: this.startStep().point,
+            EPoint: this.endStep().point,
+            SPointList: {
+                nodes: this.waypointsAsPoints()
+            }
+        }
+    }
+
+    toJSONRequest() {
+        return serialize(this.toRequest())
+    }
 
     // findPointByXY(id, x, y) {
     //     for (const p of this.steps) {
@@ -157,10 +223,6 @@ export default class StepManager extends BaseListener {
     //
     //     if (!p.hasTMap()) p.tmapPoint = new Step(id, id, x, y)
     // }
-
-    pathLength() {
-        return this.stepPath.length()
-    }
 
     isTestMode() {
         return RANDOM_MODE === RANDOM_MODE_TEST

@@ -78,27 +78,32 @@ export default class TMapFetcher extends BaseFetcher {
 
         data.features.forEach(feature => {
             const id = parseInt(feature.properties.index)
-            if (id > 0) {
+            const x = feature.geometry.coordinates[0]
+            const y = feature.geometry.coordinates[1]
+
+            let step
+            if (id === 0) {
+                step = new Step(0, 'base')
+                route.baseStep = step
+            } else if (id > 0) {
                 if (!route.has(id)) route.addStep(id, new Step(id, id))
-                const step = route.step(id)
+                step = route.step(id)
+            }
 
-                if (feature.geometry.type === 'Point') {
-                    step.distance = feature.properties.distance
-                    const x = feature.geometry.coordinates[0]
-                    const y = feature.geometry.coordinates[1]
-                    step.point = new Point(x, y)
-                    step.position = new kakao.maps.LatLng(y, x)
-                }
+            if (feature.geometry.type === 'Point') {
+                step.distance = feature.properties.distance
+                step.point = new Point(x, y)
+                step.position = new kakao.maps.LatLng(y, x)
+            }
 
-                if (feature.geometry.type === 'LineString') {
-                    step.path = new Path()
-                    step.path.start = step.position
-                    step.path.nodes = []
-                    feature.geometry.coordinates.forEach(coord => {
-                        step.path.nodes.push(new kakao.maps.LatLng(coord[1], coord[0]))
-                    })
-                    step.path.end = step.path.nodes.pop()
-                }
+            if (feature.geometry.type === 'LineString') {
+                step.path = new Path()
+                step.path.start = step.position
+                step.path.nodes = []
+                feature.geometry.coordinates.forEach(coord => {
+                    step.path.nodes.push(new kakao.maps.LatLng(coord[1], coord[0]))
+                })
+                step.path.end = step.path.nodes.pop()
             }
         })
 

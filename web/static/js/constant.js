@@ -1,5 +1,4 @@
 /*MARKER*/
-
 const IMG_SIZE = new kakao.maps.Size(24, 26)
 const MARKER_IMAGE_SRC = {
     start: '../img/start_marker.png',
@@ -101,6 +100,8 @@ const RANDOM_MODE = RANDOM_MODE_TEST
 const FETCH_MODE_PROD = 'prod'
 const FETCH_MODE_TEST = 'test'
 const FETCH_MODE = FETCH_MODE_TEST
+
+let kakaoMap = null
 
 const TLIB_SVR_HOST = '192.168.100.58'
 const TLIB_SVR_PORT = 9080

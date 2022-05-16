@@ -75,7 +75,7 @@ export default class MainModule {
         this.stepManager.addPoint(point)
     }
 
-    
+
     onGenPointsClicked(e, n) {
         this.stepManager.init()
 
@@ -90,12 +90,12 @@ export default class MainModule {
     }
 
     onFetchRoutesClicked(e, libs) {
-        if (this.stepManager.pathLength() < 1) {
+        if (this.stepManager.stepsLength() < 1) {
             alert('배달점이 없습니다. 배달점을 등록해주세요.')
             return
         }
 
-        this.fetcherManager.executeRequest(this.stepManager.stepPath, libs)
+        this.fetcherManager.executeRequest(this.stepManager.toRequest(), libs)
     }
 
     onAllDataFetched(data) {
@@ -116,6 +116,7 @@ export default class MainModule {
             this.mapManager.renderRouteByAPI(api, type)
         } else {
             this.mapManager.removeRouteByAPI(api, type)
+            this.mapManager.removeRouteByAPI(api, POLYLINE_TYPE_SEGMENT)
         }
     }
 
@@ -130,10 +131,10 @@ export default class MainModule {
     onShowSegmentClicked(e) {
         const target = e.currentTarget
         const api = target.dataset.api
-        const stepId = target.dataset.stepId
+        const stepId = parseInt(target.dataset.stepId)
         console.log({target, api, stepId})
 
         const step = this.stepManager.stepByAPI(api, stepId)
-        this.mapManager.renderSegment(api, step)
+        if (step) this.mapManager.renderSegment(api, step)
     }
 }

@@ -42,6 +42,7 @@ export default class MapManager extends BaseListener{
         }
 
         this.map = new kakao.maps.Map(placeholder, options)
+        kakaoMap = this.map
     }
 
     initMapListeners() {
@@ -95,24 +96,24 @@ export default class MapManager extends BaseListener{
 
         const styles = POLYLINE_STYLES[api]
         styles.forEach(item => {
+            const pl = route.polyline(item.type)
             if (item.type !== Polyline.TYPE_SEGMENT) {
-                const pl = route.polyline(item.type)
                 const path = route.pathByType(item.type)
                 console.log({type: item.type, path})
-                pl.options(item.style)
                 pl.load(path)
             }
+            pl.options(item.style)
         })
 
         this.routes.set(api, route)
     }
 
-    route(api) {
+    routeByAPI(api) {
         return this.routes.get(api) ?? null
     }
 
     renderRouteByAPI(api, type) {
-        this.renderRoute(this.route(api), type)
+        this.renderRoute(this.routeByAPI(api), type)
     }
 
     renderRoutes(type) {
@@ -122,12 +123,11 @@ export default class MapManager extends BaseListener{
 
     renderRoute(route, type) {
         const pl = route.polyline(type)
-        console.log({route, type, pl})
         pl.render(this.map)
     }
 
     removeRouteByAPI(api, type) {
-        this.removeRoute(this.route(api), type)
+        this.removeRoute(this.routeByAPI(api), type)
     }
 
     removeRoute(route, type) {
@@ -138,8 +138,11 @@ export default class MapManager extends BaseListener{
 
     renderSegment(api, step) {
         const type = Polyline.TYPE_SEGMENT
-        const pl = this.route(api).polyline(type)
-        const path = this.route(api).pathByType(type, step)
+        const route =  this.routeByAPI(api)
+        const pl = route.polyline(type)
+        const path = route.pathByType(type, step.id)
+        console.log({route, type, pl, path})
+
         pl.load(path)
         pl.render(this.map)
     }

@@ -9,18 +9,22 @@ export default class Path {
         this.nodes = null
     }
 
-    // Omits end point if is a looped path
-    asNodes() {
-        const nodes = this.isLooped() ? this.nodes : [...this.nodes, this.end]
-        return [this.start, ...nodes]
+    loadFrom(list) {
+        if (!list) throw new Error('InvalidList: null list')
+
+        const [start, ...nodes] = list
+        const end = nodes.pop()
+
+        this.start = start
+        this.end = end
+        this.nodes = nodes
     }
 
-    length() {
-        const length = this.nodes.length
-        return length + (this.isLooped() ? 1 : 2)
-    }
+    asNodes(noStart, noEnd) {
+        const nodes = this.nodes == null ? [] : [...this.nodes]
+        if (this.start != null && !noStart) nodes.unshift(this.start)
+        if (this.end != null && !noEnd) nodes.push(this.end)
 
-    isLooped() {
-        return this.end.equals(this.start)
+        return nodes
     }
 }
