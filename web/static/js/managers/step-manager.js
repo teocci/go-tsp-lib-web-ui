@@ -61,7 +61,7 @@ export default class StepManager extends BaseListener {
             step.type = i === 0 ? Step.TYPE_START : Step.TYPE_WAYPOINT
             step.point = point
             step.position = new kakao.maps.LatLng(p.y, p.x)
-            this.addPoint(i, point)
+            this.addPointWithId(i, point)
             this.addStep(i, step)
         })
         const last = list.length - 1
@@ -78,8 +78,14 @@ export default class StepManager extends BaseListener {
         this.stepPath = new StepPath(this.steps.values())
     }
 
-    addPoint(id, p) {
+    addPointWithId(id, p) {
         this.points.set(id, p)
+    }
+
+    addPoint(p){
+        this.points.set(this.points.size, p)
+
+        console.log({points:this.points})
     }
 
     addStep(id, s) {
@@ -121,6 +127,8 @@ export default class StepManager extends BaseListener {
 
         console.error(`[${api}] step not found ${step.position.toString()}`)
     }
+
+
 
     // findPointByXY(id, x, y) {
     //     for (const p of this.steps) {
