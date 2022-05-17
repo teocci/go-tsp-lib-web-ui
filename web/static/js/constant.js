@@ -15,9 +15,9 @@ const MARKERS = {
 }
 
 /* color */
-const TLIB_ROUTE_COLOR = '#e04010'
-const TMAP_ROUTE_COLOR = '#007196'
-const PARTLY_ROUTE_COLOR = '#00FF00'
+const TLIB_ROUTE_COLOR = '#c60c30'
+const TMAP_ROUTE_COLOR = '#005AAE'
+const SEGMENT_COLOR = '#fffd00'
 
 const TLIB_ROUTE_POLYLINE = {
     endArrow: true, strokeWeight: 4, // 선의 두께 입니다
@@ -49,9 +49,9 @@ const TMAP_POINT_POLYLINE = {
 
 const PARTLY_POLYLINE = {
     endArrow: true, strokeWeight: 6, // 선의 두께 입니다
-    strokeColor: PARTLY_ROUTE_COLOR, // 빨간색
-    strokeOpacity: 0.8, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
-    strokeStyle: 'shortdot' // 선의 스타일입니다
+    strokeColor: SEGMENT_COLOR, // 빨간색
+    strokeOpacity: 0.6, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+    strokeStyle: 'solid' // 선의 스타일입니다
 }
 
 const POLYLINE_TYPE_ROUTE = 'route'

@@ -50,45 +50,52 @@ export default class ResultsPanel extends BasePanel {
 
             const sectionId = `tab-result-${api}`
             const section = document.createElement('section')
+            section.className = 'tab-content'
             section.id = sectionId
 
-            tab.append(radio)
-            tab.append(label)
+            const timeline = document.createElement('div')
+            timeline.className = 'timeline'
 
-            tabs.append(tab)
+            tab.append(radio, label)
 
-            content.append(section)
+            tabs.appendChild(tab)
+
+            section.appendChild(timeline)
+
+            content.appendChild(section)
 
             this.tabs.set(api, {
                 'api': api,
                 'label': t.label,
                 'tab': radio,
                 'section': section,
+                'timeline': timeline,
                 'listener': null,
             })
         })
 
-        this.placeholder.append(tabs)
-        this.placeholder.append(content)
+        this.placeholder.append(tabs, content)
     }
 
-    handleOnChange(e) {
-        const element = e.target
-        const api = element.dataset.api
-        console.log({this: this})
-        if (api) this.openTabContentByAPI(api)
+    setMainTab(api) {
+        this.mainTabId = this.mainTabId ?? api
     }
 
     tabByAPI(api) {
-        return this.tabs.get(api).tab ?? null
+        return this.tabs.get(api)?.tab ?? null
     }
 
     sectionByAPI(api) {
-        return this.tabs.get(api).section ?? null
+        return this.tabs.get(api)?.section ?? null
+    }
+
+    timelineByAPI(api) {
+        return this.tabs.get(api)?.timeline ?? null
     }
 
     checkTabByAPI(api) {
-        this.tabByAPI(api).checked = true
+        const tab = this.tabByAPI(api)
+        if (tab) tab.checked = true
     }
 
     openTabContentByAPI(api) {
@@ -113,7 +120,7 @@ export default class ResultsPanel extends BasePanel {
     }
 
     renderTimeline(api, route, start) {
-        const section = this.sectionByAPI(api)
+        const timeline = this.timelineByAPI(api)
         const nodes = route.asArray()
 
         this.setMainTab(api)
@@ -122,39 +129,40 @@ export default class ResultsPanel extends BasePanel {
         const steps = [start, ...nodes]
         steps.forEach(step => {
             const elem = this.createWaypoint(api, step)
-            section.append(elem)
+            timeline.appendChild(elem)
         })
     }
 
     createWaypoint(api, step) {
-        const stepElement = document.createElement('div')
-        stepElement.className = 'step'
+        const stepElem = document.createElement('div')
+        stepElem.className = 'step'
+        stepElem.dataset.api = api
+        stepElem.dataset.stepId = step.id
+        stepElem.activeStep = false
+        stepElem.onclick = e => this.handleOnShowSegmentClicked(e)
 
-        const container = document.createElement('div')
-        container.className = 'tag'
+        const tag = document.createElement('div')
+        tag.className = 'tag'
+        tag.textContent = step.id === 0 ? 'S' : `${step.label}`
 
-        const img = document.createElement('img')
-        img.src = '../img/display_marker.png'
+        // const img = document.createElement('img')
+        // img.src = '../img/display_marker.png'
+        //
+        // const val = document.createElement('div')
+        // val.textContent = step.id === 0 ? 'S' : `${step.label}`
 
-        const val = document.createElement('div')
-        val.textContent = step.id === 0 ? 'S' : `${step.label}`
-        val.className = 'centered'
+        const info = document.createElement('div')
+        info.className = 'info'
 
-        container.appendChild(img)
-        container.appendChild(val)
+        const cost = document.createElement('div')
+        cost.className = 'cost'
+        cost.textContent = step.id === 0 ? step.label : distanceFormatter(step.distance)
 
-        const costSection = document.createElement('div')
-        costSection.className = 'cost'
-        costSection.textContent = step.id === 0 ? step.label : `${step.distance}`
+        // tag.append(img, val)
+        info.appendChild(cost)
+        stepElem.append(tag, info)
 
-        stepElement.appendChild(container)
-        stepElement.appendChild(costSection)
-
-        stepElement.dataset.api = api
-        stepElement.dataset.stepId = step.id
-        stepElement.onclick = e => this.handleOnShowSegmentClicked(e)
-
-        return stepElement
+        return stepElem
     }
 
     disableTabByAPI(api) {
@@ -183,7 +191,33 @@ export default class ResultsPanel extends BasePanel {
         if (tab) tab.disabled = false
     }
 
+    removeActiveByAPI(api) {
+        const timeline = this.timelineByAPI(api)
+        const tags = timeline.querySelectorAll('.step .tag')
+        for (const tag of tags) {
+            tag.classList.remove('active')
+        }
+    }
+
+    handleOnChange(e) {
+        const element = e.target
+        const api = element.dataset.api
+        console.log({this: this})
+        if (api) this.openTabContentByAPI(api)
+    }
+
     handleOnShowSegmentClicked(e) {
+        const target = e.currentTarget
+        const api = target.dataset.api
+
+        if (target.activeStep) return
+
+        this.removeActiveByAPI(api)
+
+        const tag = target.querySelector('.tag')
+        if (tag) tag.classList.add('active')
+        target.activeStep = true
+
         this.callListener(ResultsPanel.LISTENER_SHOW_SEGMENT, e)
     }
 
@@ -291,9 +325,5 @@ export default class ResultsPanel extends BasePanel {
 
     static makeRouteTableForTMap(id, cost) {
 
-    }
-
-    setMainTab(api) {
-        this.mainTabId = this.mainTabId ?? api
     }
 }

@@ -123,6 +123,7 @@ export default class MainModule {
         } else {
             this.mapManager.removeRouteByAPI(api, type)
             this.mapManager.removeRouteByAPI(api, POLYLINE_TYPE_SEGMENT)
+            this.resultsPanel.removeActiveByAPI(api)
         }
     }
 
