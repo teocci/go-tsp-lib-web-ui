@@ -4,6 +4,8 @@
  */
 import BaseListener from '../base/base-listener.js'
 import Polyline from '../geo/polyline.js'
+import Point from '../geo/point.js'
+import Overlay from '../panels/overlay.js'
 
 export default class MapManager extends BaseListener {
     static TAG = 'map'
@@ -25,11 +27,11 @@ export default class MapManager extends BaseListener {
         this.panel = panel
 
         this.map = null
-        this.markers = []
+        this.markers = new Map()
+        this.routes = new Map()
+        this.overlays = new Map()
 
         this.handlerOnClick = null
-
-        this.routes = new Map()
 
         this.initPanel()
         this.initMapListeners()
@@ -47,23 +49,23 @@ export default class MapManager extends BaseListener {
     }
 
     initMapListeners() {
-        const map = this.map
 
         this.handlerOnClick = e => {
             this.mapClickListener(e)
         }
+
+    }
+
+    activateClickListener() {
+        const map = this.map
+        map.setCursor('pointer')
+        kakao.maps.event.addListener(map, 'click', this.handlerOnClick)
 
         kakao.maps.event.addListener(map, 'rightclick', me => {
             this.map.setCursor(null)
             this.callListener(MapManager.LISTENER_FINISH_CLICKED, me)
             kakao.maps.event.removeListener(map, 'click', this.handlerOnClick)
         })
-
-    }
-
-    activateClickListener() {
-        this.map.setCursor('pointer')
-        kakao.maps.event.addListener(this.map, 'click', this.handlerOnClick)
     }
 
     mapClickListener(me) {
@@ -72,21 +74,18 @@ export default class MapManager extends BaseListener {
     }
 
     loadMarkers(steps) {
-        steps.forEach((step, i) => this.addMarkerWithStep(step, i))
+        steps.forEach((step, i) => this.loadMarkerFromStep(step, i))
     }
 
-    addMarkerWithStep(step, i) {
-        this.makeMarker(step.label, step.position, i)
+    loadMarkerFromStep(step, i) {
+        const marker = this.makeMarker(step.label, step.position, i)
+        this.appendMarker(marker)
     }
 
-    addMarker(pos, i) {
+    loadMarker(pos, i) {
         const title = i === 0 ? 'start' : `${i}`
-        this.makeMarker(title, pos, i)
-    }
-
-    removeMarkers() {
-        this.markers.forEach(m => m.setMap(null))
-        this.markers = []
+        const marker = this.makeMarker(title, pos, i)
+        this.appendMarker(marker)
     }
 
     makeMarker(title, pos, i) {
@@ -96,7 +95,16 @@ export default class MapManager extends BaseListener {
         marker.setImage(i === 0 ? MARKERS.start : MARKERS.waypoint)
         marker.setMap(this.map)
 
-        this.markers.push(marker)
+        return marker
+    }
+
+    appendMarker(marker) {
+        this.markers.set(this.markers.size, marker)
+    }
+
+    removeMarkers() {
+        this.markers.forEach(m => m.setMap(null))
+        this.markers = new Map()
     }
 
     loadRoutes(data) {
@@ -108,18 +116,63 @@ export default class MapManager extends BaseListener {
         if (!api) throw new Error('InvalidAPI: null apis')
         if (!route) throw new Error('InvalidRoute: null route')
 
-        const styles = POLYLINE_STYLES[api]
-        styles.forEach(item => {
-            const pl = route.polyline(item.type)
-            if (item.type !== Polyline.TYPE_SEGMENT) {
-                const path = route.pathByType(item.type)
-                console.log({type: item.type, path})
-                pl.load(path)
-            }
-            pl.options(item.style)
-        })
-
+        route.loadPLPaths()
         this.routes.set(api, route)
+    }
+
+    loadOverlays(data) {
+        data.forEach(r => this.loadOverlay(r.api, r.route))
+        console.log({overlays: this.overlays})
+    }
+
+    loadOverlay(api, route) {
+        const map = this.map
+        route.steps.forEach(step => {
+            const overlay = this.findOverlay(route.api, step) ?? this.makeOverlay(step)
+            overlay.position = step.position
+            overlay.updateTagByAPI(api, step.id, step.label)
+            overlay.activateTagByAPI(api)
+            overlay.render(map)
+        })
+    }
+
+    findOverlay(api, step) {
+        for (const overlay of this.overlays.values()) {
+            const p = new Point(truncate(overlay.position.getLng(), 5), truncate(overlay.position.getLat(), 5))
+            const q = new Point(truncate(step.position.getLng(), 5), truncate(step.position.getLat(), 5))
+
+            if (p.equals(q)) {
+                return overlay
+            }
+        }
+
+        return null
+    }
+
+    makeOverlay() {
+        const overlay = new Overlay()
+        this.appendOverlay(overlay)
+
+        return overlay
+    }
+
+    appendOverlay(overlay) {
+        const id = this.overlaysSize()
+        this.overlays.set(id, overlay)
+
+        return id
+    }
+
+    overlaysSize() {
+        return this.overlays?.size ?? 0
+    }
+
+    activateOTagByAPI(api){
+        this.overlays.forEach(o => o.activateTagByAPI(api))
+    }
+
+    deactivateOTagByAPI(api){
+        this.overlays.forEach(o => o.deactivateTagByAPI(api))
     }
 
     routeByAPI(api) {

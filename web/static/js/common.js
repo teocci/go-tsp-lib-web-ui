@@ -24,6 +24,14 @@ function rand(min, max) {
     return Math.random() * (max - min) + min
 }
 
+function truncate(n, p) {
+    return Math.trunc(n * Math.pow(10, p)) / Math.pow(10, p)
+}
+
+function round(n, p) {
+    return Math.trunc((n + Number.EPSILON) * Math.pow(10, p)) / Math.pow(10, p)
+}
+
 function distanceFormatter(d, precision = 2) {
     const rx = /\.0+$|(\.\d*[1-9])0+$/;
     const lookup = [

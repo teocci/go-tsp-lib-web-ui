@@ -50,6 +50,19 @@ export default class Route {
         this.polyline(k).setMap(null)
     }
 
+    loadPLPaths() {
+        const styles = POLYLINE_STYLES[this.api]
+        for (const item of styles) {
+            const pl = this.polyline(item.type)
+            pl.options(item.style)
+
+            if (item.type ===  Polyline.TYPE_SEGMENT) return
+
+            const path = this.pathByType(item.type)
+            pl.load(path)
+        }
+    }
+
     pathByType(type, k) {
         switch (type) {
             case POLYLINE_TYPE_ROUTE:

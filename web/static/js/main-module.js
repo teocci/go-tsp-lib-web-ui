@@ -70,7 +70,7 @@ export default class MainModule {
         const point = new Point(pos.getLng(), pos.getLat())
         const index = this.stepManager.appendPoint(point)
 
-        this.mapManager.addMarker(pos, index)
+        this.mapManager.loadMarker(pos, index)
     }
 
     onMapClickFinished(e) {
@@ -112,6 +112,7 @@ export default class MainModule {
         this.resultsPanel.renderTimelines(data, this.stepManager.startStep())
 
         this.mapManager.loadRoutes(data)
+        this.mapManager.loadOverlays(data)
         this.mapManager.renderRoutes(POLYLINE_TYPE_ROUTE)
     }
 
@@ -120,10 +121,12 @@ export default class MainModule {
         const api = e.target.dataset.api
         if (e.target.checked) {
             this.mapManager.renderRouteByAPI(api, type)
+            this.mapManager.activateOTagByAPI(api)
         } else {
             this.mapManager.removeRouteByAPI(api, type)
             this.mapManager.removeRouteByAPI(api, POLYLINE_TYPE_SEGMENT)
             this.resultsPanel.removeActiveByAPI(api)
+            this.mapManager.deactivateOTagByAPI(api)
         }
     }
 

@@ -172,8 +172,9 @@ export default class StepManager extends BaseListener {
 
     matchRoute(api, route) {
         if (!route) throw 'InvalidRoute: null route'
+
         if (!route.baseStep) route.baseStep = this.startStep()
-        route.steps.forEach(s => this.matchStep(api, s))
+        route?.steps.forEach(s => this.matchStep(api, s))
         console.log({steps: this.steps})
     }
 
