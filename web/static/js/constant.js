@@ -15,8 +15,8 @@ const MARKERS = {
 }
 
 /* color */
-const TLIB_ROUTE_COLOR = '#c60c30'
-const TMAP_ROUTE_COLOR = '#005AAE'
+const TLIB_ROUTE_COLOR = '#ff323d'
+const TMAP_ROUTE_COLOR = '#0079c4'
 const SEGMENT_COLOR = '#fffd00'
 
 const TLIB_ROUTE_POLYLINE = {
