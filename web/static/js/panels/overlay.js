@@ -23,8 +23,8 @@ export default class Overlay extends BasePanel {
             const tag = document.createElement('div')
             tag.classList.add(`tag-${api}`, 'tag', 'hidden')
             tag.textContent = '-'
-            tag.dataset.id = null
             tag.dataset.api = api
+            tag.routeId = null
             tag.activeTag = false
 
             overlay.appendChild(tag)
@@ -40,13 +40,15 @@ export default class Overlay extends BasePanel {
     }
 
     updateTagByAPI(api, id, label) {
-        this.tags[api].dataset.id = id
+        this.tags[api].routeId = id
         this.tags[api].textContent = label
     }
 
     activateTagByAPI(api) {
-        this.tags[api].activeTag = true
-        this.tags[api].classList.remove('hidden')
+        const tag = this.tags[api]
+        if (tag.routeId == null) return
+        tag.activeTag = true
+        tag.classList.remove('hidden')
     }
 
     deactivateTagByAPI(api) {
