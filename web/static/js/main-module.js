@@ -66,11 +66,11 @@ export default class MainModule {
     }
 
     onMapClicked(e) {
-        const latLng = e.latLng
-        const point = new Point(latLng.getLng(), latLng.getLat())
+        const pos = e.latLng
+        const point = new Point(pos.getLng(), pos.getLat())
+        const index = this.stepManager.appendPoint(point)
 
-        this.mapManager.addMarker(latLng, this.stepManager.points.size)
-        this.stepManager.addPoint(point)
+        this.mapManager.addMarker(pos, index)
     }
 
     onMapClickFinished(e) {
@@ -96,7 +96,7 @@ export default class MainModule {
     }
 
     onFetchRoutesClicked(e, libs) {
-        if (this.stepManager.stepsLength() < 1) {
+        if (this.stepManager.stepsSize() < 1) {
             alert('배달점이 없습니다. 배달점을 등록해주세요.')
             return
         }

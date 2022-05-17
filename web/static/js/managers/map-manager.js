@@ -4,9 +4,8 @@
  */
 import BaseListener from '../base/base-listener.js'
 import Polyline from '../geo/polyline.js'
-import StepManager from './step-manager.js'
 
-export default class MapManager extends BaseListener{
+export default class MapManager extends BaseListener {
     static TAG = 'map'
 
     static POLYLINE_TYPES = [
@@ -18,11 +17,11 @@ export default class MapManager extends BaseListener{
     static LISTENER_ADD_CLICKED = 'on-add-point'
     static LISTENER_FINISH_CLICKED = 'finished-click-mode'
 
-    constructor(panel) {      
+    constructor(panel) {
         if (!panel) throw 'InvalidPanel: null panel'
 
         super()
-        
+
         this.panel = panel
 
         this.map = null
@@ -59,17 +58,17 @@ export default class MapManager extends BaseListener{
             this.callListener(MapManager.LISTENER_FINISH_CLICKED, me)
             kakao.maps.event.removeListener(map, 'click', this.handlerOnClick)
         })
-        
+
     }
 
-    activateClickListener(){
+    activateClickListener() {
         this.map.setCursor('pointer')
         kakao.maps.event.addListener(this.map, 'click', this.handlerOnClick)
     }
 
     mapClickListener(me) {
         //call the listener. send data to main-moudle.
-        this.callListener(MapManager.LISTENER_ADD_CLICKED, me)       
+        this.callListener(MapManager.LISTENER_ADD_CLICKED, me)
     }
 
     loadMarkers(steps) {
@@ -77,27 +76,26 @@ export default class MapManager extends BaseListener{
     }
 
     addMarkerWithStep(step, i) {
-        this.makeMarker(step.label, step.position, i);
-    }
-    
-    addMarker(pos, i){
-        this.makeMarker(i  === 0 ? "start" : i.toString(), pos, i)
+        this.makeMarker(step.label, step.position, i)
     }
 
-    removeMarkers(){
-        this.markers.forEach(m =>{
-            m.setMap(null)
-        })
+    addMarker(pos, i) {
+        const title = i === 0 ? 'start' : `${i}`
+        this.makeMarker(title, pos, i)
+    }
+
+    removeMarkers() {
+        this.markers.forEach(m => m.setMap(null))
         this.markers = []
     }
 
-    makeMarker(title, pos, i){
-        const marker = new kakao.maps.Marker({
-            map: this.map,
-            position: pos,
-        })
+    makeMarker(title, pos, i) {
+        const marker = new kakao.maps.Marker()
+        marker.setPosition(pos)
         marker.setTitle(title)
         marker.setImage(i === 0 ? MARKERS.start : MARKERS.waypoint)
+        marker.setMap(this.map)
+
         this.markers.push(marker)
     }
 
@@ -154,7 +152,7 @@ export default class MapManager extends BaseListener{
 
     renderSegment(api, step) {
         const type = Polyline.TYPE_SEGMENT
-        const route =  this.routeByAPI(api)
+        const route = this.routeByAPI(api)
         const pl = route.polyline(type)
         const path = route.pathByType(type, step.id)
         console.log({route, type, pl, path})

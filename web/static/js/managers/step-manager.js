@@ -59,8 +59,8 @@ export default class StepManager extends BaseListener {
             step.type = id === 0 ? Step.TYPE_START : Step.TYPE_WAYPOINT
             step.point = point
             step.position = new kakao.maps.LatLng(p.y, p.x)
-            this.addPointWithId(id, point)
-            this.addStepWithId(id, step)
+            this.addPoint(id, point)
+            this.addStep(id, step)
             last = id
         })
         this.steps.get(last).label = '도착지'
@@ -69,19 +69,25 @@ export default class StepManager extends BaseListener {
         this.callListener(StepManager.LISTENER_STEPS_LOADED, this.asStepArray(false, true))
     }
 
-    addPoint(p) {
-        this.addPointWithId(this.points.size, p)
-        console.log({points: this.points})
+    appendPoint(p) {
+        const id = this.pointsSize()
+        this.addPoint(id, p)
+
+        return id
     }
 
-    addPointWithId(id, p) {
+    addPoint(id, p) {
         this.points.set(id, p)
+    }
+
+    pointsSize() {
+        return this.points?.size ?? 0
     }
 
     pointsAsArray(n, bounds) {
         if (n && bounds) {
             const points = this.isTestMode() ? RANDOM_TEST_POINTS : this.genRandomInBounds(n, bounds)
-            points.forEach(p => this.addPoint(p))
+            points.forEach(p => this.appendPoint(p))
             return points
         }
         if (this.points.size < 1) throw new Error('InvalidPoints: null points')
@@ -89,16 +95,19 @@ export default class StepManager extends BaseListener {
         return [...this.points].map(([k, v]) => (v))
     }
 
-    addStep(s) {
-        this.addStepWithId(this.points.size, s)
+    appendStep(s) {
+        const id = this.stepsSize()
+        this.addStep(id, s)
+
+        return id
     }
 
-    addStepWithId(id, s) {
+    addStep(id, s) {
         this.steps.set(id, s)
     }
 
-    stepsLength() {
-        return this.steps.size ?? 0
+    stepsSize() {
+        return this.steps?.size ?? 0
     }
 
     stepByAPI(api, stepId) {
