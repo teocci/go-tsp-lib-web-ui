@@ -131,7 +131,12 @@ export default class MainModule {
     }
 
     onListPointsClicked(e) {
-        console.log({e})
+        let str = ''
+        const points = this.stepManager.pointsAsArray()
+        points.forEach(point =>{
+            str += `${point.x}, ${point.y},` 
+        })
+        alert(str)
     }
 
     onShowSegmentClicked(e) {
