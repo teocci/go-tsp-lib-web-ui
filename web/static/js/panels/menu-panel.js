@@ -98,4 +98,14 @@ export default class MenuPanel extends BasePanel {
             this.showPathCBGroup.get(id).disabled = false
         })
     }
+
+    activateRouteBy(api){
+        const id = `show-${api}-${POLYLINE_TYPE_ROUTE}`
+        this.showPathCBGroup.get(id).checked = true
+    }
+
+    deactivateRouteBy(api){
+        const id = `show-${api}-${POLYLINE_TYPE_ROUTE}`
+        this.showPathCBGroup.get(id).checked = false
+    }
 }

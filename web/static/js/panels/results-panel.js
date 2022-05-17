@@ -193,7 +193,13 @@ export default class ResultsPanel extends BasePanel {
 
     removeActiveByAPI(api) {
         const timeline = this.timelineByAPI(api)
+        const steps = timeline.querySelectorAll('.step')
         const tags = timeline.querySelectorAll('.step .tag')
+
+        for (const step of steps) {
+            step.activeStep = false
+        }
+
         for (const tag of tags) {
             tag.classList.remove('active')
         }
