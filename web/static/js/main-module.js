@@ -160,9 +160,8 @@ export default class MainModule {
     onListPointsClicked(e) {
         let str = ''
         const points = this.stepManager.pointsAsArray()
-        points.forEach(point =>{
-            str += `${point.x}, ${point.y},` 
-        })
+        points.forEach(p => str += `${p.toString()},`)
+        str = str.slice(0, -1)
         alert(str)
     }
 

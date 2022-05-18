@@ -4,8 +4,8 @@
  */
 import BaseListener from '../base/base-listener.js'
 import Polyline from '../geo/polyline.js'
-import Point from '../geo/point.js'
 import Overlay from '../geo/overlay.js'
+import Point from '../geo/point.js'
 
 export default class MapManager extends BaseListener {
     static TAG = 'map'
@@ -139,7 +139,7 @@ export default class MapManager extends BaseListener {
     loadOverlay(api, route) {
         const map = this.map
         route.steps.forEach(step => {
-            const overlay = this.findOverlay(route.api, step) ?? this.makeOverlay(step)
+            const overlay = this.findOverlay(step) ?? this.makeOverlay(step)
             overlay.position = step.position
             overlay.updateTagByAPI(api, step.id, step.label)
             overlay.activateTagByAPI(api)
@@ -147,11 +147,11 @@ export default class MapManager extends BaseListener {
         })
     }
 
-    findOverlay(api, step) {
+    // TODO replace with position
+    findOverlay(step) {
         for (const overlay of this.overlays.values()) {
             const p = new Point(truncate(overlay.position.getLng(), 5), truncate(overlay.position.getLat(), 5))
             const q = new Point(truncate(step.position.getLng(), 5), truncate(step.position.getLat(), 5))
-
             if (p.equals(q)) {
                 return overlay
             }
