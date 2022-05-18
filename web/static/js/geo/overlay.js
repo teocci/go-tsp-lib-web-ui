@@ -2,17 +2,20 @@
  * Created by RTT.
  * Author: teocci@yandex.com on 2022-May-16
  */
-import BasePanel from '../base/base-panel.js'
 
-export default class Overlay extends BasePanel {
+export default class Overlay {
     constructor() {
-        super()
-
         this.tags = {}
 
-        this.element = this.createElement()
+        this.initElement()
 
         this._pos = null
+    }
+
+    initElement() {
+        this.instance = new kakao.maps.CustomOverlay({
+            content: this.createElement(),
+        })
     }
 
     createElement() {
@@ -30,10 +33,6 @@ export default class Overlay extends BasePanel {
             overlay.appendChild(tag)
 
             this.tags[api] = tag
-        })
-
-        this.instance = new kakao.maps.CustomOverlay({
-            content: overlay,
         })
 
         return overlay

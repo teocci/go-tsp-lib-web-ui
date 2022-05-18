@@ -128,6 +128,7 @@ export default class ResultsPanel extends BasePanel {
 
         const steps = [route.baseStep, ...nodes]
         console.log({steps})
+
         steps.forEach(step => {
             const elem = this.createWaypoint(api, step)
             timeline.appendChild(elem)
@@ -193,6 +194,7 @@ export default class ResultsPanel extends BasePanel {
 
         for (const step of steps) {
             step.activeStep = false
+            step.classList.remove('active')
         }
 
         for (const tag of tags) {
@@ -214,6 +216,7 @@ export default class ResultsPanel extends BasePanel {
         if (target.activeStep) return
 
         this.removeActiveByAPI(api)
+        target.classList.add('active')
 
         const tag = target.querySelector('.tag')
         if (tag) tag.classList.add('active')
