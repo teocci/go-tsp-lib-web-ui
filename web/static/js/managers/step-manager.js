@@ -23,35 +23,36 @@ export default class StepManager extends BaseListener {
         this.steps = new Map()
     }
 
-    fixPoints(points) {
-        if (!points) throw new Error('InvalidPoints: null points')
-
-        console.log({points})
-        const [start, ...rest] = points
-
-        const url = `${TLIB_SVR_URL}/fix_points`
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-type': 'text/plain'
-            },
-            body: serialize({
-                SPoint: start,
-                EPoint: start,
-                SPointList: {
-                    nodes: rest
-                },
-            }),
-        }).then(r => r.json()).then(body => {
-            this.loadSteps(body)
-        })
-    }
+    // fixPoints(points) {
+    //     if (!points) throw new Error('InvalidPoints: null points')
+    //
+    //     console.log({points})
+    //     const [start, ...rest] = points
+    //
+    //     const url = `${TLIB_SVR_URL}/fix_points`
+    //     fetch(url, {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-type': 'text/plain'
+    //         },
+    //         body: serialize({
+    //             SPoint: start,
+    //             EPoint: start,
+    //             SPointList: {
+    //                 nodes: rest
+    //             },
+    //         }),
+    //     }).then(r => r.json()).then(body => {
+    //         this.loadSteps(body)
+    //     })
+    // }
 
     // Random 좌표 n개 생성
     loadSteps(data) {
-        let last = 0
-
+        console.log({data})
         const list = [data.FixPoint.SPoint, ...data.FixPoint.pts, data.FixPoint.EPoint]
+
+        let last = null
         list.forEach((p, id) => {
             const label = id === 0 ? '시작점' : `${id}`
             const point = new Point(p.x, p.y)
@@ -63,10 +64,11 @@ export default class StepManager extends BaseListener {
             this.addStep(id, step)
             last = id
         })
-        this.steps.get(last).label = '도착지'
-        this.steps.get(last).type = Step.TYPE_END
 
-        this.callListener(StepManager.LISTENER_STEPS_LOADED, this.asStepArray(false, true))
+        if (last) {
+            this.steps.get(last).label = '도착지'
+            this.steps.get(last).type = Step.TYPE_END
+        }
     }
 
     appendPoint(p) {

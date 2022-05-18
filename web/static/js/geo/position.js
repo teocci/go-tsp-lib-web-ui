@@ -7,11 +7,11 @@ export default class Position {
         this.geo = new kakao.maps.LatLng(y, x)
     }
 
-    lat() {
+    get lat() {
         return this.geo.getLat()
     }
 
-    lng() {
+    get lng() {
         return this.geo.getLng()
     }
 

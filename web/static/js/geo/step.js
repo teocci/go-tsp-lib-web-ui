@@ -50,19 +50,19 @@ export default class Step {
         }
     }
 
-    nodes() {
+    get nodes() {
         return this.path?.asNodes(true) ?? null
     }
 
-    allNodes() {
+    get allNodes() {
         return this.path?.asNodes() ?? null
     }
 
-    lat() {
+    get lat() {
         return this.position?.getLat() ?? null
     }
 
-    lng() {
+    get lng() {
         return this.position?.getLng() ?? null
     }
 

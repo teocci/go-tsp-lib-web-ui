@@ -11,56 +11,18 @@ export default class BaseFetcher extends BaseListener {
         super()
 
         this.apiInfo = info
-
-        this.initStruct()
     }
 
-    initStruct() {
-        this.routeOverlay = []
-        this.pointOverlay = []
-    }
-
-    clearMap() {
-        this.routePolyLine.setMap(null)
-        this.pointPolyLine.setMap(null)
-        this.partlyPolyLine.setMap(null)
-
-        this.routeOverlay.forEach(element => {
-            element.setMap(null)
-        })
-
-        this.pointOverlay.forEach(element => {
-            element.setMap(null)
-        })
-    }
-
-    reset() {
-        this.clearMap()
-        this.initStruct()
-        this.initPolyLines()
-    }
-
-    initPolyLines() {
-    }
-
-    apiURL() {
+    get apiURL() {
         return this.apiInfo.url
     }
 
-    apiKey() {
+    get apiKey() {
         return this.apiInfo.key
     }
 
     testResponse(k) {
         return this.apiInfo.testResponse(k)
-    }
-
-    isRequestTestMode(k) {
-        return this.apiInfo.isRequestTestMode(k)
-    }
-
-    isAPITestMode() {
-        return this.apiInfo.isTestMode()
     }
 
     async fetch(config) {
@@ -74,5 +36,13 @@ export default class BaseFetcher extends BaseListener {
             'body': body,
             'duration': duration,
         }
+    }
+
+    isRequestTestMode(k) {
+        return this.apiInfo.isRequestTestMode(k)
+    }
+
+    isAPITestMode() {
+        return this.apiInfo.isTestMode()
     }
 }

@@ -17,18 +17,23 @@ export default class TLibFetcher extends BaseFetcher {
         super(TLibAPI.instance())
     }
 
-    // async fetchRoutePath(req) {
-    //     const config = this.parseRequest(req)
-    //
-    //     const sTime = performance.now()
-    //     const body = await (await fetch(config.url, config.options)).json()
-    //     const duration = performance.now() - sTime
-    //
-    //     const info = this.parseInfo(body, duration)
-    //     const route = this.parseRoute(body)
-    //
-    //     return new RouteResponse(TLibAPI.TAG, info, route).toObject()
-    // }
+    async fetchFixPoints(points) {
+        if (!points) throw new Error('InvalidPoints: null points')
+        console.log({points})
+
+        const [start, ...rest] = points
+        const req = {
+            SPoint: start,
+            EPoint: start,
+            SPointList: {
+                nodes: rest
+            },
+        }
+
+        const config = this.prepareFixPointsRequest(req)
+
+        return await this.fetch(config)
+    }
 
     async fetchRoutePath(req) {
         const config = this.prepareRouteRequest(req)
@@ -41,25 +46,37 @@ export default class TLibFetcher extends BaseFetcher {
         return new RouteResponse(TLibAPI.TAG, info, route).toObject()
     }
 
+    prepareFixPointsRequest(req) {
+        const type = REQUEST_FIX_POINTS
+        const url = `${this.apiURL}/fix_points`
+
+        return this.prepareRequest(type, url, req)
+    }
+
     prepareRouteRequest(req) {
         const type = REQUEST_FIND_ROUTE
+        const url = `${this.apiURL}/TSP_find_shortest4`
 
-        let url, options
-        if (this.isRequestTestMode(type)) {
-            url = this.testResponse(type)
-            options = {
-                method: 'GET'
-            }
-        } else {
-            url = `${this.apiURL()}/TSP_find_shortest4`
-            options = {
-                method: 'POST',
+        return this.prepareRequest(type, url, req)
+    }
+
+    prepareRequest(type, prod_url, req) {
+        const url = this.isRequestTestMode(type) ? this.testResponse(type) : prod_url
+        let options = {
+            method: this.isRequestTestMode(type) ? 'GET' : 'POST'
+        }
+
+        if (!this.isRequestTestMode(type)) {
+            const optionsExt = {
                 headers: {
                     'Content-Type': 'text/plain'
                 },
                 body: serialize(req),
             }
+            options = {...options, ...optionsExt}
         }
+
+        console.log({url, options})
 
         return {
             'url': url,
@@ -81,7 +98,7 @@ export default class TLibFetcher extends BaseFetcher {
             step.path = new Path()
             step.point = new Point(path.SPoint.x, path.SPoint.y)
             step.path.start = new kakao.maps.LatLng(path.SPoint.y, path.SPoint.x)
-            step.path.end  = new kakao.maps.LatLng(path.EPoint.y, path.EPoint.x)
+            step.path.end = new kakao.maps.LatLng(path.EPoint.y, path.EPoint.x)
             step.path.nodes = []
             path.SLineString.nodes.forEach(node => {
                 step.path.nodes.push(new kakao.maps.LatLng(node.y, node.x))

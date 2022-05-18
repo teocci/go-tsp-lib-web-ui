@@ -22,23 +22,7 @@ export default class MainModule {
 
         this.mapManager = new MapManager(this.mapPanel)
 
-        this.mapManager.addListener(MapManager.LISTENER_ADD_CLICKED, e => this.onMapClicked(e))
-        this.mapManager.addListener(MapManager.LISTENER_FINISH_CLICKED, e => this.onMapClickFinished(e))
-
-        this.pointsPanel.addListener(PointsPanel.LISTENER_ADD_CLICKED, e => this.onAddPointClicked(e))
-        this.pointsPanel.addListener(PointsPanel.LISTENER_GEN_CLICKED, (e, params) => this.onGenPointsClicked(e, params[0]))
-
-        this.stepManager.addListener(StepManager.LISTENER_STEPS_LOADED, steps => this.onStepsLoaded(steps))
-        this.fetcherManager.addListener(FetcherManager.LISTENER_ALL_DATA_FETCHED, d => this.onAllDataFetched(d))
-
-        this.generatorPanel.addListener(GeneratorsPanel.LISTENER_FETCH_CLICKED, (e, params) => this.onFetchRoutesClicked(e, params[0]))
-
-        this.menuPanel.addListener(MenuPanel.LISTENER_SHOW_CHANGED, e => this.onShowPathChanged(e))
-        this.menuPanel.addListener(MenuPanel.LISTENER_CLEAR_CLICKED, e => this.onClearMapClicked(e))
-        this.menuPanel.addListener(MenuPanel.LISTENER_LIST_CLICKED, e => this.onListPointsClicked(e))
-
-        this.resultsPanel.addListener(ResultsPanel.LISTENER_SHOW_SEGMENT, e => this.onShowSegmentClicked(e))
-        // this.resultsPanel.addListener(TmapFetcher.TAG, drawTMapLinePartly)
+        this.initHandlers()
     }
 
     initPanels() {
@@ -59,6 +43,28 @@ export default class MainModule {
 
         this.summaryPanel = new SummaryPanel(summaryElement)
         this.menuPanel = new MenuPanel(menuElement)
+    }
+
+    initHandlers() {
+        // Map click and right click
+        this.mapManager.addListener(MapManager.LISTENER_ADD_CLICKED, e => this.onMapClicked(e))
+        this.mapManager.addListener(MapManager.LISTENER_FINISH_CLICKED, e => this.onMapClickFinished(e))
+
+        // Add or generate points
+        this.pointsPanel.addListener(PointsPanel.LISTENER_ADD_CLICKED, e => this.onAddPointClicked(e))
+        this.pointsPanel.addListener(PointsPanel.LISTENER_GEN_CLICKED, (e, params) => this.onGenPointsClicked(e, params[0]))
+
+        this.fetcherManager.addListener(FetcherManager.LISTENER_FIX_POINTS_FETCHED, p => this.onFixPointsFetched(p))
+        this.fetcherManager.addListener(FetcherManager.LISTENER_ALL_DATA_FETCHED, d => this.onAllDataFetched(d))
+
+        // Request for fetching routes
+        this.generatorPanel.addListener(GeneratorsPanel.LISTENER_FETCH_CLICKED, (e, params) => this.onFetchRoutesClicked(e, params[0]))
+
+        this.menuPanel.addListener(MenuPanel.LISTENER_SHOW_CHANGED, e => this.onShowPathChanged(e))
+        this.menuPanel.addListener(MenuPanel.LISTENER_CLEAR_CLICKED, e => this.onClearMapClicked(e))
+        this.menuPanel.addListener(MenuPanel.LISTENER_LIST_CLICKED, e => this.onListPointsClicked(e))
+
+        this.resultsPanel.addListener(ResultsPanel.LISTENER_SHOW_SEGMENT, e => this.onShowSegmentClicked(e))
     }
 
     onAddPointClicked(e) {
@@ -83,16 +89,21 @@ export default class MainModule {
     }
 
     onGenPointsClicked(e, n) {
-        this.stepManager.init()
         const bounds = this.mapManager.mapBounds()
         const points = this.stepManager.pointsAsArray(n, bounds)
-        this.stepManager.fixPoints(points)
+
+        this.stepManager.init()
+        this.fetcherManager.fetchFixPoints(points)
+    }
+
+    onFixPointsFetched(data) {
+        this.stepManager.loadSteps(data)
+        this.mapManager.loadMarkers(this.stepManager.asStepArray(false, true))
+        this.pointsPanel.enablePanelElements()
+        this.generatorPanel.enablePanelElements()
     }
 
     onStepsLoaded(steps) {
-        this.mapManager.loadMarkers(steps)
-        this.pointsPanel.enablePanelElements()
-        this.generatorPanel.enablePanelElements()
     }
 
     onFetchRoutesClicked(e, libs) {
@@ -101,7 +112,7 @@ export default class MainModule {
             return
         }
 
-        this.fetcherManager.executeRequest(this.stepManager.toRequest(), libs)
+        this.fetcherManager.fetchRoutes(this.stepManager.toRequest(), libs)
     }
 
     onAllDataFetched(data) {

@@ -28,11 +28,11 @@ export default class Route {
         return this.steps.get(k)
     }
 
-    asArrayObjects(){
+    get asArrayObjects(){
         return [...this.steps].map(([id, step]) => ({id, step}))
     }
 
-    asArray() {
+    get asArray() {
         return [...this.steps].map(([id, step]) => (step))
     }
 
@@ -97,14 +97,14 @@ export default class Route {
 
         const path = []
         this.steps.forEach(step => {
-            if (step.nodes()) path.push(step.nodes())
+            if (step.nodes) path.push(step.nodes)
         })
 
         return path
     }
 
     segmentPath(k) {
-        return this.steps.get(k).nodes(true)
+        return this.steps.get(k).nodes
     }
 
     has(k) {

@@ -40,25 +40,28 @@ export default class TMapFetcher extends BaseFetcher {
         const num = req.SPointList.nodes.length + 1
         if (num < 10) throw new Error('InvalidLength: tmap request is possible when the number of delivery destinations is 10, 20, 30, 100.')
 
-        const type = 'find-route'
+        const type = REQUEST_FIND_ROUTE
+        const re = /#/gi
+        const url = this.apiURL.replace(re, `${num}`)
 
-        let url, options
-        if (this.isRequestTestMode(type)) {
-            url = this.testResponse(type)
-            options = {
-                method: 'GET'
-            }
-        } else {
-            const re = /#/gi
-            url = this.apiURL().replace(re, `${num}`)
-            options = {
-                method: 'POST',
+        return this.prepareRequest(type, url, req)
+    }
+
+    prepareRequest(type, prod_url, req) {
+        const url = this.isRequestTestMode(type) ? this.testResponse(type) : prod_url
+        let options = {
+            method: this.isRequestTestMode(type) ? 'GET' : 'POST'
+        }
+
+        if (!this.isRequestTestMode(type)) {
+            const optionsExt = {
                 headers: {
-                    'appKey': this.apiKey(),
-                    'Content-type': 'application/json'
+                    'appKey': this.apiKey,
+                    'Content-Type': 'application/json'
                 },
-                body: serialize(this.makeTMapReqObject(req))
+                body: serialize(this.makeTMapReqObject(req)),
             }
+            options = {...options, ...optionsExt}
         }
 
         console.log({url, options})
@@ -75,7 +78,6 @@ export default class TMapFetcher extends BaseFetcher {
 
     parseRoute(data) {
         const route = new Route(TMapAPI.TAG)
-
 
         let step, prev = null
         data.features.forEach(feature => {

@@ -121,7 +121,7 @@ export default class ResultsPanel extends BasePanel {
 
     renderTimeline(api, route) {
         const timeline = this.timelineByAPI(api)
-        const nodes = route.asArray()
+        const nodes = route.asArray
 
         this.setMainTab(api)
         this.enableTabByAPI(api)
