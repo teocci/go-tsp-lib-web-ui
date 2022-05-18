@@ -73,8 +73,9 @@ export default class TLibFetcher extends BaseFetcher {
 
     parseRoute(data) {
         const route = new Route(TLibAPI.TAG)
-        data.SPathList.paths.forEach(path => {
-            const step = new Step(path.id, path.id)
+        let step
+        data.SPathList.paths.forEach((path, i) => {
+            step = new Step(path.id, path.id)
             step.distance = path.cost
 
             step.path = new Path()
@@ -85,10 +86,18 @@ export default class TLibFetcher extends BaseFetcher {
             path.SLineString.nodes.forEach(node => {
                 step.path.nodes.push(new kakao.maps.LatLng(node.y, node.x))
             })
-            step.position = step.path.start
+            step.position = step.path.end
+
+            if (i === 0) {
+                route.baseStep = new Step(i, '시작점')
+                route.baseStep.type = Step.TYPE_START
+                route.baseStep.point = step.point
+                route.baseStep.position = step.path.start
+            }
 
             route.addStep(path.id, step)
         })
+        step.type = Step.TYPE_END
 
         return route
     }

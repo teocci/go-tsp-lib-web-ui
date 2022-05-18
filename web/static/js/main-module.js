@@ -109,7 +109,7 @@ export default class MainModule {
         this.stepManager.matchRoutes(data)
         this.summaryPanel.updateInfo(data)
 
-        this.resultsPanel.renderTimelines(data, this.stepManager.startStep())
+        this.resultsPanel.renderTimelines(data)
 
         this.mapManager.loadRoutes(data)
         this.mapManager.loadOverlays(data)

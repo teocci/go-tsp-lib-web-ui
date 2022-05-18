@@ -111,22 +111,23 @@ export default class ResultsPanel extends BasePanel {
         })
     }
 
-    renderTimelines(data, start) {
+    renderTimelines(data) {
         this.mainTabId = null
         this.disableTabs()
-        data.forEach(r => this.renderTimeline(r.api, r.route, start))
+        data.forEach(r => this.renderTimeline(r.api, r.route))
         this.openTabContentByAPI(this.mainTabId)
         this.show()
     }
 
-    renderTimeline(api, route, start) {
+    renderTimeline(api, route) {
         const timeline = this.timelineByAPI(api)
         const nodes = route.asArray()
 
         this.setMainTab(api)
         this.enableTabByAPI(api)
 
-        const steps = [start, ...nodes]
+        const steps = [route.baseStep, ...nodes]
+        console.log({steps})
         steps.forEach(step => {
             const elem = this.createWaypoint(api, step)
             timeline.appendChild(elem)
@@ -145,12 +146,6 @@ export default class ResultsPanel extends BasePanel {
         tag.className = 'tag'
         tag.textContent = step.id === 0 ? 'S' : `${step.label}`
 
-        // const img = document.createElement('img')
-        // img.src = '../img/display_marker.png'
-        //
-        // const val = document.createElement('div')
-        // val.textContent = step.id === 0 ? 'S' : `${step.label}`
-
         const info = document.createElement('div')
         info.className = 'info'
 
@@ -158,8 +153,8 @@ export default class ResultsPanel extends BasePanel {
         cost.className = 'cost'
         cost.textContent = step.id === 0 ? step.label : distanceFormatter(step.distance)
 
-        // tag.append(img, val)
         info.appendChild(cost)
+
         stepElem.append(tag, info)
 
         return stepElem

@@ -76,36 +76,47 @@ export default class TMapFetcher extends BaseFetcher {
     parseRoute(data) {
         const route = new Route(TMapAPI.TAG)
 
+
+        let step, prev = null
         data.features.forEach(feature => {
             const id = parseInt(feature.properties.index)
             const x = feature.geometry.coordinates[0]
             const y = feature.geometry.coordinates[1]
 
-            let step
-            if (id === 0) {
-                step = new Step(0, 'base')
-                route.baseStep = step
-            } else if (id > 0) {
-                if (!route.has(id)) route.addStep(id, new Step(id, id))
-                step = route.step(id)
-            }
-
             if (feature.geometry.type === 'Point') {
+                step = new Step(id, id)
                 step.distance = feature.properties.distance
                 step.point = new Point(x, y)
                 step.position = new kakao.maps.LatLng(y, x)
+
+                if (id === 0) {
+                    step.type = Step.TYPE_START
+
+                    route.baseStep = new Step(id, '시작점')
+                    route.baseStep.type = step.type
+                    route.baseStep.point = step.point
+                    route.baseStep.position = step.position
+                } else {
+                    route.addStep(id, step)
+                }
+
+                prev = step
             }
 
             if (feature.geometry.type === 'LineString') {
-                step.path = new Path()
-                step.path.start = step.position
-                step.path.nodes = []
-                feature.geometry.coordinates.forEach(coord => {
-                    step.path.nodes.push(new kakao.maps.LatLng(coord[1], coord[0]))
-                })
-                step.path.end = step.path.nodes.pop()
+                step = route.has(id) ? route.step(id) : null
+                if (step != null) {
+                    step.path = new Path()
+                    step.path.start = prev.position
+                    step.path.end = step.position
+                    step.path.nodes = []
+                    feature.geometry.coordinates.forEach(coord => {
+                        step.path.nodes.push(new kakao.maps.LatLng(coord[1], coord[0]))
+                    })
+                }
             }
         })
+        step.type = Step.TYPE_END
 
         return route
     }
