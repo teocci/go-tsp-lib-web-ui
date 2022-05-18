@@ -209,10 +209,17 @@ export default class MapManager extends BaseListener {
         const pl = route.polyline(type)
         const path = route.pathByType(type, stepId)
         console.log({route, type, pl, path})
-
+      
         pl.load(path)
         pl.render(this.map)
     }
+
+    clearAllSegment(){
+        APIS.forEach(api => {
+            this.routeByAPI(api).clearSegmentPL()
+        })
+    }
+    
 
     moveMapToBase(api) {
         const route = this.routeByAPI(api)
