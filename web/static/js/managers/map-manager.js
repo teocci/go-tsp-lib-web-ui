@@ -214,6 +214,14 @@ export default class MapManager extends BaseListener {
         pl.render(this.map)
     }
 
+    moveMapToBase(api) {
+        const route = this.routeByAPI(api)
+        const step = route.baseStep
+        console.log({route, step})
+
+        this.map.setCenter(step.position);
+    }
+
     // drawTSPLine(lines) {
     //     let linePath = []
     //     let pointPath = []

@@ -31,6 +31,11 @@
     --bg-primary-color: hsl(0, 0%, 80%);
     --bg-accent-color: #FFEB93;
     --bg-tone-color: hsl(143, 84%, 37%);
+    --bg-orange-color: hsl(17, 100%, 50%);
+    --bg-orange-dark-color: hsl(17, 100%, 40%);
+
+    --bg-yellow-color: hsl(56, 100%, 50%);
+    --bg-gold-color: hsl(46, 100%, 50%);
 
     --thumb-accent-color: hsl(0, 0%, 66.3%);
     --thumb-contrast-color: hsl(210, 12.6%, 50%);
@@ -40,6 +45,8 @@
     --main-accent-color: hsl(211, 100%, 57%);
     --main-strong-color: hsl(211, 100%, 40%);
     --main-contrast-color: hsl(0, 0%, 25%);
+    --main-contrast-light-color: hsl(0, 0%, 30%);
+    --main-contrast-dark-color: hsl(0, 0%, 20%);
 
     --tlib-color: hsl(357, 100.0%, 59.8%);
     --tmap-color: hsl(203, 100.0%, 38.4%);
@@ -707,7 +714,7 @@ body * {
 }
 
 .timeline .step:before {
-    --bg-color: var(--main-primary-color);
+    --bg-color: var(--main-accent-color);
     content: '';
     position: absolute;
     left: 15px;
@@ -725,6 +732,7 @@ body * {
 
 .timeline .step .tag {
     --bg-color: var(--main-primary-color);
+    --border-color: var(--main-accent-color);
     --tex-color: var(--light-text-color);
     width: 35px;
     height: 35px;
@@ -733,7 +741,7 @@ body * {
     justify-content: center;
     align-items: center;
     background: var(--bg-color);
-    border: 2px solid var(--main-accent-color);
+    border: 2px solid var(--border-color);
     border-radius: 50%;
     color: var(--tex-color);
     font-size: 1rem;
@@ -744,12 +752,13 @@ body * {
 }
 
 .timeline .step .tag.active {
-    --bg-color: var(--bg-tone-color);
-    color: var(--tex-color);
+    --bg-color: var(--bg-gold-color);
+    --border-color: var(--main-strong-color);
+    --tex-color: var(--main-contrast-dark-color);
 }
 
 .timeline .step.active:before {
-    --bg-color: var(--bg-tone-color)
+    --bg-color: var(--bg-gold-color)
 }
 
 .timeline .step .info {

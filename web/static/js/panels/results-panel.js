@@ -187,6 +187,15 @@ export default class ResultsPanel extends BasePanel {
         if (tab) tab.disabled = false
     }
 
+    activateStep(api, step) {
+        this.removeActiveByAPI(api)
+        step.activeStep = true
+        step.classList.add('active')
+
+        const tag = step.querySelector('.tag')
+        if (tag) tag.classList.add('active')
+    }
+
     removeActiveByAPI(api) {
         const timeline = this.timelineByAPI(api)
         const steps = timeline.querySelectorAll('.step')
@@ -211,16 +220,7 @@ export default class ResultsPanel extends BasePanel {
 
     handleOnShowSegmentClicked(e) {
         const target = e.currentTarget
-        const api = target.dataset.api
-
         if (target.activeStep) return
-
-        this.removeActiveByAPI(api)
-        target.classList.add('active')
-
-        const tag = target.querySelector('.tag')
-        if (tag) tag.classList.add('active')
-        target.activeStep = true
 
         this.callListener(ResultsPanel.LISTENER_SHOW_SEGMENT, e)
     }

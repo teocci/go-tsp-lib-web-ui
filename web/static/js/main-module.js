@@ -149,9 +149,15 @@ export default class MainModule {
         const stepId = parseInt(target.dataset.stepId)
         console.log({target, api, stepId})
 
-        this.menuPanel.activateRouteBy(api)
+        this.resultsPanel.activateStep(api, target)
 
-        this.mapManager.renderRouteByAPI(api, POLYLINE_TYPE_ROUTE)
-        this.mapManager.renderSegment(api, stepId)
+        if (stepId === 0) {
+            this.mapManager.moveMapToBase(api)
+        } else {
+            this.menuPanel.activateRouteBy(api)
+
+            this.mapManager.renderRouteByAPI(api, POLYLINE_TYPE_ROUTE)
+            this.mapManager.renderSegment(api, stepId)
+        }
     }
 }
