@@ -67,7 +67,18 @@ export default class MainModule {
         this.resultsPanel.addListener(ResultsPanel.LISTENER_SHOW_SEGMENT, e => this.onShowSegmentClicked(e))
     }
 
+    reset() {
+        this.mapManager.reset()
+        this.stepManager.reset()
+        this.pointsPanel.reset()
+        this.generatorPanel.reset()
+        this.resultsPanel.reset()
+        this.summaryPanel.reset()
+        this.menuPanel.reset()
+    }
+
     onAddPointClicked(e) {
+        this.reset()
         this.mapManager.activateClickListener()
     }
 
@@ -82,17 +93,17 @@ export default class MainModule {
     onMapClickFinished(e) {
         this.pointsPanel.enablePanelElements()
         this.generatorPanel.enablePanelElements()
-        this.mapManager.removeMarkers()
+        this.mapManager.resetMarkers()
 
         const points = this.stepManager.pointsAsArray()
-        this.stepManager.fixPoints(points)
+        this.fetcherManager.fetchFixPoints(points)
     }
 
     onGenPointsClicked(e, n) {
+        this.reset()
+
         const bounds = this.mapManager.mapBounds()
         const points = this.stepManager.pointsAsArray(n, bounds)
-
-        this.stepManager.init()
         this.fetcherManager.fetchFixPoints(points)
     }
 
@@ -101,9 +112,6 @@ export default class MainModule {
         this.mapManager.loadMarkers(this.stepManager.asStepArray(false, true))
         this.pointsPanel.enablePanelElements()
         this.generatorPanel.enablePanelElements()
-    }
-
-    onStepsLoaded(steps) {
     }
 
     onFetchRoutesClicked(e, libs) {
@@ -146,7 +154,7 @@ export default class MainModule {
     }
 
     onClearMapClicked(e) {
-        console.log({e})
+        this.reset()
     }
 
     onListPointsClicked(e) {

@@ -20,15 +20,15 @@ export default class Route {
         this.steps.set(k, v)
     }
 
-    addPolyline(k, v) {
-        this.polylines.set(k, v)
-    }
-
     step(k) {
         return this.steps.get(k)
     }
 
-    get asArrayObjects(){
+    resetSteps() {
+        this.steps = new Map()
+    }
+
+    get asArrayObjects() {
         return [...this.steps].map(([id, step]) => ({id, step}))
     }
 
@@ -36,28 +36,27 @@ export default class Route {
         return [...this.steps].map(([id, step]) => (step))
     }
 
+    addPolyline(k, v) {
+        this.polylines.set(k, v)
+    }
+
     polyline(k) {
         return this.polylines.get(k) ?? null
     }
 
-    clearPolylines() {
-        for (const pl of this.polylines.values()) {
-            console.log({pl})
-            pl.remove()            
-        }
+    resetPolylines() {
+        this.polylines.forEach(pl => pl.remove())
+        this.polylines = new Map()
     }
 
     clearSegmentPL() {
-        for (const pl of this.polylines.values()) {
-            console.log({pl})        
-            if(pl.type === Polyline.TYPE_SEGMENT){
-                pl.remove()
-            }           
-        }
+        this.polylines.forEach(pl => {
+            if (pl.type === Polyline.TYPE_SEGMENT) pl.remove()
+        })
     }
 
     hidePolyline(k) {
-        this.polyline(k).setMap(null)
+        this.polyline(k).remove()
     }
 
     loadPLPaths() {
@@ -66,7 +65,7 @@ export default class Route {
             const pl = this.polyline(item.type)
             pl.options(item.style)
 
-            if (item.type ===  Polyline.TYPE_SEGMENT) return
+            if (item.type === Polyline.TYPE_SEGMENT) return
 
             const path = this.pathByType(item.type)
             pl.load(path)

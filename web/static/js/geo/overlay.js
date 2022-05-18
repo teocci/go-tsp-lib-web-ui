@@ -12,6 +12,7 @@ export default class Overlay {
         this._pos = null
     }
 
+    // TODO use position from the instance instead
     initElement() {
         this.instance = new kakao.maps.CustomOverlay({
             content: this.createElement(),
@@ -66,7 +67,6 @@ export default class Overlay {
 
     render(map) {
         this.instance.setMap(map)
-        this.instance.setVisible(true)
     }
 
     remove() {

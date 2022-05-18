@@ -21,6 +21,8 @@ export default class ResultsPanel extends BasePanel {
         this.mainTabId = null
 
         this.createPanel()
+
+        this.reset()
     }
 
     createPanel() {
@@ -77,6 +79,15 @@ export default class ResultsPanel extends BasePanel {
         this.placeholder.append(tabs, content)
     }
 
+    reset() {
+        this.hide()
+        this.tabs.forEach(t => {
+            this.hideSection(t.section)
+            this.disableTab(t.tab)
+            this.destroyChildren(t.timeline)
+        })
+    }
+
     setMainTab(api) {
         this.mainTabId = this.mainTabId ?? api
     }
@@ -102,13 +113,19 @@ export default class ResultsPanel extends BasePanel {
         console.log({api})
         this.hideAllTabContentElements()
         this.checkTabByAPI(api)
-        this.sectionByAPI(api).classList.add('active')
+        this.showSection(this.sectionByAPI(api))
     }
 
     hideAllTabContentElements() {
-        this.tabs.forEach(t => {
-            t.section.classList.remove('active')
-        })
+        this.tabs.forEach(t => this.hideSection(t.section))
+    }
+
+    showSection(section) {
+        section.classList.add('active')
+    }
+
+    hideSection(section) {
+        section.classList.remove('active')
     }
 
     renderTimelines(data) {
@@ -192,8 +209,8 @@ export default class ResultsPanel extends BasePanel {
         step.activeStep = true
         step.classList.add('active')
 
-        const tag = step.querySelector('.tag')
-        if (tag) tag.classList.add('active')
+        // const tag = step.querySelector('.tag')
+        // if (tag) tag.classList.add('active')
     }
 
     removeActiveByAPI(api) {
@@ -206,9 +223,9 @@ export default class ResultsPanel extends BasePanel {
             step.classList.remove('active')
         }
 
-        for (const tag of tags) {
-            tag.classList.remove('active')
-        }
+        // for (const tag of tags) {
+        //     tag.classList.remove('active')
+        // }
     }
 
     handleOnChange(e) {
@@ -325,9 +342,4 @@ export default class ResultsPanel extends BasePanel {
     //
     //     return eachDiv
     // }
-
-
-    static makeRouteTableForTMap(id, cost) {
-
-    }
 }

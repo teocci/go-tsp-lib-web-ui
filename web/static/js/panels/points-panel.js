@@ -23,11 +23,24 @@ export default class PointsPanel extends BasePanel {
         this.btnGenPath = document.getElementById('gen-points')
 
         this.radioGroup = document.getElementsByName('path-length')
+
+        this.initRadioGroup()
     }
 
     initHandlers() {
         this.btnAddPoints.onclick = e => this.handleAddPoints(e)
         this.btnGenPath.onclick = e => this.handleGenPoints(e)
+    }
+
+    reset() {
+        this.initRadioGroup()
+    }
+
+    initRadioGroup() {
+        this.radioGroup.forEach((r, i) => {
+            r.checked = i === 0
+            r.disabled = false
+        })
     }
 
     radioGroupValue() {
@@ -46,14 +59,13 @@ export default class PointsPanel extends BasePanel {
         this.callListener(PointsPanel.LISTENER_GEN_CLICKED, e, this.radioGroupValue())
     }
 
-    disablePanelElements(){
+    disablePanelElements() {
         this.disableBtnAddPoints()
         this.disableBtnGenPoints()
         this.disableRadioGroup()
     }
 
-    enablePanelElements(){
-        console.log('enablePanelElements')
+    enablePanelElements() {
         this.enableBtnAddPoints()
         this.enableBtnGenPoints()
         this.enableRadioGroup()

@@ -751,7 +751,7 @@ body * {
     transition: --bg-color 0.2s ease-out;
 }
 
-.timeline .step .tag.active {
+.timeline .step.active .tag {
     --bg-color: var(--bg-gold-color);
     --border-color: var(--main-strong-color);
     --tex-color: var(--main-contrast-dark-color);

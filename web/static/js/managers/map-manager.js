@@ -27,17 +27,17 @@ export default class MapManager extends BaseListener {
         this.panel = panel
 
         this.map = null
+        this.handlerOnClick = null
+
         this.markers = new Map()
         this.routes = new Map()
         this.overlays = new Map()
 
-        this.handlerOnClick = null
-
-        this.initPanel()
+        this.initMapPanel()
         this.initMapListeners()
     }
 
-    initPanel() {
+    initMapPanel() {
         const placeholder = this.panel.placeholder
         const options = {
             center: new kakao.maps.LatLng(36.4310406, 127.3934052),
@@ -49,11 +49,15 @@ export default class MapManager extends BaseListener {
     }
 
     initMapListeners() {
-
         this.handlerOnClick = e => {
             this.mapClickListener(e)
         }
+    }
 
+    reset() {
+        this.resetMarkers()
+        this.resetRoutes()
+        this.resetOverlays()
     }
 
     activateClickListener() {
@@ -102,7 +106,7 @@ export default class MapManager extends BaseListener {
         this.markers.set(this.markers.size, marker)
     }
 
-    removeMarkers() {
+    resetMarkers() {
         this.markers.forEach(m => m.setMap(null))
         this.markers = new Map()
     }
@@ -120,9 +124,16 @@ export default class MapManager extends BaseListener {
         this.routes.set(api, route)
     }
 
+    resetRoutes() {
+        this.routes.forEach(r => {
+            r.resetSteps()
+            r.resetPolylines()
+        })
+        this.routes = new Map()
+    }
+
     loadOverlays(data) {
         data.forEach(r => this.loadOverlay(r.api, r.route))
-        console.log({overlays: this.overlays})
     }
 
     loadOverlay(api, route) {
@@ -167,11 +178,16 @@ export default class MapManager extends BaseListener {
         return this.overlays?.size ?? 0
     }
 
-    activateOTagByAPI(api){
+    resetOverlays() {
+        this.overlays.forEach(ol => ol.remove())
+        this.overlays = new Map()
+    }
+
+    activateOTagByAPI(api) {
         this.overlays.forEach(o => o.activateTagByAPI(api))
     }
 
-    deactivateOTagByAPI(api){
+    deactivateOTagByAPI(api) {
         this.overlays.forEach(o => o.deactivateTagByAPI(api))
     }
 
@@ -209,21 +225,15 @@ export default class MapManager extends BaseListener {
         const pl = route.polyline(type)
         const path = route.pathByType(type, stepId)
         console.log({route, type, pl, path})
-      
+
         pl.load(path)
         pl.render(this.map)
     }
 
-    clearAllSegment(){
+    clearAllSegment() {
         APIS.forEach(api => {
             this.routeByAPI(api).clearSegmentPL()
         })
-    }
-    
-
-    moveMapToBase(api) {
-        const route = this.routeByAPI(api)
-        const step = route.baseStep
     }
 
     moveMapToStep(api, stepId = null) {

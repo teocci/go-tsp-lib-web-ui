@@ -25,6 +25,7 @@ export default class SummaryPanel extends BasePanel {
 
         this.initFields()
         this.initElements()
+        this.reset()
     }
 
     initFields() {
@@ -40,6 +41,12 @@ export default class SummaryPanel extends BasePanel {
             field.textContent = '-'
             this.fields.set(k, field)
         }
+    }
+
+    reset() {
+        this.fields.forEach(f => {
+            f.textContent = '-'
+        })
     }
 
     updateInfo(data) {

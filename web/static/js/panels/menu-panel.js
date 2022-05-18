@@ -35,8 +35,9 @@ export default class MenuPanel extends BasePanel {
                 const id = `show-${api}-${type}`
                 const cb = document.getElementById(id)
                 cb.value = type
-                cb.dataset.api = api
+                cb.checked = type === POLYLINE_TYPE_ROUTE
                 cb.disabled = true
+                cb.dataset.api = api
 
                 this.showPathCBGroup.set(id, cb)
             })
@@ -45,6 +46,21 @@ export default class MenuPanel extends BasePanel {
         //배달점 새로고침
         this.btnCleanMap = document.getElementById('clear-map')
         this.btnListPoints = document.getElementById('list-points')
+
+        this.reset()
+    }
+
+    initCBs() {
+        APIS.forEach(api => {
+            MenuPanel.SUPPORTED_PL_TYPES.forEach(type => {
+                const id = `show-${api}-${type}`
+                const cb = document.getElementById(id)
+                cb.value = type
+                cb.checked = type === POLYLINE_TYPE_ROUTE
+                cb.disabled = true
+                cb.dataset.api = api
+            })
+        })
     }
 
     initHandlers() {
@@ -54,6 +70,15 @@ export default class MenuPanel extends BasePanel {
 
         this.btnCleanMap.onclick = e => this.handleCleanMap(e)
         this.btnListPoints.onclick = e => this.handleListPoints(e)
+    }
+
+    reset() {
+        this.initCBs()
+        this.closeMenu()
+    }
+
+    closeMenu() {
+        this.options.classList.add('hidden')
     }
 
     handleToggleMenu(e) {

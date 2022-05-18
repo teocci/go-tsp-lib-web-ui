@@ -10,8 +10,6 @@ import BaseListener from '../base/base-listener.js'
 export default class StepManager extends BaseListener {
     static TAG = 'step-manager'
 
-    static LISTENER_STEPS_LOADED = 'on-steps-loaded'
-
     constructor() {
         super()
 
@@ -23,29 +21,9 @@ export default class StepManager extends BaseListener {
         this.steps = new Map()
     }
 
-    // fixPoints(points) {
-    //     if (!points) throw new Error('InvalidPoints: null points')
-    //
-    //     console.log({points})
-    //     const [start, ...rest] = points
-    //
-    //     const url = `${TLIB_SVR_URL}/fix_points`
-    //     fetch(url, {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-type': 'text/plain'
-    //         },
-    //         body: serialize({
-    //             SPoint: start,
-    //             EPoint: start,
-    //             SPointList: {
-    //                 nodes: rest
-    //             },
-    //         }),
-    //     }).then(r => r.json()).then(body => {
-    //         this.loadSteps(body)
-    //     })
-    // }
+    reset() {
+        this.init()
+    }
 
     // Random 좌표 n개 생성
     loadSteps(data) {

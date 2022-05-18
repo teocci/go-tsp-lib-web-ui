@@ -29,6 +29,10 @@ export default class GeneratorsPanel extends BasePanel {
         this.disablePanelElements()
     }
 
+    reset() {
+        this.disablePanelElements()
+    }
+
     initHandlers() {
         this.btnFetchRoutes.onclick = e => this.handleFetchRoutes(e)
     }
