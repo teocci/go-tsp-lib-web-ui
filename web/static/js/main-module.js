@@ -126,7 +126,11 @@ export default class MainModule {
             this.mapManager.removeRouteByAPI(api, type)
             this.mapManager.removeRouteByAPI(api, POLYLINE_TYPE_SEGMENT)
             this.resultsPanel.removeActiveByAPI(api)
-            this.mapManager.deactivateOTagByAPI(api)
+
+            console.log({isAPIOff: this.menuPanel.isAPIOff(api)})
+            if (this.menuPanel.isAPIOff(api)) {
+                this.mapManager.deactivateOTagByAPI(api)
+            }
         }
     }
 
@@ -152,12 +156,13 @@ export default class MainModule {
         this.resultsPanel.activateStep(api, target)
 
         if (stepId === 0) {
-            this.mapManager.moveMapToBase(api)
+            this.mapManager.moveMapToStep(api)
         } else {
             this.menuPanel.activateRouteBy(api)
 
             this.mapManager.renderRouteByAPI(api, POLYLINE_TYPE_ROUTE)
             this.mapManager.renderSegment(api, stepId)
+            this.mapManager.moveMapToStep(api, stepId)
         }
     }
 }

@@ -217,9 +217,20 @@ export default class MapManager extends BaseListener {
     moveMapToBase(api) {
         const route = this.routeByAPI(api)
         const step = route.baseStep
+    }
+
+    moveMapToStep(api, stepId = null) {
+        const route = this.routeByAPI(api)
+        const step = route.step(stepId) ?? route.baseStep
         console.log({route, step})
 
-        this.map.setCenter(step.position);
+        this.moveMapTo(step.position)
+    }
+
+    moveMapTo(pos) {
+        if (!pos) throw new Error('InvalidPosition: null pos')
+
+        this.map.setCenter(pos);
     }
 
     // drawTSPLine(lines) {

@@ -99,13 +99,25 @@ export default class MenuPanel extends BasePanel {
         })
     }
 
-    activateRouteBy(api){
+    activateRouteBy(api) {
         const id = `show-${api}-${POLYLINE_TYPE_ROUTE}`
         this.showPathCBGroup.get(id).checked = true
     }
 
-    deactivateRouteBy(api){
+    deactivateRouteBy(api) {
         const id = `show-${api}-${POLYLINE_TYPE_ROUTE}`
         this.showPathCBGroup.get(id).checked = false
+    }
+
+    isAPIOff(api) {
+        let isOff = true
+
+        for (const type of MenuPanel.SUPPORTED_PL_TYPES) {
+            const id = `show-${api}-${type}`
+            const cb = this.showPathCBGroup.get(id)
+            if (!cb.disabled && cb.checked) return false
+        }
+
+        return isOff
     }
 }

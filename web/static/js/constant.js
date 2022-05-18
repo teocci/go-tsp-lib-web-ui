@@ -17,9 +17,9 @@ const MARKERS = {
 /* color */
 const TLIB_ROUTE_COLOR = '#ff323d'
 const TMAP_ROUTE_COLOR = '#0079c4'
-// const SEGMENT_COLOR = '#73ca14'
+const SEGMENT_COLOR = '#73ca14'
 // const SEGMENT_COLOR = '#ff4900'
-const SEGMENT_COLOR = '#ffC400'
+// const SEGMENT_COLOR = '#ffC400'
 
 const TLIB_ROUTE_POLYLINE = {
     endArrow: true, strokeWeight: 4, // 선의 두께 입니다
