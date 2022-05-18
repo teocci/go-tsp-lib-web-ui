@@ -42,7 +42,17 @@ export default class Route {
 
     clearPolylines() {
         for (const pl of this.polylines.values()) {
-            pl.setMap(null)
+            console.log({pl})
+            pl.remove()            
+        }
+    }
+
+    clearSegmentPL() {
+        for (const pl of this.polylines.values()) {
+            console.log({pl})        
+            if(pl.type === Polyline.TYPE_SEGMENT){
+                pl.remove()
+            }           
         }
     }
 

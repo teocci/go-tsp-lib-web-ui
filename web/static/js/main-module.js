@@ -161,6 +161,8 @@ export default class MainModule {
             this.menuPanel.activateRouteBy(api)
 
             this.mapManager.renderRouteByAPI(api, POLYLINE_TYPE_ROUTE)
+
+            this.mapManager.clearAllSegment()
             this.mapManager.renderSegment(api, stepId)
             this.mapManager.moveMapToStep(api, stepId)
         }
