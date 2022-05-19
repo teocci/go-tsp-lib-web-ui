@@ -40,7 +40,7 @@ export default class MapManager extends BaseListener {
     initMapPanel() {
         const placeholder = this.panel.placeholder
         const options = {
-            center: new kakao.maps.LatLng(36.4310406, 127.3934052),
+            center: new kakao.maps.LatLng(RANDOM_30_CENTER.y, RANDOM_30_CENTER.x),
             level: 3
         }
 
@@ -98,6 +98,7 @@ export default class MapManager extends BaseListener {
         marker.setTitle(title)
         marker.setImage(i === 0 ? MARKERS.start : MARKERS.waypoint)
         marker.setMap(this.map)
+        marker.setZIndex(1)
 
         return marker
     }

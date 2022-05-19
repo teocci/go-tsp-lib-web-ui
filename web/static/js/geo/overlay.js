@@ -13,6 +13,7 @@ export default class Overlay {
     initElement() {
         this.instance = new kakao.maps.CustomOverlay({
             content: this.createElement(),
+            zIndex: Z_INDEX_OVERLAYS,
         })
     }
 

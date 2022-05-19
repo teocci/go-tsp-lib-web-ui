@@ -14,7 +14,7 @@ export default class TLibAPI extends API {
         this.mode = FETCH_MODE_PROD
 
         this.addRequest(REQUEST_FIX_POINTS, 'POST', FIX_POINTS_TEST_URL)
-        this.addRequest(REQUEST_FIND_ROUTE, 'POST', FIND_ROUTE_TEST_URL)
+        this.addRequest(REQUEST_FIND_ROUTE, 'POST', TLIB_TEST_30)
     }
 
     static instance() {

@@ -810,12 +810,10 @@ body * {
 .modal-wrapper.hidden {
     opacity: 0;
     transition: opacity 0.25s ease-in-out;
-    visibility: hidden;
 }
 
 .modal-wrapper {
     opacity: 1;
-    visibility: visible;
 }
 
 .modal-wrapper section {

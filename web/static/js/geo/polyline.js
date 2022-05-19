@@ -14,6 +14,14 @@ export default class Polyline {
         this.instance = new kakao.maps.Polyline(style)
     }
 
+    set zIndex(v){
+        this.instance.setZIndex(v)
+    }
+
+    get zIndex(){
+        return this.instance.getZIndex()
+    }
+
     options(style) {
         this.instance.setOptions(style)
     }

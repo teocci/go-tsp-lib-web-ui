@@ -67,7 +67,7 @@ export default class StepManager extends BaseListener {
 
     pointsAsArray(n, bounds) {
         if (n && bounds) {
-            const points = TLibAPI.instance().isRequestTestMode(REQUEST_FIX_POINTS) ? RANDOM_TEST_POINTS : this.genRandomInBounds(n, bounds)
+            const points = this.isRandomTestMode() ? RANDOM_30_TEST_POINTS : this.genRandomInBounds(n, bounds)
             points.forEach(p => this.appendPoint(p))
             return points
         }
@@ -199,32 +199,7 @@ export default class StepManager extends BaseListener {
         return serialize(this.toRequest())
     }
 
-    // findPointByXY(id, x, y) {
-    //     for (const p of this.steps) {
-    //         if (p.compareXY(new Step(id, x, y))) return p
-    //     }
-    //
-    //     return null
-    // }
-    //
-    // putTLibPoint(id, x, y) {
-    //     const p = this.findPointByXY(id, x, y)
-    //     if (p == null) {
-    //         console.error(`[TLIB] NO POINT x : ${x}, y : ${y}`)
-    //         return false
-    //     }
-    //
-    //     if (!p.hasTLib()) p.tlibPoint = new Step(id, id, x, y)
-    // }
-    //
-    // putTMapPoint(id, x, y) {
-    //     const p = this.findPointByXY(id, x, y)
-    //     if (p == null) {
-    //         console.error(`[TMAP] NO POINT x : ${x}, y : ${y}`)
-    //         return false;
-    //     }
-    //
-    //     if (!p.hasTMap()) p.tmapPoint = new Step(id, id, x, y)
-    // }
-
+    isRandomTestMode() {
+        return RANDOM_MODE === RANDOM_MODE_TEST
+    }
 }

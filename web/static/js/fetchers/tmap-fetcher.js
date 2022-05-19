@@ -22,7 +22,7 @@ export default class TMapFetcher extends BaseFetcher {
     initPolyLines() {
         this.routePolyLine = new kakao.maps.Polyline(TMAP_ROUTE_POLYLINE)
         this.pointPolyLine = new kakao.maps.Polyline(TMAP_POINT_POLYLINE)
-        this.partlyPolyLine = new kakao.maps.Polyline(PARTLY_POLYLINE)
+        this.partlyPolyLine = new kakao.maps.Polyline(SEGMENT_POLYLINE)
     }
 
     async fetchRoutePath(req) {
