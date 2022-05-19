@@ -12,7 +12,7 @@ export default class TMapAPI extends API {
 
         this.url = TMAP_SVR_URL
         this.key = TMAP_APP_KEY
-        this.mode = FETCH_MODE_TEST
+        this.mode = FETCH_MODE_PROD//FETCH_MODE_TEST
 
         this.addRequest(REQUEST_FIND_ROUTE, 'POST', TMAP_TEST_API)
     }

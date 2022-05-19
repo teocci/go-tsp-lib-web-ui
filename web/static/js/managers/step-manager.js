@@ -5,6 +5,7 @@
 import Point from '../geo/point.js'
 import Step from '../geo/step.js'
 import BaseListener from '../base/base-listener.js'
+import TLibAPI from '../apis/tlib-api.js'
 
 // Data Structure to map points
 export default class StepManager extends BaseListener {
@@ -66,7 +67,7 @@ export default class StepManager extends BaseListener {
 
     pointsAsArray(n, bounds) {
         if (n && bounds) {
-            const points = this.isTestMode() ? RANDOM_TEST_POINTS : this.genRandomInBounds(n, bounds)
+            const points = TLibAPI.instance().isTestMode()? RANDOM_TEST_POINTS : this.genRandomInBounds(n, bounds)
             points.forEach(p => this.appendPoint(p))
             return points
         }
@@ -226,7 +227,4 @@ export default class StepManager extends BaseListener {
     //     if (!p.hasTMap()) p.tmapPoint = new Step(id, id, x, y)
     // }
 
-    isTestMode() {
-        return RANDOM_MODE === RANDOM_MODE_TEST
-    }
 }
