@@ -25,7 +25,7 @@ export default class ModalPanel extends BasePanel {
 
         const title = document.createElement('div')
         title.classList.add('title')
-        title.textContent = 'Modal title'
+        title.textContent = '경로 비교'
 
         const close = document.createElement('div')
         close.classList.add('close')
@@ -62,7 +62,7 @@ export default class ModalPanel extends BasePanel {
         const thIndex = document.createElement('th')
         thIndex.textContent = '#'
         const thPoints = document.createElement('th')
-        thPoints.textContent = 'Points'
+        thPoints.textContent = '배달점'
         const thTLib = document.createElement('th')
         thTLib.textContent = 'Tlib'
         const thTMap = document.createElement('th')
@@ -100,19 +100,20 @@ export default class ModalPanel extends BasePanel {
     createTD(step) {
         const id = step.id
         const td = document.createElement('tr')
+        td.dataset.index = id
+
         const tdIndex = document.createElement('td')
-        tdIndex.dataset.index = id
-        tdIndex.textContent = `${id}`
+        tdIndex.textContent = id
+
         const tdPoints = document.createElement('td')
-        tdPoints.dataset.index = id
         tdPoints.textContent = step.point.toString()
+
         const tdTLib = document.createElement('td')
         tdTLib.dataset.api = 'tlib'
-        tdTLib.dataset.index = id
         tdTLib.textContent = ModalPanel.EMPTY_VALUE
+
         const tdTMap = document.createElement('td')
         tdTMap.dataset.api = 'tmap'
-        tdTMap.dataset.index = id
         tdTMap.textContent = ModalPanel.EMPTY_VALUE
 
         td.append(tdIndex, tdPoints, tdTLib, tdTMap)
@@ -120,12 +121,27 @@ export default class ModalPanel extends BasePanel {
     }
 
     // TODO 용림아 do your magic here
-    updateTDbyAPI() {
+    updateTDbyAPI(api, route) {
+        const rows = this.table.getElementsByTagName('tr')
+        const TLIB_COL = 2
+        const TMAP_COL = 3
 
+        let column = api === 'tlib' ? TLIB_COL : TMAP_COL;
+
+        route.steps.forEach(step =>{
+            [...rows].forEach( row =>{
+                if(step.id === parseInt(row.dataset.index)){
+                    let item = row.getElementsByTagName('td')[column]
+                    item.textContent = step.point.toString()
+                }
+
+            })
+        })
     }
 
     loadRoutes(data) {
         console.log({data})
+        data.forEach(r => this.updateTDbyAPI(r.api, r.route))
     }
 
     show() {

@@ -133,7 +133,7 @@ export default class MainModule {
         this.menuPanel.enableCBByData(data)
         this.stepManager.matchRoutes(data)
         this.summaryPanel.updateInfo(data)
-
+        
         this.resultsPanel.renderTimelines(data)
 
         this.modalPanel.loadRoutes(data)
