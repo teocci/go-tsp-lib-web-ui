@@ -11,6 +11,7 @@ import ResultsPanel from './panels/results-panel.js'
 import MapManager from './managers/map-manager.js'
 import SummaryPanel from './panels/summary-panel.js'
 import MenuPanel from './panels/menu-panel.js'
+import ModalPanel from './panels/modal-panel.js'
 import Point from './geo/point.js'
 
 export default class MainModule {
@@ -34,6 +35,7 @@ export default class MainModule {
 
         const summaryElement = document.getElementById('summary')
         const menuElement = document.getElementById('menu')
+        const modalElement = document.getElementById('modal')
 
         this.mapPanel = new MapPanel(mapElement)
 
@@ -42,7 +44,9 @@ export default class MainModule {
         this.resultsPanel = new ResultsPanel(resultElement)
 
         this.summaryPanel = new SummaryPanel(summaryElement)
+
         this.menuPanel = new MenuPanel(menuElement)
+        this.modalPanel = new ModalPanel(modalElement)
     }
 
     initHandlers() {
@@ -75,6 +79,7 @@ export default class MainModule {
         this.resultsPanel.reset()
         this.summaryPanel.reset()
         this.menuPanel.reset()
+        this.modalPanel.reset()
     }
 
     onAddPointClicked(e) {
@@ -110,6 +115,7 @@ export default class MainModule {
     onFixPointsFetched(data) {
         this.stepManager.loadSteps(data)
         this.mapManager.loadMarkers(this.stepManager.asStepArray(false, true))
+        this.modalPanel.loadFixedPoints(this.stepManager.asStepArray())
         this.pointsPanel.enablePanelElements()
         this.generatorPanel.enablePanelElements()
     }
@@ -130,6 +136,7 @@ export default class MainModule {
 
         this.resultsPanel.renderTimelines(data)
 
+        this.modalPanel.loadRoutes(data)
         this.mapManager.loadRoutes(data)
         this.mapManager.loadOverlays(data)
         this.mapManager.renderRoutes(POLYLINE_TYPE_ROUTE)
@@ -158,11 +165,12 @@ export default class MainModule {
     }
 
     onListPointsClicked(e) {
-        let str = ''
-        const points = this.stepManager.pointsAsArray()
-        points.forEach(p => str += `${p.toString()},`)
-        str = str.slice(0, -1)
-        alert(str)
+        // let str = ''
+        // const points = this.stepManager.pointsAsArray()
+        // points.forEach(p => str += `${p.toString()},`)
+        // str = str.slice(0, -1)
+        // alert(str)
+        this.modalPanel.open()
     }
 
     onShowSegmentClicked(e) {

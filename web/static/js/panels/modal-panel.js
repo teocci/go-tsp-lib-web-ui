@@ -1,0 +1,134 @@
+/**
+ * Created by RTT.
+ * Author: teocci@yandex.com on 2022-May-19
+ */
+import BasePanel from '../base/base-panel.js'
+
+export default class ModalPanel extends BasePanel {
+    constructor(element) {
+        if (!element) throw 'InvalidElement: null element'
+        super(element)
+
+        this.content = null
+        this.table = null
+
+        this.createPanel()
+        this.createEmptyTable()
+    }
+
+    createPanel() {
+        const section = document.createElement('section')
+        section.classList.add('modal-section')
+
+        const header = document.createElement('div')
+        header.classList.add('modal-header')
+
+        const title = document.createElement('div')
+        title.classList.add('title')
+        title.textContent = 'Modal title'
+
+        const close = document.createElement('div')
+        close.classList.add('close')
+        close.role = 'button'
+        close.onclick = e => this.close(e)
+        close.isCloseBtn = true
+
+        const icon = document.createElement('i')
+        icon.classList.add('fa', 'fa-times')
+        icon.ariaHidden = 'true'
+
+        const content = document.createElement('div')
+        content.classList.add('modal-content')
+
+        const trigger = document.createElement('div')
+        trigger.classList.add('outside-trigger')
+        trigger.onclick = e => this.close(e)
+
+        this.content = content
+
+        close.appendChild(icon)
+        header.append(title, close)
+
+        section.append(header, content)
+
+        this.placeholder.append(trigger, section)
+    }
+
+    createEmptyTable() {
+        const table = document.createElement('table')
+        table.classList.add('modal-table')
+
+        const tr = document.createElement('tr')
+        const thIndex = document.createElement('th')
+        thIndex.textContent = '#'
+        const thPoints = document.createElement('th')
+        thPoints.textContent = 'Points'
+        const thTLib = document.createElement('th')
+        thTLib.textContent = 'Tlib'
+        const thTMap = document.createElement('th')
+        thTMap.textContent = 'TMap'
+
+        tr.append(thIndex, thPoints, thTLib, thTMap)
+        table.append(tr)
+
+        this.table = table
+        this.content.appendChild(table)
+    }
+
+    open() {
+        this.show()
+        console.log('opened')
+    }
+
+    close(e) {
+        console.log({target: e.target, current: e.currentTarget})
+        e.preventDefault()
+        e.stopPropagation()
+        if (e.target === e.currentTarget || e.target.parentNode.isCloseBtn) this.hide()
+    }
+
+    reset() {
+        this.destroyChildren(this.content)
+        this.createEmptyTable()
+    }
+
+    loadFixedPoints(steps) {
+        console.log({steps})
+        steps.forEach(step => this.createTD(step))
+    }
+
+    createTD(step) {
+        const id = step.id
+        const td = document.createElement('tr')
+        const tdIndex = document.createElement('td')
+        tdIndex.dataset.index = id
+        tdIndex.textContent = `${id}`
+        const tdPoints = document.createElement('td')
+        tdPoints.dataset.index = id
+        tdPoints.textContent = step.point.toString()
+        const tdTLib = document.createElement('td')
+        tdTLib.dataset.api = 'tlib'
+        tdTLib.dataset.index = id
+        tdTLib.textContent = ModalPanel.EMPTY_VALUE
+        const tdTMap = document.createElement('td')
+        tdTMap.dataset.api = 'tmap'
+        tdTMap.dataset.index = id
+        tdTMap.textContent = ModalPanel.EMPTY_VALUE
+
+        td.append(tdIndex, tdPoints, tdTLib, tdTMap)
+        this.table.append(td)
+    }
+
+    // TODO 용림아 do your magic here
+    updateTDbyAPI() {
+
+    }
+
+    loadRoutes(data) {
+        console.log({data})
+    }
+
+    show() {
+        super.show()
+    }
+}

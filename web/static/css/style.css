@@ -61,10 +61,14 @@
     --right-aside-width: 5vw;
 
     --summary-width: 280px;
+    --modal-width: 680px;
 
     --menu-options-bottom: 90px;
     --menu-options-width: 180px;
     --menu-options-height: 320px;
+
+    --z-summary: 100;
+    --z-modal: 200;
 }
 
 *, *:before, *:after {
@@ -287,9 +291,9 @@ body * {
 
 .summary {
     width: var(--summary-width);
-    z-index: 100;
     top: 0;
     left: var(--aside-width);
+    z-index: var(--z-summary);
 }
 
 .summary table, .summary td, .summary th {
@@ -779,6 +783,93 @@ body * {
 
 .timeline .step:first-child:before {
     display: none;
+}
+
+/* Modal */
+.modal-wrapper {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: var(--z-modal);
+}
+
+.modal-wrapper.hidden {
+    opacity: 0;
+    transition: opacity 0.25s ease-in-out;
+    visibility: hidden;
+}
+
+.modal-wrapper {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-wrapper section {
+    width: var(--modal-width);
+    z-index: calc(var(--z-modal) + 1);
+}
+
+.modal-wrapper .modal-header {
+    background: var(--main-accent-color);
+    color: var(--light-text-color);
+    line-height: 2rem;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    user-select: none;
+}
+
+.modal-wrapper .modal-header .title {
+    padding-left: 5px;
+}
+
+.modal-wrapper .modal-header .close {
+    cursor: pointer;
+    height: 2em;
+    width: 2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-wrapper table, .summary td, .summary th {
+    border: 1px solid var(--light-gray-d09);
+    border-left: none;
+    border-right: none;
+    line-height: 2rem;
+    padding: 0 10px;
+}
+
+.modal-wrapper table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--bg-light-color);
+}
+
+.modal-wrapper th {
+    background: var(--main-accent-color);
+    color: var(--light-text-color);
+}
+
+.modal-wrapper td.cell {
+    text-align: right
+}
+
+.modal-wrapper .outside-trigger {
+    cursor: default;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    z-index: calc(var(--z-modal) - 1);
 }
 
 .hidden {

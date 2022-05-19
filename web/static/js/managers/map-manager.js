@@ -3,9 +3,9 @@
  * Author: teocci@yandex.com on 2022-May-12
  */
 import BaseListener from '../base/base-listener.js'
+import Point from '../geo/point.js'
 import Polyline from '../geo/polyline.js'
 import Overlay from '../geo/overlay.js'
-import Point from '../geo/point.js'
 
 export default class MapManager extends BaseListener {
     static TAG = 'map'
