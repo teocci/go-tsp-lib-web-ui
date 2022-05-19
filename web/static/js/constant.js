@@ -111,13 +111,7 @@ POLYLINE_STYLES[TMAP_API_NAME] = TMAP_POLYLINE_STYLES
 const OFFSET_Y = -0.0001
 const OFFSET_X = 0 //-0.0001
 
-const RANDOM_MODE_PROD = 'prod'
-const RANDOM_MODE_TEST = 'test'
-const RANDOM_MODE = RANDOM_MODE_TEST
 
-const FETCH_MODE_PROD = 'prod'
-const FETCH_MODE_TEST = 'test'
-const FETCH_MODE = FETCH_MODE_TEST
 
 let kakaoMap = null
 
@@ -141,7 +135,8 @@ const TMAP_TEST_API = 'https://gist.githubusercontent.com/amissu89/be5fc038dc559
 const RTT = {x: 127.3934052, y: 36.4310406}
 const RANDOM_30_CENTER = {x: 127.3877229, y: 36.3590841}
 
-const RANDOM_TEST_POINTS = [
+
+const RANDOM_10_TEST_POINTS = [
     {'x': 127.386293, 'y': 36.430404},
     {'x': 127.391044, 'y': 36.427786},
     {'x': 127.402162, 'y': 36.433517},
@@ -186,6 +181,17 @@ const RANDOM_30_TEST_POINTS = [
     {x: 127.4023008481491, y: 36.3603745812103},
     {x: 127.39986184662077, y: 36.36240796422763},
 ]
+
+const RANDOM_MODE_PROD = 'prod'
+const RANDOM_MODE_TEST = 'test'
+const RANDOM_MODE = RANDOM_MODE_TEST
+
+const FETCH_MODE_PROD = 'prod'
+const FETCH_MODE_TEST = 'test'
+const FETCH_MODE = FETCH_MODE_TEST
+
+const RANDOM_TEST_POINTS = RANDOM_30_TEST_POINTS
+
 
 function getProtocol() {
     return location.protocol

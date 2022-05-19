@@ -67,7 +67,7 @@ export default class StepManager extends BaseListener {
 
     pointsAsArray(n, bounds) {
         if (n && bounds) {
-            const points = this.isRandomTestMode() ? RANDOM_30_TEST_POINTS : this.genRandomInBounds(n, bounds)
+            const points = this.isRandomTestMode() ? RANDOM_TEST_POINTS : this.genRandomInBounds(n, bounds)
             points.forEach(p => this.appendPoint(p))
             return points
         }
