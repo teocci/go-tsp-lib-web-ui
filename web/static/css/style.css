@@ -797,7 +797,7 @@ body * {
 
 /* Modal */
 .modal-wrapper {
-    position: fixed;
+    position: absolute;
     top: calc(50vh - var(--modal-height) / 2);
     left: calc(50vw - var(--modal-width) / 2);
     width: var(--modal-width);
@@ -824,13 +824,14 @@ body * {
 }
 
 .modal-wrapper .modal-header {
-    background: var(--main-accent-color);
-    color: var(--light-text-color);
-    line-height: 2rem;
+    cursor: move;
+    user-select: none;
     display: flex;
     flex-flow: row nowrap;
     justify-content: space-between;
-    user-select: none;
+    background: var(--main-accent-color);
+    color: var(--light-text-color);
+    line-height: 2rem;
 }
 
 .modal-wrapper .modal-header .title {
@@ -882,7 +883,8 @@ body * {
 .modal-wrapper table tbody {
     display: block;
     width: 100%;
-    height: calc(var(--modal-height) - 65px);
+    height: 100%;
+    max-height: calc(var(--modal-height) - 65px);
     overflow-y: auto;
 }
 
@@ -894,16 +896,6 @@ body * {
 .modal-wrapper td.cell {
     text-align: right
 }
-
-/*.modal-wrapper .outside-trigger {*/
-/*    cursor: default;*/
-/*    position: fixed;*/
-/*    bottom: 0;*/
-/*    left: 0;*/
-/*    right: 0;*/
-/*    top: 0;*/
-/*    z-index: calc(var(--z-modal) - 1);*/
-/*}*/
 
 .hidden {
     display: none !important;

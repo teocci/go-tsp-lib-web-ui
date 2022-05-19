@@ -2,9 +2,9 @@
  * Created by RTT.
  * Author: teocci@yandex.com on 2022-May-19
  */
-import BasePanel from '../base/base-panel.js'
+import Draggable from '../base/base-draggable.js'
 
-export default class ModalPanel extends BasePanel {
+export default class ModalPanel extends Draggable {
     constructor(element) {
         if (!element) throw 'InvalidElement: null element'
         super(element)
@@ -14,6 +14,7 @@ export default class ModalPanel extends BasePanel {
 
         this.createPanel()
         this.createEmptyTable()
+        this.startDragEvent(this.header)
     }
 
     createPanel() {
@@ -44,6 +45,7 @@ export default class ModalPanel extends BasePanel {
         // trigger.classList.add('outside-trigger')
         // trigger.onclick = e => this.close(e)
 
+        this.header = header
         this.content = content
 
         close.appendChild(icon)
@@ -129,9 +131,9 @@ export default class ModalPanel extends BasePanel {
 
         let column = api === 'tlib' ? TLIB_COL : TMAP_COL;
 
-        route.steps.forEach(step =>{
-            [...rows].forEach( row =>{
-                if(step.id === parseInt(row.dataset.index)){
+        route.steps.forEach(step => {
+            [...rows].forEach(row => {
+                if (step.id === parseInt(row.dataset.index)) {
                     let item = row.getElementsByTagName('td')[column]
                     item.textContent = step.point.toString()
                 }
