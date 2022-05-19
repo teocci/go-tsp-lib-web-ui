@@ -40,9 +40,9 @@ export default class ModalPanel extends BasePanel {
         const content = document.createElement('div')
         content.classList.add('modal-content')
 
-        const trigger = document.createElement('div')
-        trigger.classList.add('outside-trigger')
-        trigger.onclick = e => this.close(e)
+        // const trigger = document.createElement('div')
+        // trigger.classList.add('outside-trigger')
+        // trigger.onclick = e => this.close(e)
 
         this.content = content
 
@@ -51,13 +51,14 @@ export default class ModalPanel extends BasePanel {
 
         section.append(header, content)
 
-        this.placeholder.append(trigger, section)
+        this.placeholder.appendChild(section)
     }
 
     createEmptyTable() {
         const table = document.createElement('table')
         table.classList.add('modal-table')
 
+        const thead = document.createElement('thead')
         const tr = document.createElement('tr')
         const thIndex = document.createElement('th')
         thIndex.textContent = '#'
@@ -68,16 +69,15 @@ export default class ModalPanel extends BasePanel {
         const thTMap = document.createElement('th')
         thTMap.textContent = 'TMap'
 
+        const tbody = document.createElement('tbody')
+        tbody.classList.add('modal-tbody')
+
         tr.append(thIndex, thPoints, thTLib, thTMap)
-        table.append(tr)
+        thead.appendChild(tr)
+        table.append(thead, tbody)
 
-        this.table = table
+        this.table = tbody
         this.content.appendChild(table)
-    }
-
-    open() {
-        this.show()
-        console.log('opened')
     }
 
     close(e) {
@@ -88,6 +88,7 @@ export default class ModalPanel extends BasePanel {
     }
 
     reset() {
+        this.hide()
         this.destroyChildren(this.content)
         this.createEmptyTable()
     }

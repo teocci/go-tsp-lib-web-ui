@@ -62,7 +62,8 @@
     --right-aside-width: 5vw;
 
     --summary-width: 280px;
-    --modal-width: 680px;
+    --modal-width: 700px;
+    --modal-height: 520px;
 
     --menu-options-bottom: 90px;
     --menu-options-width: 180px;
@@ -797,15 +798,12 @@ body * {
 /* Modal */
 .modal-wrapper {
     position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    top: 0;
-    width: 100vw;
+    top: calc(50vh - var(--modal-height) / 2);
+    left: calc(50vw - var(--modal-width) / 2);
+    width: var(--modal-width);
     display: flex;
     justify-content: center;
     align-items: center;
-    background: rgba(0, 0, 0, 0.7);
     z-index: var(--z-modal);
 }
 
@@ -848,7 +846,12 @@ body * {
     justify-content: center;
 }
 
-.modal-wrapper table, .summary td, .summary th {
+.modal-wrapper .modal-content {
+    overflow: hidden;
+    max-height: calc(var(--modal-height) - 65px);
+}
+
+.modal-wrapper table, .modal-wrapper td, .modal-wrapper th {
     border: 1px solid var(--light-gray-d09);
     border-left: none;
     border-right: none;
@@ -862,6 +865,27 @@ body * {
     background: var(--bg-light-color);
 }
 
+
+.modal-wrapper table thead th:first-child,
+.modal-wrapper table tbody td:first-child {
+    width: 40px;
+}
+
+
+.modal-wrapper table thead,
+.modal-wrapper table tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.modal-wrapper table tbody {
+    display: block;
+    width: 100%;
+    height: calc(var(--modal-height) - 65px);
+    overflow-y: auto;
+}
+
 .modal-wrapper th {
     background: var(--main-accent-color);
     color: var(--light-text-color);
@@ -871,15 +895,15 @@ body * {
     text-align: right
 }
 
-.modal-wrapper .outside-trigger {
-    cursor: default;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    top: 0;
-    z-index: calc(var(--z-modal) - 1);
-}
+/*.modal-wrapper .outside-trigger {*/
+/*    cursor: default;*/
+/*    position: fixed;*/
+/*    bottom: 0;*/
+/*    left: 0;*/
+/*    right: 0;*/
+/*    top: 0;*/
+/*    z-index: calc(var(--z-modal) - 1);*/
+/*}*/
 
 .hidden {
     display: none !important;

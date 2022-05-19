@@ -170,7 +170,7 @@ export default class MainModule {
         // points.forEach(p => str += `${p.toString()},`)
         // str = str.slice(0, -1)
         // alert(str)
-        this.modalPanel.open()
+        this.modalPanel.toggle()
     }
 
     onShowSegmentClicked(e) {
