@@ -1,23 +1,26 @@
 /*MARKER*/
-const IMG_SIZE = new kakao.maps.Size(24, 26)
+const START_SIZE = new kakao.maps.Size(50, 45)
+const START_OFFSET = new kakao.maps.Point(15, 43)
+const MARKER_SIZE = new kakao.maps.Size(48, 48)
 const MARKER_IMAGE_SRC = {
-    start: '../img/start_marker.png',
-    waypoint: '../img/delivery_marker.png',
+    start: '../img/green_flag_marker.png',
+    waypoint: '../img/yellow-pin-marker.png',
     tlib: '../img/tlib_marker.png',
     tmap: '../img/tmap_marker.png'
 }
 
 const MARKERS = {
-    start: new kakao.maps.MarkerImage(MARKER_IMAGE_SRC.start, IMG_SIZE),
-    waypoint: new kakao.maps.MarkerImage(MARKER_IMAGE_SRC.waypoint, IMG_SIZE),
-    tlib: new kakao.maps.MarkerImage(MARKER_IMAGE_SRC.tlib, IMG_SIZE),
-    tmap: new kakao.maps.MarkerImage(MARKER_IMAGE_SRC.tmap, IMG_SIZE)
+    start: new kakao.maps.MarkerImage(MARKER_IMAGE_SRC.start, START_SIZE, START_OFFSET),
+    waypoint: new kakao.maps.MarkerImage(MARKER_IMAGE_SRC.waypoint, MARKER_SIZE),
+    tlib: new kakao.maps.MarkerImage(MARKER_IMAGE_SRC.tlib, MARKER_SIZE),
+    tmap: new kakao.maps.MarkerImage(MARKER_IMAGE_SRC.tmap, MARKER_SIZE)
 }
 
 /* color */
 const TLIB_ROUTE_COLOR = '#ff323d'
 const TMAP_ROUTE_COLOR = '#0079c4'
-const SEGMENT_COLOR = '#73ca14'
+const SEGMENT_COLOR = '#10AA18'
+// const SEGMENT_COLOR = '#73ca14'
 // const SEGMENT_COLOR = '#ff4900'
 // const SEGMENT_COLOR = '#ffC400'
 
@@ -52,7 +55,7 @@ const TMAP_POINT_POLYLINE = {
 const PARTLY_POLYLINE = {
     endArrow: true, strokeWeight: 6, // 선의 두께 입니다
     strokeColor: SEGMENT_COLOR, // 빨간색
-    strokeOpacity: 0.6, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+    strokeOpacity: 0.9, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
     strokeStyle: 'solid' // 선의 스타일입니다
 }
 

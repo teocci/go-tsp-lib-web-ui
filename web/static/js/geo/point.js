@@ -3,7 +3,8 @@
  * Author: teocci@yandex.com on 2022-May-13
  */
 export default class Point {
-    static  EPSILON = 0.00001
+    static PRECISION = 5
+    static EPSILON = 0.00001 * Point.PRECISION
 
     constructor(x, y) {
         this.x = x

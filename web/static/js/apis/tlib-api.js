@@ -13,7 +13,7 @@ export default class TLibAPI extends API {
         this.url = TLIB_SVR_URL
         this.mode = FETCH_MODE_PROD
 
-        this.addRequest(REQUEST_FIX_POINTS, 'POST', FIX_POINTS_TEST_URL)
+        this.addRequest(REQUEST_FIX_POINTS, 'POST', FIX_POINTS_TEST_URL, FETCH_MODE_TEST)
         this.addRequest(REQUEST_FIND_ROUTE, 'POST', FIND_ROUTE_TEST_URL)
     }
 

@@ -100,7 +100,7 @@ export default class TLibFetcher extends BaseFetcher {
             step.path.start = new kakao.maps.LatLng(path.SPoint.y, path.SPoint.x)
             step.path.end = new kakao.maps.LatLng(path.EPoint.y, path.EPoint.x)
             step.path.nodes = []
-            path.SLineString.nodes.forEach(node => {
+            path.SLineString?.nodes.forEach(node => {
                 step.path.nodes.push(new kakao.maps.LatLng(node.y, node.x))
             })
             step.position = step.path.end

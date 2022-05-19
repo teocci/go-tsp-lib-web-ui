@@ -36,6 +36,7 @@
 
     --bg-yellow-color: hsl(56, 100%, 50%);
     --bg-gold-color: hsl(46, 100%, 50%);
+    --bg-green-color: hsl(143, 84%, 37%);
 
     --thumb-accent-color: hsl(0, 0%, 66.3%);
     --thumb-contrast-color: hsl(210, 12.6%, 50%);
@@ -342,21 +343,24 @@ body * {
     transition: all 0.3s;
 }
 
+/* Overlays */
 .overlay-tags {
-    height: 30px;
-    line-height: 30px;
-    border-radius: 4px;
-    padding: 0px 10px;
+    height: 2rem;
     width: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 2rem;
+    padding: 0 10px;
     user-select: none;
 }
 
 .overlay-tags .tag {
     display: inline-block;
-    height: 24px;
-    line-height: 22px;
-    border-radius: 4px;
+    height: 1.5rem;
+    line-height: 1.5rem;
     padding: 0 10px;
+    border-radius: 4px;
     border: 1px solid var(--light-gray-d09);
     box-shadow: var(--dark-gray-a10) 0 1px 0;
 }
@@ -753,6 +757,11 @@ body * {
     margin-right: 14px;
     z-index: 100;
     transition: --bg-color 0.2s ease-out;
+}
+
+.timeline .step.active:first-child .tag {
+    --bg-color: var(--bg-green-color);
+    --tex-color: var(--light-text-color);
 }
 
 .timeline .step.active .tag {

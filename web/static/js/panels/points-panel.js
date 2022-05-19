@@ -38,7 +38,6 @@ export default class PointsPanel extends BasePanel {
 
     initRadioGroup() {
         this.radioGroup.forEach((r, i) => {
-            r.checked = i === 0
             r.disabled = false
         })
     }

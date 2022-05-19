@@ -67,7 +67,7 @@ export default class StepManager extends BaseListener {
 
     pointsAsArray(n, bounds) {
         if (n && bounds) {
-            const points = TLibAPI.instance().isTestMode() ? RANDOM_TEST_POINTS : this.genRandomInBounds(n, bounds)
+            const points = TLibAPI.instance().isRequestTestMode(REQUEST_FIX_POINTS) ? RANDOM_TEST_POINTS : this.genRandomInBounds(n, bounds)
             points.forEach(p => this.appendPoint(p))
             return points
         }
