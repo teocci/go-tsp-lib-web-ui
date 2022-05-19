@@ -17,7 +17,6 @@ export default class API {
     }
 
     testResponse(k) {
-        console.log({request: this.requests})
         return this.requests[k]?.response ?? null
     }
 

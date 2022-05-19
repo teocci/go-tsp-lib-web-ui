@@ -409,10 +409,10 @@ export default class MapManager extends BaseListener {
     // MBR 가져오기
     mapBounds() {
         const bounds = this.map.getBounds().toString().split(',')
-        const minX = bounds[0].replace('((', '')
-        const minY = bounds[1].replace(')', '')
-        const maxX = bounds[2].replace('(', '')
-        const maxY = bounds[3].replace('))', '')
+        const minY = bounds[0].replace('((', '')
+        const minX = bounds[1].replace(')', '')
+        const maxY = bounds[2].replace('(', '')
+        const maxX = bounds[3].replace('))', '')
         console.log({bounds})
 
         return {
