@@ -847,7 +847,6 @@ body * {
 }
 
 .modal-wrapper .modal-content {
-    overflow: hidden;
     max-height: calc(var(--modal-height) - 65px);
 }
 
