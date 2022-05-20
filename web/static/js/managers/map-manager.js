@@ -58,6 +58,7 @@ export default class MapManager extends BaseListener {
         this.resetMarkers()
         this.resetRoutes()
         this.resetOverlays()
+        this.deactivateClickListener()
     }
 
     activateClickListener() {
@@ -66,10 +67,15 @@ export default class MapManager extends BaseListener {
         kakao.maps.event.addListener(map, 'click', this.handlerOnClick)
 
         kakao.maps.event.addListener(map, 'rightclick', me => {
-            this.map.setCursor(null)
+            this.deactivateClickListener()
             this.callListener(MapManager.LISTENER_FINISH_CLICKED, me)
-            kakao.maps.event.removeListener(map, 'click', this.handlerOnClick)
+            
         })
+    }
+
+    deactivateClickListener(){
+        this.map.setCursor(null)
+        kakao.maps.event.removeListener(this.map, 'click', this.handlerOnClick)
     }
 
     mapClickListener(me) {
