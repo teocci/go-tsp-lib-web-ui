@@ -5,7 +5,6 @@
 import BaseListener from '../base/base-listener.js'
 import Point from '../geo/point.js'
 import Step from '../geo/step.js'
-import TLibAPI from '../apis/tlib-api.js'
 
 // Data Structure to map points
 export default class StepManager extends BaseListener {

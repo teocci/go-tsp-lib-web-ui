@@ -45,7 +45,6 @@ export default class MapManager extends BaseListener {
         }
 
         this.map = new kakao.maps.Map(placeholder, options)
-        kakaoMap = this.map
     }
 
     initMapListeners() {
@@ -68,8 +67,7 @@ export default class MapManager extends BaseListener {
 
         kakao.maps.event.addListener(map, 'rightclick', me => {
             this.deactivateClickListener()
-            this.callListener(MapManager.LISTENER_FINISH_CLICKED, me)
-            
+            mainModule.onMapClickFinished(me)
         })
     }
 
@@ -79,8 +77,9 @@ export default class MapManager extends BaseListener {
     }
 
     mapClickListener(me) {
-        //call the listener. send data to main-moudle.
-        this.callListener(MapManager.LISTENER_ADD_CLICKED, me)
+        // Call the listener. send data to main-module.
+        // this.callListener(MapManager.LISTENER_ADD_CLICKED, me)
+        mainModule.onMapClicked(me)
     }
 
     loadMarkers(steps) {

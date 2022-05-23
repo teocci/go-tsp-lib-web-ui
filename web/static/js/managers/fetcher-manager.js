@@ -20,7 +20,7 @@ export default class FetcherManager extends BaseListener {
 
     fetchFixPoints(req) {
         this.tlibManager.fetchFixPoints(req).then(data => {
-            this.callListener(FetcherManager.LISTENER_FIX_POINTS_FETCHED, data.body)
+            mainModule.onFixPointsFetched(data.body)
         })
     }
 
@@ -28,7 +28,7 @@ export default class FetcherManager extends BaseListener {
         console.log({req, apis})
 
         this.runParallelRequests(req, apis).then(data => {
-            this.callListener(FetcherManager.LISTENER_ALL_DATA_FETCHED, data)
+            mainModule.onAllDataFetched(data)
         })
     }
 

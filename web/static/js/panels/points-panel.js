@@ -50,12 +50,12 @@ export default class PointsPanel extends BasePanel {
 
     handleAddPoints(e) {
         this.disablePanelElements()
-        this.callListener(PointsPanel.LISTENER_ADD_CLICKED, e)
+        mainModule.onAddPointClicked(e)
     }
 
     handleGenPoints(e) {
         this.disablePanelElements()
-        this.callListener(PointsPanel.LISTENER_GEN_CLICKED, e, this.radioGroupValue())
+        mainModule.onGenPointsClicked(e, this.radioGroupValue())
     }
 
     disablePanelElements() {

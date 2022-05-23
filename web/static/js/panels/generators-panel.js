@@ -42,11 +42,12 @@ export default class GeneratorsPanel extends BasePanel {
 
         this.disablePanelElements()
 
-        const data = {
+        const apis = {
             tlib: this.isTLibChecked(),
             tmap: this.isTMapChecked(),
         }
-        this.callListener(GeneratorsPanel.LISTENER_FETCH_CLICKED, e, data)
+
+        mainModule.onFetchRoutesClicked(e, apis)
     }
 
     disablePanelElements() {

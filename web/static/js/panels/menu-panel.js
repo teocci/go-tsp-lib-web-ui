@@ -86,15 +86,15 @@ export default class MenuPanel extends BasePanel {
     }
 
     handleShowPath(e) {
-        this.callListener(MenuPanel.LISTENER_SHOW_CHANGED, e)
+        mainModule.onShowPathChanged(e)
     }
 
     handleCleanMap(e) {
-        this.callListener(MenuPanel.LISTENER_CLEAR_CLICKED, e)
+        mainModule.onClearMapClicked(e)
     }
 
     handleListPoints(e) {
-        this.callListener(MenuPanel.LISTENER_LIST_CLICKED, e)
+        mainModule.onListPointsClicked(e)
     }
 
     disableCBByAPI(api) {

@@ -5,8 +5,7 @@ import MainModule from './main-module.js'
 TLibAPI.instance()
 TMapAPI.instance()
 
-let mainModule
-
 window.onload = () => {
-    mainModule = new MainModule()
+    mainModule = MainModule.instance
+    kakaoMap = mainModule.mapManager.map
 }

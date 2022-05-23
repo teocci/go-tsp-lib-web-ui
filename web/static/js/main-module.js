@@ -23,7 +23,13 @@ export default class MainModule {
 
         this.mapManager = new MapManager(this.mapPanel)
 
-        this.initHandlers()
+        // this.initHandlers()
+    }
+
+    static get instance() {
+        this._instance = this._instance ?? new MainModule()
+
+        return this._instance
     }
 
     initPanels() {
@@ -50,7 +56,7 @@ export default class MainModule {
     }
 
     initHandlers() {
-        // Map click and right click
+        // Map click and right-click
         this.mapManager.addListener(MapManager.LISTENER_ADD_CLICKED, e => this.onMapClicked(e))
         this.mapManager.addListener(MapManager.LISTENER_FINISH_CLICKED, e => this.onMapClickFinished(e))
 
@@ -120,20 +126,20 @@ export default class MainModule {
         this.generatorPanel.enablePanelElements()
     }
 
-    onFetchRoutesClicked(e, libs) {
+    onFetchRoutesClicked(e, apis) {
         if (this.stepManager.stepsSize() < 1) {
             alert('배달점이 없습니다. 배달점을 등록해주세요.')
             return
         }
 
-        this.fetcherManager.fetchRoutes(this.stepManager.toRequest(), libs)
+        this.fetcherManager.fetchRoutes(this.stepManager.toRequest(), apis)
     }
 
     onAllDataFetched(data) {
         this.menuPanel.enableCBByData(data)
         this.stepManager.matchRoutes(data)
         this.summaryPanel.updateInfo(data)
-        
+
         this.resultsPanel.renderTimelines(data)
 
         this.modalPanel.loadRoutes(data)

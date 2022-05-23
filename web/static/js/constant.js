@@ -111,10 +111,6 @@ POLYLINE_STYLES[TMAP_API_NAME] = TMAP_POLYLINE_STYLES
 const OFFSET_Y = -0.0001
 const OFFSET_X = 0 //-0.0001
 
-
-
-let kakaoMap = null
-
 const TLIB_SVR_HOST = '192.168.100.58'
 const TLIB_SVR_PORT = 9080
 const TLIB_SVR_ADDR = `${TLIB_SVR_HOST}:${TLIB_SVR_PORT}`
@@ -192,6 +188,8 @@ const FETCH_MODE = FETCH_MODE_TEST
 
 const RANDOM_TEST_POINTS = RANDOM_30_TEST_POINTS
 
+let kakaoMap = null
+let mainModule = null
 
 function getProtocol() {
     return location.protocol
