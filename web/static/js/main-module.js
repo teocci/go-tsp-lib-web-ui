@@ -133,6 +133,7 @@ export default class MainModule {
         }
 
         this.fetcherManager.fetchRoutes(this.stepManager.toRequest(), apis)
+        this.menuPanel.openMenu()
     }
 
     onAllDataFetched(data) {

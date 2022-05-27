@@ -5,10 +5,10 @@
 import Request from '../fetchers/request.js'
 
 export default class API {
-    constructor() {
+    constructor(mode) {
         this.url = null
         this.key = null
-        this.mode = FETCH_MODE
+        this.mode = mode ?? FETCH_MODE
         this.requests = {}
     }
 

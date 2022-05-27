@@ -7,12 +7,11 @@ import API from './api.js'
 export default class TMapAPI extends API {
     static TAG = TMAP_API_NAME
 
-    constructor() {
-        super()
+    constructor(mode) {
+        super(mode)
 
         this.url = TMAP_SVR_URL
         this.key = TMAP_APP_KEY
-        this.mode = FETCH_MODE_TEST
 
         this.addRequest(REQUEST_FIND_ROUTE, 'POST', TMAP_TEST_30)
     }

@@ -81,8 +81,12 @@ export default class MenuPanel extends BasePanel {
         this.options.classList.add('hidden')
     }
 
-    handleToggleMenu(e) {
+    openMenu() {
         this.options.classList.toggle('hidden')
+    }
+
+    handleToggleMenu(e) {
+        this.openMenu()
     }
 
     handleShowPath(e) {
