@@ -51,6 +51,7 @@ func validate(ccmd *cobra.Command, args []string) error {
 
 		return nil
 	}
+	log.Printf("#%v", config.File)
 
 	if !config.Verbose {
 		ccmd.HelpFunc()(ccmd, args)
