@@ -52,6 +52,13 @@ func Start() {
 	router.StaticFile(indexRoute, indexFilePath)
 	router.StaticFile(defaultFaviconRoute, defaultFaviconFilePath)
 
+	router.GET("/tsp-info", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"ip":   config.Data.TSP.Host,
+			"port": config.Data.TSP.Port,
+		})
+	})
+
 	router.Use(CORSMiddleware())
 
 	fmt.Println("[url]", urlFormat(address))

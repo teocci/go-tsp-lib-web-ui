@@ -95,6 +95,7 @@ var (
 
 	Data = &ServerSetup{
 		Web: WebServer{defaultWebPort},
+		TSP: TSPServer{defaultTSPHost, defaultTSPPort},
 	}
 
 	LogLevel  = "info"         // Log level to output [fatal|error|info|debug|trace]

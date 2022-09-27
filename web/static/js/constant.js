@@ -111,10 +111,24 @@ POLYLINE_STYLES[TMAP_API_NAME] = TMAP_POLYLINE_STYLES
 const OFFSET_Y = -0.0001
 const OFFSET_X = 0 //-0.0001
 
+const getProtocol = () => location.protocol
+const getTSPInfo = async () => {
+    return await (await fetch('/tsp-info')).json()
+}
+
 const TLIB_SVR_HOST = '192.168.100.58'
-const TLIB_SVR_PORT = 9080
+const TLIB_SVR_PORT = 9090
+
 const TLIB_SVR_ADDR = `${TLIB_SVR_HOST}:${TLIB_SVR_PORT}`
-const TLIB_SVR_URL = `${getProtocol()}//${TLIB_SVR_ADDR}`
+// const TLIB_SVR_URL = `${getProtocol()}//${TLIB_SVR_ADDR}`
+
+
+let tslServerURL
+getTSPInfo().then(data => {
+    console.log({data})
+    const tslServerAddr = data ? `${data.ip}:${data.port}` : TLIB_SVR_ADDR
+    tslServerURL = `${getProtocol()}//${tslServerAddr}`
+})
 
 const TMAP_APP_KEY = 'l7xxce0f7ed72c234020a6bd5ed566685f97'
 const TMAP_SVR_URL = 'https://apis.openapi.sk.com/tmap/routes/routeOptimization#?version=1&format=json'
@@ -190,7 +204,3 @@ const RANDOM_TEST_POINTS = RANDOM_30_TEST_POINTS
 
 let kakaoMap = null
 let mainModule = null
-
-function getProtocol() {
-    return location.protocol
-}

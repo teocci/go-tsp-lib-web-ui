@@ -10,7 +10,7 @@ export default class TLibAPI extends API {
     constructor(mode = null) {
         super(mode)
 
-        this.url = TLIB_SVR_URL
+        this.url = tslServerURL
 
         this.addRequest(REQUEST_FIX_POINTS, 'POST', FIX_POINTS_TEST_URL)
         this.addRequest(REQUEST_FIND_ROUTE, 'POST', TLIB_TEST_30)
