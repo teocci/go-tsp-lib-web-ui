@@ -189,8 +189,8 @@ export default class StepManager extends BaseListener {
             SPoint: this.startStep().point,
             EPoint: this.endStep().point,
             SPointList: {
-                nodes: this.waypointsAsPoints()
-            }
+                nodes: this.waypointsAsPoints(),
+            },
         }
     }
 

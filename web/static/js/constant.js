@@ -6,14 +6,14 @@ const MARKER_IMAGE_SRC = {
     start: '../img/green_flag_marker.png',
     waypoint: '../img/yellow-pin-marker.png',
     tlib: '../img/tlib_marker.png',
-    tmap: '../img/tmap_marker.png'
+    tmap: '../img/tmap_marker.png',
 }
 
 const MARKERS = {
     start: new kakao.maps.MarkerImage(MARKER_IMAGE_SRC.start, START_SIZE, START_OFFSET),
     waypoint: new kakao.maps.MarkerImage(MARKER_IMAGE_SRC.waypoint, MARKER_SIZE),
     tlib: new kakao.maps.MarkerImage(MARKER_IMAGE_SRC.tlib, MARKER_SIZE),
-    tmap: new kakao.maps.MarkerImage(MARKER_IMAGE_SRC.tmap, MARKER_SIZE)
+    tmap: new kakao.maps.MarkerImage(MARKER_IMAGE_SRC.tmap, MARKER_SIZE),
 }
 
 /* color */
@@ -122,7 +122,6 @@ const TLIB_SVR_PORT = 9090
 const TLIB_SVR_ADDR = `${TLIB_SVR_HOST}:${TLIB_SVR_PORT}`
 // const TLIB_SVR_URL = `${getProtocol()}//${TLIB_SVR_ADDR}`
 
-
 let tslServerURL
 getTSPInfo().then(data => {
     console.log({data})
@@ -145,7 +144,6 @@ const TMAP_TEST_API = 'https://gist.githubusercontent.com/amissu89/be5fc038dc559
 const RTT = {x: 127.3934052, y: 36.4310406}
 const RANDOM_30_CENTER = {x: 127.3877229, y: 36.3590841}
 
-
 const RANDOM_10_TEST_POINTS = [
     {'x': 127.386293, 'y': 36.430404},
     {'x': 127.391044, 'y': 36.427786},
@@ -160,7 +158,7 @@ const RANDOM_10_TEST_POINTS = [
 ]
 
 const RANDOM_30_TEST_POINTS = [
-    {x: 127.40316323901139, y: 36.34745526785475,},
+    {x: 127.40316323901139, y: 36.34745526785475},
     {x: 127.3744303555594, y: 36.349569689958805},
     {x: 127.38976398341718, y: 36.35830191640296},
     {x: 127.39081753194847, y: 36.347312315410356},

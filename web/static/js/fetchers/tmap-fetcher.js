@@ -50,14 +50,14 @@ export default class TMapFetcher extends BaseFetcher {
     prepareRequest(type, prod_url, req) {
         const url = this.isRequestTestMode(type) ? this.testResponse(type) : prod_url
         let options = {
-            method: this.isRequestTestMode(type) ? 'GET' : 'POST'
+            method: this.isRequestTestMode(type) ? 'GET' : 'POST',
         }
 
         if (!this.isRequestTestMode(type)) {
             const optionsExt = {
                 headers: {
                     'appKey': this.apiKey,
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
                 body: serialize(this.makeTMapReqObject(req)),
             }

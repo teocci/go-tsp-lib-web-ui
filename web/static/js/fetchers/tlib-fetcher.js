@@ -26,7 +26,7 @@ export default class TLibFetcher extends BaseFetcher {
             SPoint: start,
             EPoint: start,
             SPointList: {
-                nodes: rest
+                nodes: rest,
             },
         }
 
@@ -63,13 +63,13 @@ export default class TLibFetcher extends BaseFetcher {
     prepareRequest(type, prod_url, req) {
         const url = this.isRequestTestMode(type) ? this.testResponse(type) : prod_url
         let options = {
-            method: this.isRequestTestMode(type) ? 'GET' : 'POST'
+            method: this.isRequestTestMode(type) ? 'GET' : 'POST',
         }
 
         if (!this.isRequestTestMode(type)) {
             const optionsExt = {
                 headers: {
-                    'Content-Type': 'text/plain'
+                    'Content-Type': 'text/plain',
                 },
                 body: serialize(req),
             }

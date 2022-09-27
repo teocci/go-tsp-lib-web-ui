@@ -129,7 +129,7 @@ export default class ModalPanel extends Draggable {
         const TLIB_COL = 2
         const TMAP_COL = 3
 
-        let column = api === 'tlib' ? TLIB_COL : TMAP_COL;
+        let column = api === 'tlib' ? TLIB_COL : TMAP_COL
 
         route.steps.forEach(step => {
             [...rows].forEach(row => {

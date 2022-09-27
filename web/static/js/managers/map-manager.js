@@ -41,7 +41,7 @@ export default class MapManager extends BaseListener {
         const placeholder = this.panel.placeholder
         const options = {
             center: new kakao.maps.LatLng(RANDOM_30_CENTER.y, RANDOM_30_CENTER.x),
-            level: 3
+            level: 3,
         }
 
         this.map = new kakao.maps.Map(placeholder, options)
@@ -71,7 +71,7 @@ export default class MapManager extends BaseListener {
         })
     }
 
-    deactivateClickListener(){
+    deactivateClickListener() {
         this.map.setCursor(null)
         kakao.maps.event.removeListener(this.map, 'click', this.handlerOnClick)
     }
@@ -251,7 +251,7 @@ export default class MapManager extends BaseListener {
     moveMapTo(pos) {
         if (!pos) throw new Error('InvalidPosition: null pos')
 
-        this.map.setCenter(pos);
+        this.map.setCenter(pos)
     }
 
     // MBR 가져오기

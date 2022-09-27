@@ -16,7 +16,7 @@ export default class BaseListener {
     }
 
     listener(name) {
-        return this.listeners.get(name) ?? null;
+        return this.listeners.get(name) ?? null
     }
 
     callListener(name, e, ...params) {
