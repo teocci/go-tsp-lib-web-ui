@@ -142,7 +142,7 @@ const TLIB_TEST_API = 'https://gist.githubusercontent.com/amissu89/c61ad8fb4a0bb
 const TMAP_TEST_API = 'https://gist.githubusercontent.com/amissu89/be5fc038dc559dadb28d47320b6862cb/raw/16976cc88db4a74b006cdab81a3c36ac4da5a05d/tmap2_response.json'
 
 const RTT = {x: 127.3934052, y: 36.4310406}
-const RANDOM_30_CENTER = {x: 127.3877229, y: 36.3590841}
+const RANDOM_30_CENTER = {x: 126.9813026, y: 37.5630353}
 
 const RANDOM_10_TEST_POINTS = [
     {'x': 127.386293, 'y': 36.430404},
