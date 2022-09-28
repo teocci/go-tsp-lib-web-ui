@@ -63,6 +63,8 @@ export default class MainModule {
         // Add or generate points
         this.pointsPanel.addListener(PointsPanel.LISTENER_ADD_CLICKED, e => this.onAddPointClicked(e))
         this.pointsPanel.addListener(PointsPanel.LISTENER_GEN_CLICKED, (e, params) => this.onGenPointsClicked(e, params[0]))
+        this.pointsPanel.addListener(PointsPanel.LISTENER_FILELOAD_CLICKED, params => this.onFilePointsClicked(params[0]))
+        
 
         this.fetcherManager.addListener(FetcherManager.LISTENER_FIX_POINTS_FETCHED, p => this.onFixPointsFetched(p))
         this.fetcherManager.addListener(FetcherManager.LISTENER_ALL_DATA_FETCHED, d => this.onAllDataFetched(d))
@@ -115,6 +117,13 @@ export default class MainModule {
 
         const bounds = this.mapManager.mapBounds()
         const points = this.stepManager.pointsAsArray(n, bounds)
+        console.log(points)
+        this.fetcherManager.fetchFixPoints(points)
+    }
+
+    onFilePointsClicked(points) {
+        this.reset()
+        console.log(points)
         this.fetcherManager.fetchFixPoints(points)
     }
 
