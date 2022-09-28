@@ -9,7 +9,7 @@ export default class PointsPanel extends BasePanel {
 
     static LISTENER_ADD_CLICKED = 'on-add-points'
     static LISTENER_GEN_CLICKED = 'on-gen-points'
-    static LISTENER_FILELOAD_CLICKED = 'on-file-points'
+    static LISTENER_LOAD_CLICKED = 'on-load-points'
 
     constructor(element) {
         if (!element) throw 'InvalidElement: null element'
@@ -22,8 +22,9 @@ export default class PointsPanel extends BasePanel {
     initElements() {
         this.btnAddPoints = document.getElementById('add-points')
         this.btnGenPath = document.getElementById('gen-points')
-        this.btnFilePoints = document.getElementById('file-points')
-        this.inputFileUpload = document.getElementById('fileupload')
+        this.btnLoadPoints = document.getElementById('load-points')
+
+        this.inputFile = document.getElementById('input-file')
 
         this.radioGroup = document.getElementsByName('path-length')
 
@@ -33,13 +34,9 @@ export default class PointsPanel extends BasePanel {
     initHandlers() {
         this.btnAddPoints.onclick = e => this.handleAddPoints(e)
         this.btnGenPath.onclick = e => this.handleGenPoints(e)
-        this.btnFilePoints.onclick = e => this.handleFilePoints(e)
+        // this.btnLoadPoints.onclick = e =>
 
-        this.inputFileUpload.onchange = () => {
-            this.processFile(this.inputFileUpload.files[0])
-        }
-
-        this.fileText = ''
+        this.inputFile.onchange = e => this.handleLoadPoints(e)
     }
 
     reset() {
@@ -68,40 +65,41 @@ export default class PointsPanel extends BasePanel {
         mainModule.onGenPointsClicked(e, this.radioGroupValue())
     }
 
-    handleFilePoints(e) {
+    handleLoadPoints(e) {
         this.disablePanelElements()
-        this.inputFileUpload.click()
+
+        const input = e.target
+        if (!input) throw new Error('null input')
+        const [first] = input.files
+
+        this.processFile(first)
     }
 
     processFile(file) {
         const reader = new FileReader()
-        reader.onload = function () {
-            const arr = reader.result.split(/\r?\n/gm)
-            this.posArr = []
-            arr.forEach(item =>{
-                const pos = item.split(',')
-                const obj = {
-                    x : Number(pos[1]),
-                    y : Number(pos[0]),
-                }
-                this.posArr.push(obj)
+        reader.onload = () => {
+            const lines = reader.result.split(/\r?\n/gm)
+            const points = lines.map(line => {
+                let [y, x] = line.split(',')
+                return {x: Number(x), y: Number(y)}
             })
 
-            mainModule.onFilePointsClicked(this.posArr)
+            mainModule.onLoadPointsClicked(points)
         }
-        reader.readAsText(file, "UTF-8")
+        reader.readAsText(file)
     }
 
-  
     disablePanelElements() {
         this.disableBtnAddPoints()
         this.disableBtnGenPoints()
+        this.disableBtnLoadPoints()
         this.disableRadioGroup()
     }
 
     enablePanelElements() {
         this.enableBtnAddPoints()
         this.enableBtnGenPoints()
+        this.enableBtnLoadPoints()
         this.enableRadioGroup()
     }
 
@@ -111,6 +109,11 @@ export default class PointsPanel extends BasePanel {
 
     disableBtnGenPoints() {
         this.btnGenPath.disabled = true
+    }
+
+    disableBtnLoadPoints() {
+        this.btnLoadPoints.classList.add('disabled')
+        this.inputFile.disabled = true
     }
 
     disableRadioGroup() {
@@ -125,6 +128,11 @@ export default class PointsPanel extends BasePanel {
 
     enableBtnGenPoints() {
         this.btnGenPath.disabled = false
+    }
+
+    enableBtnLoadPoints() {
+        this.btnLoadPoints.classList.remove('disabled')
+        this.inputFile.disabled = false
     }
 
     enableRadioGroup() {

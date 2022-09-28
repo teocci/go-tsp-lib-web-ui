@@ -161,7 +161,8 @@ body * {
     padding-bottom: 20px;
 }
 
-.aside .sections button {
+.aside .sections button,
+.aside .file label {
     appearance: none;
     background-color: var(--main-primary-color);
     border: 1px solid var(--dark-gray-a15);
@@ -185,28 +186,33 @@ body * {
     white-space: nowrap;
 }
 
-.aside .sections button:focus:not(:focus-visible):not(.focus-visible) {
+.aside .sections button:focus:not(:focus-visible):not(.focus-visible),
+.aside .file label:focus:not(:focus-visible):not(.focus-visible) {
     box-shadow: none;
     outline: none;
 }
 
-.aside .sections button:hover {
+.aside .sections button:hover,
+.aside .file label:hover {
     background-color: var(--light-blue-d18);
 }
 
-.aside .sections button:focus {
+.aside .sections button:focus,
+.aside .file label:focus {
     box-shadow: var(--light-blue-d03-a40) 0 0 0 3px;
     outline: none;
 }
 
-.aside .sections button:disabled {
+.aside .sections button:disabled,
+.aside .file label.disabled {
     background-color: var(--disabled-button-color);
     border-color: var(--dark-gray-a10);
     color: var(--white-a80);
     cursor: default;
 }
 
-.aside .sections button:not([disabled]):active {
+.aside .sections button:not([disabled]):active,
+.aside .file label:not([disabled]):active {
     background-color: var(--light-blue-d10);
     box-shadow: var(--light-blue-d20-a20) 0 1px 0 inset;
 }
@@ -893,6 +899,10 @@ body * {
 
 .modal-wrapper td.cell {
     text-align: right
+}
+
+.disabled {
+    cursor: default;
 }
 
 .hidden {
