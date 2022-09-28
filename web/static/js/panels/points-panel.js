@@ -25,6 +25,10 @@ export default class PointsPanel extends BasePanel {
         this.btnLoadPoints = document.getElementById('load-points')
 
         this.inputFile = document.getElementById('input-file')
+        this.inputFile.accept = 'text/plain'
+
+        this.loadOutput = document.getElementById('load-output')
+        this.loadOutput.classList.add('output')
 
         this.radioGroup = document.getElementsByName('path-length')
 
@@ -34,19 +38,24 @@ export default class PointsPanel extends BasePanel {
     initHandlers() {
         this.btnAddPoints.onclick = e => this.handleAddPoints(e)
         this.btnGenPath.onclick = e => this.handleGenPoints(e)
-        // this.btnLoadPoints.onclick = e =>
 
         this.inputFile.onchange = e => this.handleLoadPoints(e)
     }
 
     reset() {
         this.initRadioGroup()
+        this.initLoadPoints()
     }
 
     initRadioGroup() {
         this.radioGroup.forEach((r, i) => {
             r.disabled = false
         })
+    }
+
+    initLoadPoints() {
+        this.inputFile.value = ''
+        this.loadOutput.textContent = ''
     }
 
     radioGroupValue() {
@@ -79,14 +88,20 @@ export default class PointsPanel extends BasePanel {
         const reader = new FileReader()
         reader.onload = () => {
             const lines = reader.result.split(/\r?\n/gm)
-            const points = lines.map(line => {
+            const points = lines.reduce((acc, line) => {
                 let [y, x] = line.split(',')
-                return {x: Number(x), y: Number(y)}
-            })
+                x = Number(x)
+                y = Number(y)
+                return isNumber(x) && isNumber(y) ? [...acc, {x, y}] : acc
+            }, [])
 
             mainModule.onLoadPointsClicked(points)
         }
         reader.readAsText(file)
+    }
+
+    textLoadOutput(msg) {
+        this.loadOutput.textContent = msg
     }
 
     disablePanelElements() {

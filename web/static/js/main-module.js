@@ -124,8 +124,18 @@ export default class MainModule {
     onLoadPointsClicked(points) {
         this.reset()
 
-        console.log(points)
-        this.fetcherManager.fetchFixPoints(points)
+        let error = null
+        if (points.length === 0) {
+            error = '지원하는 형식의 파일이 아닙니다.'
+        } else if (points.length < 10) {
+            error = '최소한 10개 이상의 좌표(위경도 쌍)가 필요합니다.'
+        }
+
+        if (isNull(error)) this.fetcherManager.fetchFixPoints(points)
+        else {
+            this.pointsPanel.textLoadOutput(error)
+            this.pointsPanel.enablePanelElements()
+        }
     }
 
     onFixPointsFetched(data) {
