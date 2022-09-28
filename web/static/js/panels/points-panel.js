@@ -84,20 +84,17 @@ export default class PointsPanel extends BasePanel {
         this.processFile(first)
     }
 
-    processFile(file) {
-        const reader = new FileReader()
-        reader.onload = () => {
-            const lines = reader.result.split(/\r?\n/gm)
-            const points = lines.reduce((acc, line) => {
-                let [y, x] = line.split(',')
-                x = Number(x)
-                y = Number(y)
-                return isNumber(x) && isNumber(y) ? [...acc, {x, y}] : acc
-            }, [])
+    async processFile(file) {
+        const text = await file.text()
+        const lines = text.split(/\r?\n/gm)
+        const points = lines.reduce((acc, line) => {
+            let [y, x] = line.split(',')
+            x = Number(x)
+            y = Number(y)
+            return isNumber(x) && isNumber(y) ? [...acc, {x, y}] : acc
+        }, [])
 
-            mainModule.onLoadPointsClicked(points)
-        }
-        reader.readAsText(file)
+        mainModule.onLoadPointsClicked(points)
     }
 
     textLoadOutput(msg) {
