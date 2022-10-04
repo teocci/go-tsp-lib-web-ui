@@ -143,6 +143,7 @@ const TMAP_TEST_API = 'https://gist.githubusercontent.com/amissu89/be5fc038dc559
 
 const RTT = {x: 127.3934052, y: 36.4310406}
 const RANDOM_30_CENTER = {x: 126.9813026, y: 37.5630353}
+const CENTER = {x: 126.9813026, y: 37.5630353}
 
 const RANDOM_10_TEST_POINTS = [
     {'x': 127.386293, 'y': 36.430404},
@@ -202,3 +203,5 @@ const RANDOM_TEST_POINTS = RANDOM_30_TEST_POINTS
 
 let kakaoMap = null
 let mainModule = null
+
+const API_MAP_VENDOR = 'kakao'
