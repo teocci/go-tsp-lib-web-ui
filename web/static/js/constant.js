@@ -1,3 +1,5 @@
+const API_MAP_VENDOR = 'kakao'
+
 /*MARKER*/
 const START_SIZE = new kakao.maps.Size(50, 45)
 const START_OFFSET = new kakao.maps.Point(15, 43)
@@ -203,5 +205,3 @@ const RANDOM_TEST_POINTS = RANDOM_30_TEST_POINTS
 
 let kakaoMap = null
 let mainModule = null
-
-const API_MAP_VENDOR = 'kakao'

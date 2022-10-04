@@ -6,6 +6,7 @@ import BaseListener from '../base/base-listener.js'
 import Point from '../geo/point.js'
 import Polyline from '../geo/polyline.js'
 import Overlay from '../geo/overlay.js'
+import MapAPI from '../apis/map/map-api.js'
 
 export default class MapManager extends BaseListener {
     static TAG = 'map'
@@ -40,11 +41,11 @@ export default class MapManager extends BaseListener {
     initMapPanel() {
         const placeholder = this.panel.placeholder
         const options = {
-            center: new kakao.maps.LatLng(RANDOM_30_CENTER.y, RANDOM_30_CENTER.x),
+            center: MapAPI.newLatLng(RANDOM_30_CENTER.y, RANDOM_30_CENTER.x),
             level: 3,
         }
 
-        this.map = new kakao.maps.Map(placeholder, options)
+        this.map = MapAPI.newMap(placeholder, options)
     }
 
     initMapListeners() {
