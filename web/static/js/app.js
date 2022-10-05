@@ -1,5 +1,5 @@
-import TLibAPI from './apis/tlib-api.js'
-import TMapAPI from './apis/tmap-api.js'
+import TLibAPI from './apis/route/tlib-api.js'
+import TMapAPI from './apis/route/tmap-api.js'
 import MainModule from './main-module.js'
 
 TLibAPI.instance()

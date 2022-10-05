@@ -1,6 +1,6 @@
 import BasePanel from '../base/base-panel.js'
-import TLibAPI from '../apis/tlib-api.js'
-import TMapAPI from '../apis/tmap-api.js'
+import TLibAPI from '../apis/route/tlib-api.js'
+import TMapAPI from '../apis/route/tmap-api.js'
 
 export default class ResultsPanel extends BasePanel {
     static TAG = 'results'

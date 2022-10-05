@@ -4,8 +4,8 @@
  */
 import BasePanel from '../base/base-panel.js'
 import ExecutionInfo from '../fetchers/execution-info.js'
-import TLibAPI from '../apis/tlib-api.js'
-import TMapAPI from '../apis/tmap-api.js'
+import TLibAPI from '../apis/route/tlib-api.js'
+import TMapAPI from '../apis/route/tmap-api.js'
 
 export default class SummaryPanel extends BasePanel {
     static TAG = 'summary'

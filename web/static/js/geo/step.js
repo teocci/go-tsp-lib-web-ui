@@ -2,8 +2,8 @@
  * Created by RTT.
  * Author: teocci@yandex.com on 2022-May-12
  */
-import TLibAPI from '../apis/tlib-api.js'
-import TMapAPI from '../apis/tmap-api.js'
+import TLibAPI from '../apis/route/tlib-api.js'
+import TMapAPI from '../apis/route/tmap-api.js'
 
 export default class Step {
     static TYPE_START = 'start'

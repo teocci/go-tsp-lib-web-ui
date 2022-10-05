@@ -3,7 +3,7 @@
  * Author: teocci@yandex.com on 2022-May-11
  */
 import BaseFetcher from '../base/base-fetcher.js'
-import TLibAPI from '../apis/tlib-api.js'
+import TLibAPI from '../apis/route/tlib-api.js'
 import Route from '../geo/route.js'
 import Point from '../geo/point.js'
 import Step from '../geo/step.js'
