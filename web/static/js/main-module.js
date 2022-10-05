@@ -73,6 +73,7 @@ export default class MainModule {
         this.generatorPanel.addListener(GeneratorsPanel.LISTENER_FETCH_CLICKED, (e, params) => this.onFetchRoutesClicked(e, params[0]))
 
         this.menuPanel.addListener(MenuPanel.LISTENER_SHOW_CHANGED, e => this.onShowPathChanged(e))
+        this.menuPanel.addListener(MenuPanel.LISTENER_SHOW_MARKER_CHANGED, e => this.onShowMarkerLabelsChanged(e))
         this.menuPanel.addListener(MenuPanel.LISTENER_CLEAR_CLICKED, e => this.onClearMapClicked(e))
         this.menuPanel.addListener(MenuPanel.LISTENER_LIST_CLICKED, e => this.onListPointsClicked(e))
 
@@ -142,6 +143,7 @@ export default class MainModule {
         this.stepManager.loadSteps(data)
         this.mapManager.loadMarkers(this.stepManager.asStepArray(false, true))
         this.modalPanel.loadFixedPoints(this.stepManager.asStepArray())
+        this.mapManager.makeNameOverlay(data)
         this.pointsPanel.enablePanelElements()
         this.generatorPanel.enablePanelElements()
     }
@@ -184,6 +186,14 @@ export default class MainModule {
             if (this.menuPanel.isAPIOff(api)) {
                 this.mapManager.deactivateOTagByAPI(api)
             }
+        }
+    }
+
+    onShowMarkerLabelsChanged(e){
+        const target = e.target
+        const markers = [...document.querySelectorAll('.marker-label')]
+        for (const marker of markers) {
+            target.checked ?  marker.classList.remove('hidden') : marker.classList.add('hidden')
         }
     }
 

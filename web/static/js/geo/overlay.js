@@ -6,7 +6,6 @@
 export default class Overlay {
     constructor() {
         this.tags = {}
-
         this.initElement()
     }
 

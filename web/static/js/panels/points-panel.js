@@ -25,7 +25,7 @@ export default class PointsPanel extends BasePanel {
         this.btnLoadPoints = document.getElementById('load-points')
 
         this.inputFile = document.getElementById('input-file')
-        this.inputFile.accept = 'text/plain'
+        this.inputFile.accept = 'text/csv'
 
         this.loadOutput = document.getElementById('load-output')
         this.loadOutput.classList.add('output')
@@ -88,13 +88,24 @@ export default class PointsPanel extends BasePanel {
         const text = await file.text()
         const lines = text.split(/\r?\n/gm)
         const points = lines.reduce((acc, line) => {
-            let [y, x] = line.split(',')
+            let [x, y, name] = line.split(',')
             x = Number(x)
             y = Number(y)
-            return isNumber(x) && isNumber(y) ? [...acc, {x, y}] : acc
+            return isNumber(x) && isNumber(y) ? [...acc, {x, y, name}] : acc
         }, [])
 
-        mainModule.onLoadPointsClicked(points)
+        let boundaryPoints = []
+        points.forEach(point => {
+            if(this.isBoundaryPoint(point)){
+                boundaryPoints.push(point)
+            }
+        })
+        mainModule.onLoadPointsClicked(boundaryPoints.slice(0, FILE_LOAD_MAX_CNT))
+    }
+
+    isBoundaryPoint(pt){
+        return MAP_BOUNDARY.SW_X < pt.x && pt.x < MAP_BOUNDARY.NE_X 
+            && MAP_BOUNDARY.SW_Y < pt.y && pt.y < MAP_BOUNDARY.NE_Y
     }
 
     textLoadOutput(msg) {

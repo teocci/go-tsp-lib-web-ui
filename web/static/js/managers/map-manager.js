@@ -40,8 +40,8 @@ export default class MapManager extends BaseListener {
     initMapPanel() {
         const placeholder = this.panel.placeholder
         const options = {
-            center: new kakao.maps.LatLng(RANDOM_30_CENTER.y, RANDOM_30_CENTER.x),
-            level: 3,
+            center: new kakao.maps.LatLng(CENTER.y, CENTER.x),
+            level: 6,
         }
 
         this.map = new kakao.maps.Map(placeholder, options)
@@ -119,7 +119,7 @@ export default class MapManager extends BaseListener {
 
     loadRoutes(data) {
         data.forEach(r => this.addRoute(r.api, r.route))
-        console.log({routes: this.routes})
+        console.log({ routes: this.routes })
     }
 
     addRoute(api, route) {
@@ -173,6 +173,31 @@ export default class MapManager extends BaseListener {
         return overlay
     }
 
+    makeNameOverlay(data) {
+        const items = data.FixPoint
+        const points = []
+        points.push(items.SPoint)
+        items.pts.forEach(item => {
+            points.push(item)
+        })
+
+        points.forEach(point => {
+            const pos = new kakao.maps.LatLng(point.y, point.x)
+            const div = document.createElement('div')
+            div.className = 'marker-label'
+            const span = document.createElement('span')
+            span.textContent = point.name
+            div.appendChild(span)
+
+            const customOverlay = new kakao.maps.CustomOverlay({
+                position: pos,
+                content: div
+            })
+
+            customOverlay.setMap(this.map)
+        })
+    }
+
     appendOverlay(overlay) {
         const id = this.overlaysSize()
         this.overlays.set(id, overlay)
@@ -206,7 +231,7 @@ export default class MapManager extends BaseListener {
     }
 
     renderRoutes(type) {
-        console.log({type})
+        console.log({ type })
         this.routes.forEach(route => this.renderRoute(route, type))
     }
 
@@ -221,7 +246,7 @@ export default class MapManager extends BaseListener {
 
     removeRoute(route, type) {
         const pl = route.polyline(type)
-        console.log({route, type, pl})
+        console.log({ route, type, pl })
         pl.remove()
     }
 
@@ -230,7 +255,7 @@ export default class MapManager extends BaseListener {
         const route = this.routeByAPI(api)
         const pl = route.polyline(type)
         const path = route.pathByType(type, stepId)
-        console.log({route, type, pl, path})
+        console.log({ route, type, pl, path })
 
         pl.load(path)
         pl.render(this.map)
@@ -261,7 +286,7 @@ export default class MapManager extends BaseListener {
         const minX = bounds[1].replace(')', '')
         const maxY = bounds[2].replace('(', '')
         const maxX = bounds[3].replace('))', '')
-        console.log({bounds})
+        console.log({ bounds })
 
         return {
             minX: minX,

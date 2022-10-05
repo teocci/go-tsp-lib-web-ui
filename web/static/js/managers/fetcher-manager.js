@@ -20,6 +20,15 @@ export default class FetcherManager extends BaseListener {
 
     fetchFixPoints(req) {
         this.tlibManager.fetchFixPoints(req).then(data => {
+     
+            if(req[0].name !== undefined){
+                data.body.FixPoint.EPoint.name = req[0].name
+                data.body.FixPoint.SPoint.name = req[0].name
+                data.body.FixPoint.pts.forEach( (pt, idx) => {
+                    pt.name = req[idx+1].name
+                })
+            }
+
             mainModule.onFixPointsFetched(data.body)
         })
     }

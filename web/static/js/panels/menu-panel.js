@@ -13,6 +13,7 @@ export default class MenuPanel extends BasePanel {
     ]
 
     static LISTENER_SHOW_CHANGED = 'on-show-changed'
+    static LISTENER_SHOW_MARKER_CHANGED = 'on-show-marker-changed'
     static LISTENER_CLEAR_CLICKED = 'on-clear-map'
     static LISTENER_LIST_CLICKED = 'on-list-points'
 
@@ -43,10 +44,12 @@ export default class MenuPanel extends BasePanel {
             })
         })
 
+        this.cbShowMarkerLabels = document.getElementById('show-marker-labels')
+
         //배달점 새로고침
         this.btnCleanMap = document.getElementById('clear-map')
         this.btnListPoints = document.getElementById('list-points')
-
+        
         this.reset()
     }
 
@@ -67,6 +70,7 @@ export default class MenuPanel extends BasePanel {
         this.btnMenu.onclick = e => this.handleToggleMenu(e)
 
         this.showPathCBGroup.forEach(cb => cb.onchange = e => this.handleShowPath(e))
+        this.cbShowMarkerLabels.onchange = e => this.handleShowMarkerLabels(e)
 
         this.btnCleanMap.onclick = e => this.handleCleanMap(e)
         this.btnListPoints.onclick = e => this.handleListPoints(e)
@@ -91,6 +95,10 @@ export default class MenuPanel extends BasePanel {
 
     handleShowPath(e) {
         mainModule.onShowPathChanged(e)
+    }
+
+    handleShowMarkerLabels(e){
+        mainModule.onShowMarkerLabelsChanged(e)
     }
 
     handleCleanMap(e) {
