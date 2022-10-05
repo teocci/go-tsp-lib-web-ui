@@ -41,8 +41,7 @@ export default class MapManager extends BaseListener {
     initMapPanel() {
         const placeholder = this.panel.placeholder
         const options = {
-            center: MapAPI.newLatLng(RANDOM_30_CENTER.y, RANDOM_30_CENTER.x),
-            level: 3,
+            center: MapAPI.newLatLng(CENTER.y, CENTER.x),
         }
 
         this.map = MapAPI.newMap(placeholder, options)
@@ -58,18 +57,22 @@ export default class MapManager extends BaseListener {
         this.resetMarkers()
         this.resetRoutes()
         this.resetOverlays()
-        this.deactivateClickListener()
+        if (MapAPI.isKakao()) {
+            this.deactivateClickListener()
+        }
     }
 
     activateClickListener() {
         const map = this.map
         map.setCursor('pointer')
-        kakao.maps.event.addListener(map, 'click', this.handlerOnClick)
+        MapAPI.addEvent(map, 'click', this.handlerOnClick)
 
-        kakao.maps.event.addListener(map, 'rightclick', me => {
-            this.deactivateClickListener()
-            mainModule.onMapClickFinished(me)
-        })
+        if (MapAPI.isKakao()) {
+            kakao.maps.event.addListener(map, 'rightclick', me => {
+                this.deactivateClickListener()
+                mainModule.onMapClickFinished(me)
+            })
+        }
     }
 
     deactivateClickListener() {
@@ -99,12 +102,15 @@ export default class MapManager extends BaseListener {
     }
 
     makeMarker(title, pos, i) {
-        const marker = new kakao.maps.Marker()
+        const marker = MapAPI.newMarker()
         marker.setPosition(pos)
         marker.setTitle(title)
-        marker.setImage(i === 0 ? MARKERS.start : MARKERS.waypoint)
         marker.setMap(this.map)
         marker.setZIndex(1)
+
+        if (MapAPI.isKakao()) {
+            marker.setImage(i === 0 ? MARKERS.start : MARKERS.waypoint)
+        }
 
         return marker
     }
@@ -120,7 +126,7 @@ export default class MapManager extends BaseListener {
 
     loadRoutes(data) {
         data.forEach(r => this.addRoute(r.api, r.route))
-        console.log({routes: this.routes})
+        console.log({ routes: this.routes })
     }
 
     addRoute(api, route) {
@@ -207,7 +213,7 @@ export default class MapManager extends BaseListener {
     }
 
     renderRoutes(type) {
-        console.log({type})
+        console.log({ type })
         this.routes.forEach(route => this.renderRoute(route, type))
     }
 
@@ -222,7 +228,7 @@ export default class MapManager extends BaseListener {
 
     removeRoute(route, type) {
         const pl = route.polyline(type)
-        console.log({route, type, pl})
+        console.log({ route, type, pl })
         pl.remove()
     }
 
@@ -231,7 +237,7 @@ export default class MapManager extends BaseListener {
         const route = this.routeByAPI(api)
         const pl = route.polyline(type)
         const path = route.pathByType(type, stepId)
-        console.log({route, type, pl, path})
+        console.log({ route, type, pl, path })
 
         pl.load(path)
         pl.render(this.map)
@@ -262,7 +268,7 @@ export default class MapManager extends BaseListener {
         const minX = bounds[1].replace(')', '')
         const maxY = bounds[2].replace('(', '')
         const maxX = bounds[3].replace('))', '')
-        console.log({bounds})
+        console.log({ bounds })
 
         return {
             minX: minX,

@@ -3,16 +3,13 @@
  * Author: teocci@yandex.com on 2022-10월-04
  */
 import KakaoAPI from './kakao-api.js'
+import RoutoAPI from './routo-api.js'
 
 export default class MapAPI {
     static get instance() {
         this._instance = this._instance ?? new MapAPI()
 
         return this._instance
-    }
-
-    constructor() {
-        this.vendor = API_MAP_VENDOR === KakaoAPI.TAG ? KakaoAPI.instance : KakaoAPI.instance
     }
 
     /**
@@ -22,7 +19,7 @@ export default class MapAPI {
      * @returns {LatLng}
      */
     static newLatLng(y, x) {
-        return new KakaoAPI.instance.LatLng(y, x)
+        return API_MAP_VENDOR === KakaoAPI.TAG ? new KakaoAPI.instance.LatLng(y, x) : { lat: y, lng: x }
     }
 
     /**
@@ -70,7 +67,7 @@ export default class MapAPI {
      * @param {?Object} [options]
      * @return {Marker}
      */
-    static newMarker(options) {
+    static newMarker(options = null) {
         const vendor = MapAPI.instance.vendor
         return new vendor.Marker(options)
     }
@@ -103,7 +100,9 @@ export default class MapAPI {
      */
     static addEvent(map, name, callback) {
         const vendor = MapAPI.instance.vendor
-        vendor.addEvent(map, name, callback)
+        const adder = this.isKakao() ? vendor.event.addListener : map.addListener
+    
+        adder(map, name, callback)
     }
 
     /**
@@ -114,6 +113,15 @@ export default class MapAPI {
      */
     static removeEvent(map, name, callback) {
         const vendor = MapAPI.instance.vendor
-        vendor.removeEvent(map, name, callback)
+        vendor.event.removeListener(map, name, callback)
+    }
+
+    static isKakao() {
+        return MapAPI.instance.name === KakaoAPI.TAG
+    }
+
+    constructor() {
+        this.name = API_MAP_VENDOR
+        this.vendor = API_MAP_VENDOR === KakaoAPI.TAG ? KakaoAPI.instance : RoutoAPI.instance
     }
 }
