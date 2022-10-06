@@ -237,7 +237,10 @@ export default class MapManager extends BaseListener {
     }
 
     // TODO reset
-    resetLabelOverlays() {}
+    resetLabelOverlays() {
+        this.labelOverlays.forEach(ol => ol.remove())
+        this.labelOverlays = new Map()
+    }
 
     routeByAPI(api) {
         return this.routes.get(api) ?? null
