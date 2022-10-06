@@ -392,9 +392,16 @@ body * {
 
 .marker-label {
     background: var(--border-dark-color);
+    border-radius: 3px;
     color: var(--light-text-color);
     z-index: 999;
     margin-top: 3rem;
+    white-space: nowrap;
+    font-weight: 400;
+    font-size: .8rem;
+    pointer-events: none;
+    user-select: none;
+    padding: 5px 10px;
 }
 
 .control-box {
