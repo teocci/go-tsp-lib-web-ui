@@ -390,12 +390,12 @@ body * {
     color: var(--light-text-color);
 }
 
-.marker-label{
-    background-color: var(--border-dark-color);
-    color : var(--white);
-    z-index : 999;
+.marker-label {
+    background: var(--border-dark-color);
+    color: var(--light-text-color);
+    z-index: 999;
+    margin-top: 1.5rem;
 }
-
 
 .control-box {
     width: var(--menu-options-width);
