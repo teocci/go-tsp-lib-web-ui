@@ -143,7 +143,6 @@ export default class MainModule {
         this.stepManager.loadSteps(data)
         this.mapManager.loadMarkers(this.stepManager.asStepArray(false, true))
         this.modalPanel.loadFixedPoints(this.stepManager.asStepArray())
-        this.mapManager.makeNameOverlay(data)
         this.pointsPanel.enablePanelElements()
         this.generatorPanel.enablePanelElements()
     }
@@ -167,7 +166,7 @@ export default class MainModule {
 
         this.modalPanel.loadRoutes(data)
         this.mapManager.loadRoutes(data)
-        this.mapManager.loadOverlays(data)
+        this.mapManager.loadTagsOverlays(data)
         this.mapManager.renderRoutes(POLYLINE_TYPE_ROUTE)
     }
 

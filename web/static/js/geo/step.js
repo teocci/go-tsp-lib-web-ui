@@ -17,6 +17,7 @@ export default class Step {
 
         this.distance = null
 
+        this.name = null
         this.point = null
         this.position = null
         this.path = null

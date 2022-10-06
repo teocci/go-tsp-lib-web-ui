@@ -92,7 +92,7 @@ export default class DrawManager {
 
         const arr = []
         pointTable.points.forEach(point => {
-            let customOverlay = ElementManager.makeOverlay(point, tlibCheck.checked, tmapCheck.checked)
+            const customOverlay = ElementManager.makeTagsOverlay(point, tlibCheck.checked, tmapCheck.checked)
             arr.push(customOverlay)
             customOverlay.setMap(map)
         })

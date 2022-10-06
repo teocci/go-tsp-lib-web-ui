@@ -208,8 +208,15 @@ const API_MAP_VENDOR = 'kakao'
 const FILE_LOAD_MAX_CNT = 20
 
 const MAP_BOUNDARY = {
-    SW_X : 126.95741096091186,
-    SW_Y : 37.53890553364695,
-    NE_X : 127.25097832512375,
-    NE_Y : 37.67833558087716,
+    swX: 126.95741096091186,
+    swY: 37.53890553364695,
+    neX: 127.25097832512375,
+    neY: 37.67833558087716,
+    isContained(point) {
+        return this.swX < point.x && this.swY < point.y
+            && point.x < this.neX && point.y < this.neY
+    },
 }
+
+const DEFAULT_MAP_LEVEL = 6
+const DEFAULT_CSV_ENCODING = 'euc-kr'

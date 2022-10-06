@@ -81,31 +81,39 @@ export default class PointsPanel extends BasePanel {
         if (!input) throw new Error('null input')
         const [first] = input.files
 
-        this.processFile(first)
+        this.readFileAsync(first).then(text => {
+            this.processFile(text)
+        })
     }
 
-    async processFile(file) {
-        const text = await file.text()
+    async readFileAsync(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader()
+            reader.onload = () => {
+                resolve(reader.result)
+            }
+            reader.onerror = reject
+
+            if (file) reader.readAsText(file, DEFAULT_CSV_ENCODING)
+        })
+    }
+
+    processFile(text) {
         const lines = text.split(/\r?\n/gm)
         const points = lines.reduce((acc, line) => {
             let [x, y, name] = line.split(',')
             x = Number(x)
             y = Number(y)
-            return isNumber(x) && isNumber(y) ? [...acc, {x, y, name}] : acc
+            return isNumber(x) && isNumber(y) && this.isContained({x, y}) ? [...acc, {x, y, name}] : acc
         }, [])
 
-        let boundaryPoints = []
-        points.forEach(point => {
-            if(this.isBoundaryPoint(point)){
-                boundaryPoints.push(point)
-            }
-        })
-        mainModule.onLoadPointsClicked(boundaryPoints.slice(0, FILE_LOAD_MAX_CNT))
+        const inBoundPoints = points.slice(0, FILE_LOAD_MAX_CNT)
+
+        mainModule.onLoadPointsClicked(inBoundPoints)
     }
 
-    isBoundaryPoint(pt){
-        return MAP_BOUNDARY.SW_X < pt.x && pt.x < MAP_BOUNDARY.NE_X 
-            && MAP_BOUNDARY.SW_Y < pt.y && pt.y < MAP_BOUNDARY.NE_Y
+    isContained(point) {
+        return MAP_BOUNDARY.isContained(point)
     }
 
     textLoadOutput(msg) {

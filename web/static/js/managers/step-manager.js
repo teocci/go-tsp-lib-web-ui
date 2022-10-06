@@ -30,22 +30,23 @@ export default class StepManager extends BaseListener {
         console.log({data})
         const list = [data.FixPoint.SPoint, ...data.FixPoint.pts, data.FixPoint.EPoint]
 
-        let last = null
+        let lastId = null
         list.forEach((p, id) => {
             const label = id === 0 ? '시작점' : `${id}`
             const point = new Point(p.x, p.y)
             const step = new Step(id, label)
             step.type = id === 0 ? Step.TYPE_START : Step.TYPE_WAYPOINT
+            step.name = p.name ?? null
             step.point = point
             step.position = new kakao.maps.LatLng(p.y, p.x)
             this.addPoint(id, point)
             this.addStep(id, step)
-            last = id
+            lastId = id
         })
 
-        if (last) {
-            this.steps.get(last).label = '도착지'
-            this.steps.get(last).type = Step.TYPE_END
+        if (lastId) {
+            this.steps.get(lastId).label = '도착지'
+            this.steps.get(lastId).type = Step.TYPE_END
         }
     }
 
@@ -171,6 +172,12 @@ export default class StepManager extends BaseListener {
         console.error(`[${api}] step not found ${step.position.toString()}`)
     }
 
+    /**
+     *
+     * @param {boolean} [noStart=false] if true the array will not contain the first step
+     * @param {boolean} [noEnd=false] if true the array will not contain the last step
+     * @returns {Step[]} Array of steps
+     */
     asStepArray(noStart, noEnd) {
         const nodes = []
         for (const step of this.steps.values()) {

@@ -6,6 +6,8 @@ import BaseListener from '../base/base-listener.js'
 import Point from '../geo/point.js'
 import Polyline from '../geo/polyline.js'
 import Overlay from '../geo/overlay.js'
+import OverlayTags from '../geo/overlay-tags.js'
+import OverlayLabel from '../geo/overlay-label.js'
 
 export default class MapManager extends BaseListener {
     static TAG = 'map'
@@ -31,7 +33,8 @@ export default class MapManager extends BaseListener {
 
         this.markers = new Map()
         this.routes = new Map()
-        this.overlays = new Map()
+        this.tagOverlays = new Map()
+        this.labelOverlays = new Map()
 
         this.initMapPanel()
         this.initMapListeners()
@@ -41,7 +44,7 @@ export default class MapManager extends BaseListener {
         const placeholder = this.panel.placeholder
         const options = {
             center: new kakao.maps.LatLng(CENTER.y, CENTER.x),
-            level: 6,
+            level: DEFAULT_MAP_LEVEL,
         }
 
         this.map = new kakao.maps.Map(placeholder, options)
@@ -56,7 +59,8 @@ export default class MapManager extends BaseListener {
     reset() {
         this.resetMarkers()
         this.resetRoutes()
-        this.resetOverlays()
+        this.resetTagsOverlays()
+        this.resetLabelOverlays()
         this.deactivateClickListener()
     }
 
@@ -83,7 +87,10 @@ export default class MapManager extends BaseListener {
     }
 
     loadMarkers(steps) {
-        steps.forEach((step, i) => this.loadMarkerFromStep(step, i))
+        steps.forEach((step, i) => {
+            this.loadMarkerFromStep(step, i)
+            this.loadLabelOverlayFromStep(step, i)
+        })
     }
 
     loadMarkerFromStep(step, i) {
@@ -98,11 +105,12 @@ export default class MapManager extends BaseListener {
     }
 
     makeMarker(title, pos, i) {
+        const map = this.map
         const marker = new kakao.maps.Marker()
         marker.setPosition(pos)
         marker.setTitle(title)
         marker.setImage(i === 0 ? MARKERS.start : MARKERS.waypoint)
-        marker.setMap(this.map)
+        marker.setMap(map)
         marker.setZIndex(1)
 
         return marker
@@ -113,13 +121,15 @@ export default class MapManager extends BaseListener {
     }
 
     resetMarkers() {
-        this.markers.forEach(m => m.setMap(null))
+        this.markers.forEach(m => {
+            m.setMap(null)
+        })
         this.markers = new Map()
     }
 
     loadRoutes(data) {
         data.forEach(r => this.addRoute(r.api, r.route))
-        console.log({ routes: this.routes })
+        console.log({routes: this.routes})
     }
 
     addRoute(api, route) {
@@ -138,14 +148,14 @@ export default class MapManager extends BaseListener {
         this.routes = new Map()
     }
 
-    loadOverlays(data) {
-        data.forEach(r => this.loadOverlay(r.api, r.route))
+    loadTagsOverlays(data) {
+        data.forEach(r => this.loadTagsOverlay(r.api, r.route))
     }
 
-    loadOverlay(api, route) {
+    loadTagsOverlay(api, route) {
         const map = this.map
         route.steps.forEach(step => {
-            const overlay = this.findOverlay(step) ?? this.makeOverlay(step)
+            const overlay = this.findTagsOverlay(step) ?? this.makeTagsOverlay(step)
             overlay.position = step.position
             overlay.updateTagByAPI(api, step.id, step.label)
             overlay.activateTagByAPI(api)
@@ -154,73 +164,80 @@ export default class MapManager extends BaseListener {
     }
 
     // TODO replace with position
-    findOverlay(step) {
-        for (const overlay of this.overlays.values()) {
+    findTagsOverlay(step) {
+        for (const overlay of this.tagOverlays.values()) {
             const p = new Point(truncate(overlay.position.getLng(), 5), truncate(overlay.position.getLat(), 5))
             const q = new Point(truncate(step.position.getLng(), 5), truncate(step.position.getLat(), 5))
-            if (p.equals(q)) {
-                return overlay
-            }
+            if (p.equals(q)) return overlay
         }
 
         return null
     }
 
-    makeOverlay() {
-        const overlay = new Overlay()
-        this.appendOverlay(overlay)
+    makeTagsOverlay() {
+        const overlay = new OverlayTags()
+        this.appendTagsOverlay(overlay)
 
         return overlay
     }
 
-    makeNameOverlay(data) {
-        const items = data.FixPoint
-        const points = []
-        points.push(items.SPoint)
-        items.pts.forEach(item => {
-            points.push(item)
-        })
-
-        points.forEach(point => {
-            const pos = new kakao.maps.LatLng(point.y, point.x)
-            const div = document.createElement('div')
-            div.className = 'marker-label'
-            const span = document.createElement('span')
-            span.textContent = point.name
-            div.appendChild(span)
-
-            const customOverlay = new kakao.maps.CustomOverlay({
-                position: pos,
-                content: div
-            })
-
-            customOverlay.setMap(this.map)
-        })
-    }
-
-    appendOverlay(overlay) {
-        const id = this.overlaysSize()
-        this.overlays.set(id, overlay)
+    appendTagsOverlay(overlay) {
+        const id = this.tagsOverlaysSize()
+        this.tagOverlays.set(id, overlay)
 
         return id
     }
 
-    overlaysSize() {
-        return this.overlays?.size ?? 0
+    tagsOverlaysSize() {
+        return this.tagOverlays?.size ?? 0
     }
 
-    resetOverlays() {
-        this.overlays.forEach(ol => ol.remove())
-        this.overlays = new Map()
+    resetTagsOverlays() {
+        this.tagOverlays.forEach(ol => ol.remove())
+        this.tagOverlays = new Map()
     }
 
     activateOTagByAPI(api) {
-        this.overlays.forEach(o => o.activateTagByAPI(api))
+        this.tagOverlays.forEach(o => o.activateTagByAPI(api))
     }
 
     deactivateOTagByAPI(api) {
-        this.overlays.forEach(o => o.deactivateTagByAPI(api))
+        this.tagOverlays.forEach(o => o.deactivateTagByAPI(api))
     }
+
+    loadLabelOverlays(steps) {
+        steps.forEach((step, i) => this.loadLabelOverlayFromStep(step, i))
+    }
+
+    loadLabelOverlayFromStep(step, i) {
+        const overlay = this.makeLabelOverlay(step.name, step.position, i)
+        this.appendLabelOverlay(overlay)
+    }
+
+    makeLabelOverlay(label, position, index) {
+        const map = this.map
+        const overlay = new OverlayLabel()
+        overlay.index = index
+        overlay.updateLabel(label)
+        overlay.position = position
+        overlay.render(map)
+
+        return overlay
+    }
+
+    appendLabelOverlay(overlay) {
+        const id = this.labelOverlaysSize()
+        this.labelOverlays.set(id, overlay)
+
+        return id
+    }
+
+    labelOverlaysSize() {
+        return this.labelOverlays?.size ?? 0
+    }
+
+    // TODO reset
+    resetLabelOverlays() {}
 
     routeByAPI(api) {
         return this.routes.get(api) ?? null
@@ -231,7 +248,7 @@ export default class MapManager extends BaseListener {
     }
 
     renderRoutes(type) {
-        console.log({ type })
+        console.log({type})
         this.routes.forEach(route => this.renderRoute(route, type))
     }
 
@@ -246,7 +263,7 @@ export default class MapManager extends BaseListener {
 
     removeRoute(route, type) {
         const pl = route.polyline(type)
-        console.log({ route, type, pl })
+        console.log({route, type, pl})
         pl.remove()
     }
 
@@ -255,7 +272,7 @@ export default class MapManager extends BaseListener {
         const route = this.routeByAPI(api)
         const pl = route.polyline(type)
         const path = route.pathByType(type, stepId)
-        console.log({ route, type, pl, path })
+        console.log({route, type, pl, path})
 
         pl.load(path)
         pl.render(this.map)
@@ -286,7 +303,7 @@ export default class MapManager extends BaseListener {
         const minX = bounds[1].replace(')', '')
         const maxY = bounds[2].replace('(', '')
         const maxX = bounds[3].replace('))', '')
-        console.log({ bounds })
+        console.log({bounds})
 
         return {
             minX: minX,
