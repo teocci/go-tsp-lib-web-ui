@@ -18,18 +18,19 @@ export default class FetcherManager extends BaseListener {
         this.tmapManager = new TMapFetcher()
     }
 
-    fetchFixPoints(req) {
-        this.tlibManager.fetchFixPoints(req).then(data => {
-
-            if (req[0].name !== undefined) {
-                data.body.FixPoint.EPoint.name = req[0].name
-                data.body.FixPoint.SPoint.name = req[0].name
-                data.body.FixPoint.pts.forEach((pt, idx) => {
-                    pt.name = req[idx + 1].name
+    fetchFixPoints(points) {
+        this.tlibManager.fetchFixPoints(points).then(data => {
+            const [first] = points
+            const body = data.body
+            if (first.name !== undefined) {
+                body.FixPoint.EPoint.name = first.name
+                body.FixPoint.SPoint.name = first.name
+                body.FixPoint.pts.forEach((pt, idx) => {
+                    pt.name = points[idx + 1].name
                 })
             }
 
-            mainModule.onFixPointsFetched(data.body)
+            mainModule.onFixPointsFetched(body)
         })
     }
 
