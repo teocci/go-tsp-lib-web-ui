@@ -143,7 +143,7 @@ const TMAP_TEST_API = 'https://gist.githubusercontent.com/amissu89/be5fc038dc559
 
 const RTT = {x: 127.3934052, y: 36.4310406}
 const RANDOM_30_CENTER = {x: 126.9813026, y: 37.5630353}
-const CENTER = {x: 127.05967710714839, y: 37.584821928034984}
+const CENTER = {x: 126.981353, y: 37.563034}
 
 const RANDOM_10_TEST_POINTS = [
     {'x': 127.386293, 'y': 36.430404},
@@ -205,13 +205,13 @@ let kakaoMap = null
 let mainModule = null
 
 const API_MAP_VENDOR = 'kakao'
-const FILE_LOAD_MAX_CNT = 20
+const FILE_LOAD_MAX_CNT = 50
 
 const MAP_BOUNDARY = {
-    swX: 126.95741096091186,
-    swY: 37.53890553364695,
-    neX: 127.25097832512375,
-    neY: 37.67833558087716,
+    swX: 126.57298757791372,
+    swY: 37.37043682980272,
+    neX: 127.39144157411216,
+    neY: 37.753733424630596,
     isContained(point) {
         return this.swX < point.x && this.swY < point.y
             && point.x < this.neX && point.y < this.neY

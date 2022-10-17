@@ -104,7 +104,7 @@ export default class PointsPanel extends BasePanel {
             let [x, y, name] = line.split(',')
             x = Number(x)
             y = Number(y)
-            return isNumber(x) && isNumber(y) && this.isContained({x, y}) ? [...acc, {x, y, name}] : acc
+            return isNumber(x) && isNumber(y) /*&& this.isContained({x, y})*/ ? [...acc, {x, y, name}] : acc
         }, [])
 
         const inBoundPoints = points.slice(0, FILE_LOAD_MAX_CNT)
